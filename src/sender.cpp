@@ -86,10 +86,10 @@ moba::MessagePtr Sender::recieveMsg() {
     }
 
     if(!FD_ISSET(sd, &read_sock)) {
-        return moba::MessagePtr();
+        return moba::MessagePtr{};
     }
 
-    moba::JsonStreamReaderSocketPtr reader(new moba::JsonStreamReaderSocket(sd));
+    moba::JsonStreamReaderSocketPtr reader{new moba::JsonStreamReaderSocket(sd)};
     moba::JsonMsgDecoder decoder(reader);
     return decoder.decodeMsg();
 }
