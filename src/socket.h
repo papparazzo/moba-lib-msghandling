@@ -22,6 +22,7 @@
 
 #include <exception>
 #include <string>
+#include <memory>
 
 namespace moba {
     class SocketException : public std::exception {
@@ -59,5 +60,7 @@ namespace moba {
 
             void init();
     };
+
+    using SocketPtr = std::shared_ptr<Socket>;
 }
 
