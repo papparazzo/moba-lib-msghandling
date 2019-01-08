@@ -2,7 +2,7 @@ AUTOMAKE_OPTIONS = subdir-objects
 noinst_LIBRARIES = \
     libmsghandling.a
 libmsghandling_a_SOURCES = \
-    symbol.cpp
+    socket.cpp
 
 LDFLAGS += -L/usr/local/lib
 
