@@ -24,43 +24,41 @@
 #include <string>
 #include <memory>
 
-namespace moba {
-    class SocketException : public std::exception {
+class SocketException : public std::exception {
 
-        public:
-            virtual ~SocketException() noexcept {
+    public:
+        virtual ~SocketException() noexcept {
 
-            }
+        }
 
-            SocketException(const std::string &what) {
-                this->what__ = what;
-            }
+        SocketException(const std::string &what) {
+            this->what__ = what;
+        }
 
-            virtual const char* what() const noexcept {
-                return this->what__.c_str();
-            }
+        virtual const char* what() const noexcept {
+            return this->what__.c_str();
+        }
 
-        private:
-            std::string what__;
-    };
+    private:
+        std::string what__;
+};
 
-    class Socket {
-        public:
-            Socket(const std::string &host, int port);
-            virtual ~Socket();
+class Socket {
+    public:
+        Socket(const std::string &host, int port);
+        virtual ~Socket();
 
-            int getSocket() {
-                return socket;
-            }
+        int getSocket() {
+            return socket;
+        }
 
-        protected:
-            int socket;
-            std::string host;
-            int port;
+    protected:
+        int socket;
+        std::string host;
+        int port;
 
-            void init();
-    };
+        void init();
+};
 
-    using SocketPtr = std::shared_ptr<Socket>;
-}
+using SocketPtr = std::shared_ptr<Socket>;
 
