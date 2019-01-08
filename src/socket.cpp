@@ -23,9 +23,9 @@
 #include <netdb.h>
 #include <unistd.h>
 
-Socket::Socket(const std::string &host, int port) : socket(-1) {
+Socket::Socket(const std::string &host, int port) : socket{-1} {
     if(host == "" || port > 64738 || port < 1024) {
-        throw SocketException("either host or port is invalid!");
+        throw SocketException{"either host or port is invalid!"};
     }
     this->host = host;
     this->port = port;
@@ -45,7 +45,7 @@ void Socket::init() {
     }
     socket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if(socket == -1) {
-        throw SocketException("socket creation failed");
+        throw SocketException{"socket creation failed"};
     }
 
     struct sockaddr_in host_addr;
@@ -61,7 +61,7 @@ void Socket::init() {
         hostn = gethostbyname(host.c_str());
 
         if(hostn == nullptr) {
-            throw SocketException("resolving url failed");
+            throw SocketException{"resolving url failed"};
         }
         memcpy(
             (char*) &host_addr.sin_addr.s_addr,
@@ -71,6 +71,6 @@ void Socket::init() {
     }
 
     if(::connect(socket, (struct sockaddr*) &host_addr, sizeof (host_addr)) == -1) {
-        throw SocketException("connection to host failed");
+        throw SocketException{"connection to host failed"};
     }
 }
