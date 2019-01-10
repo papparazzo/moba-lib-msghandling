@@ -57,7 +57,7 @@ long Endpoint::registerApp() {
 /*
     Message msg{Message::MT_CLIENT_START, obj};
     sendMsg(msg);
-    auto mptr = recieveMsg();
+    auto mptr = recieveMsg(MsgEndpoint::MSG_HANDLER_TIME_OUT_SEC);
     if(!mptr || mptr->getMsgType() != Message::MT_CLIENT_CONNECTED) {
         throw SocketException{"did not recieve CLIENT_CONNECTED"};
     }
@@ -69,7 +69,7 @@ long Endpoint::registerApp() {
  */
 }
 
-moba::MessagePtr Endpoint::recieveMsg() {
+moba::MessagePtr Endpoint::recieveMsg(time_t timeoutSec) {
     struct timeval timeout;
     fd_set         read_sock;
 
@@ -78,7 +78,7 @@ moba::MessagePtr Endpoint::recieveMsg() {
     FD_ZERO(&read_sock);
     FD_SET(sd, &read_sock);
 
-    timeout.tv_sec = MSG_HANDLER_TIME_OUT_SEC;
+    timeout.tv_sec = timeoutSec;
     timeout.tv_usec = MSG_HANDLER_TIME_OUT_USEC;
 
     if(::select(sd + 1, &read_sock, NULL, NULL, &timeout) == -1) {

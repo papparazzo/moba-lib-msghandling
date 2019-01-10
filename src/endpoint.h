@@ -37,6 +37,8 @@ class Endpoint {
 
         long getAppId() {return appId;}
 
+        auto recieveMsg(time_t timeoutSec) -> moba::MessagePtr;
+
         // ---- message transmission ----
         void sendMsg(const std::string &msgType, const moba::JsonItemPtr &msgData);
 
@@ -61,6 +63,5 @@ class Endpoint {
         static const int MSG_HANDLER_TIME_OUT_USEC = 0;
 
         long registerApp();
-        auto recieveMsg() -> moba::MessagePtr;
         void init();
 };
