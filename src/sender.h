@@ -36,16 +36,14 @@ class Sender {
         long connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups);
 
         long getAppId() {return appId;}
-/*
+
         // ---- message transmission ----
-        void sendMsg(const Message::MessageType type, const JsonItemPtr &msgData);
-*/
+        void sendMsg(const std::string &msgType, const moba::JsonItemPtr &msgData);
+
         void sendMsg(const std::string &msgType, const std::string &msgData);
+
+        void sendMsg(const std::string &msgType);
 /*
-        void sendMsg(const Message::MessageType type);
-
-        void sendMsg(const Message::MessageType type, const std::string &msgData);
-
         void sendMsg(const Message &msg);
 */
         void sendMsg(const moba::JsonObject &obj);

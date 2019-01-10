@@ -93,28 +93,28 @@ moba::MessagePtr Sender::recieveMsg() {
     moba::JsonMsgDecoder decoder(reader);
     return decoder.decodeMsg();
 }
+
+void Sender::sendMsg(const std::string &msgType, const moba::JsonItemPtr &msgData) {
+    moba::JsonObject obj;
+    obj["msgType"] = moba::toJsonStringPtr(msgType);
+    obj["msgData"] = msgData;
+    sendMsg(obj);
+}
+
+void Sender::sendMsg(const std::string &msgType, const std::string &msgData) {
+    moba::JsonObject obj;
+    obj["msgType"] = moba::toJsonStringPtr(msgType);
+    obj["msgData"] = moba::toJsonStringPtr(msgData);
+    sendMsg(obj);
+}
+
+void Sender::sendMsg(const std::string &msgType) {
+    moba::JsonObject obj;
+    obj["msgType"] = moba::toJsonStringPtr(msgType);
+    obj["msgData"] = moba::toJsonNULLPtr();
+    sendMsg(obj);
+}
 /*
-    void MsgEndpoint::sendMsg(const Message::MessageType type, const JsonItemPtr &msgData) {
-        JsonObject obj;
-        obj["msgType"] = Message::convertToString(type);
-        obj["msgData"] = msgData;
-        sendMsg(obj);
-    }
-
-    void MsgEndpoint::sendMsg(const Message::MessageType type) {
-        JsonObject obj;
-        obj["msgType"] = Message::convertToString(type);
-        obj["msgData"] = moba::toJsonNULLPtr();
-        sendMsg(obj);
-    }
-
-    void MsgEndpoint::sendMsg(const Message::MessageType type, const std::string &msgData) {
-        JsonObject obj;
-        obj["msgType"] = Message::convertToString(type);
-        obj["msgData"] = moba::toJsonStringPtr(msgData);
-        sendMsg(obj);
-    }
-
     void MsgEndpoint::sendMsg(const Message &msg) {
         JsonObject obj;
         obj["msgType"] = Message::convertToString(msg.getMsgType());
@@ -122,12 +122,6 @@ moba::MessagePtr Sender::recieveMsg() {
         sendMsg(obj);
     }
 */
-void Sender::sendMsg(const std::string &msgType, const std::string &msgData) {
-    moba::JsonObject obj;
-    obj["msgType"] = moba::toJsonStringPtr(msgType);
-    obj["msgData"] = moba::toJsonStringPtr(msgData);
-    sendMsg(obj);
-}
 
 void Sender::sendMsg(const moba::JsonObject &obj) {
     std::string s = obj.getJsonString();
