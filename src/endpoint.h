@@ -26,10 +26,10 @@
 #include <moba/jsonabstractitem.h>
 #include <moba/message.h>
 
-class Sender {
+class Endpoint {
     public:
-        Sender(SocketPtr socket);
-        virtual ~Sender();
+        Endpoint(SocketPtr socket);
+        virtual ~Endpoint();
 
         long connect();
 

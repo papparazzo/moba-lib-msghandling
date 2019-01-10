@@ -18,7 +18,7 @@
  *
  */
 
-#include "sender.h"
+#include "endpoint.h"
 #include <string>
 #include <memory>
 
@@ -29,26 +29,26 @@
 #include <moba/jsonmsgdecoder.h>
 #include <moba/jsonstreamreadersocket.h>
 
-Sender::Sender(SocketPtr socket) : socket{socket} {
+Endpoint::Endpoint(SocketPtr socket) : socket{socket} {
 }
 
-Sender::~Sender() {
+Endpoint::~Endpoint() {
     //sendMsg(Message::MT_CLIENT_CLOSE);
 }
 
-long Sender::connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups) {
+long Endpoint::connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups) {
     this->appName = appName;
     this->version = version;
     this->groups = groups;
     connect();
 }
 
-long Sender::connect() {
+long Endpoint::connect() {
     init();
     return registerApp();
 }
 
-long Sender::registerApp() {
+long Endpoint::registerApp() {
     moba::JsonObjectPtr obj{new moba::JsonObject{}};
 
     (*obj)["appName"  ] = moba::toJsonStringPtr(appName);
@@ -69,7 +69,7 @@ long Sender::registerApp() {
  */
 }
 
-moba::MessagePtr Sender::recieveMsg() {
+moba::MessagePtr Endpoint::recieveMsg() {
     struct timeval timeout;
     fd_set         read_sock;
 
@@ -94,21 +94,21 @@ moba::MessagePtr Sender::recieveMsg() {
     return decoder.decodeMsg();
 }
 
-void Sender::sendMsg(const std::string &msgType, const moba::JsonItemPtr &msgData) {
+void Endpoint::sendMsg(const std::string &msgType, const moba::JsonItemPtr &msgData) {
     moba::JsonObject obj;
     obj["msgType"] = moba::toJsonStringPtr(msgType);
     obj["msgData"] = msgData;
     sendMsg(obj);
 }
 
-void Sender::sendMsg(const std::string &msgType, const std::string &msgData) {
+void Endpoint::sendMsg(const std::string &msgType, const std::string &msgData) {
     moba::JsonObject obj;
     obj["msgType"] = moba::toJsonStringPtr(msgType);
     obj["msgData"] = moba::toJsonStringPtr(msgData);
     sendMsg(obj);
 }
 
-void Sender::sendMsg(const std::string &msgType) {
+void Endpoint::sendMsg(const std::string &msgType) {
     moba::JsonObject obj;
     obj["msgType"] = moba::toJsonStringPtr(msgType);
     obj["msgData"] = moba::toJsonNULLPtr();
@@ -123,7 +123,7 @@ void Sender::sendMsg(const std::string &msgType) {
     }
 */
 
-void Sender::sendMsg(const moba::JsonObject &obj) {
+void Endpoint::sendMsg(const moba::JsonObject &obj) {
     std::string s = obj.getJsonString();
     ssize_t c = ::send(socket->getSocket(), s.c_str(), s.length(), 0);
     if(c == -1 || c != s.length()) {
