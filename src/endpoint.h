@@ -35,7 +35,13 @@ class Endpoint {
 
         long connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups);
 
+        long getAppId() {return appId;}
+
         auto recieveMsg(time_t timeoutSec) -> moba::MessagePtr;
+
+        void sendVoid() {sendMsg("VOID");}
+
+        void sendEchoReq(const std::string &data) {sendMsg("ECHO_REQ", data);}
 
         // ---- message transmission ----
         void sendMsg(const std::string &msgType, const moba::JsonItemPtr &msgData);
@@ -48,6 +54,12 @@ class Endpoint {
 
     protected:
         SocketPtr socket;
+
+        long appId;
+
+        std::string appName;
+        moba::Version version;
+        moba::JsonArrayPtr groups;
 
         static const int MSG_HANDLER_TIME_OUT_SEC = 2;
         static const int MSG_HANDLER_TIME_OUT_USEC = 0;

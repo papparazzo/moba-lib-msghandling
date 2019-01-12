@@ -29,11 +29,26 @@
 #include <moba/jsonmsgdecoder.h>
 #include <moba/jsonstreamreadersocket.h>
 
+/**
+ VOID
+ECHO_REQ
+ECHO_RES
+ERROR
+CLIENT_START
+CLIENT_CONNECTED
+CLIENT_CLOSE
+CLIENT_SHUTDOWN
+CLIENT_RESET
+CLIENT_SELF_TESTING
+
+ */
+
+
 Endpoint::Endpoint(SocketPtr socket) : socket{socket} {
 }
 
 Endpoint::~Endpoint() {
-    //sendMsg(Message::MT_CLIENT_CLOSE);
+    sendMsg("CLIENT_CLOSE");
 }
 
 long Endpoint::connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups) {
@@ -53,10 +68,11 @@ long Endpoint::registerApp() {
     (*obj)["appName"  ] = moba::toJsonStringPtr(appName);
     (*obj)["version"  ] = version.toJsonPtr();
     (*obj)["msgGroups"] = groups;
-/*
-    Message msg{Message::MT_CLIENT_START, obj};
+
+    Message msg{"CLIENT_START", obj};
     sendMsg(msg);
-    auto mptr = recieveMsg(MsgEndpoint::MSG_HANDLER_TIME_OUT_SEC);
+    auto mptr = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
+/*
     if(!mptr || mptr->getMsgType() != Message::MT_CLIENT_CONNECTED) {
         throw SocketException{"did not recieve CLIENT_CONNECTED"};
     }
