@@ -114,14 +114,6 @@ void Endpoint::sendMsg(const std::string &msgType) {
     obj["msgData"] = moba::toJsonNULLPtr();
     sendMsg(obj);
 }
-/*
-    void MsgEndpoint::sendMsg(const Message &msg) {
-        JsonObject obj;
-        obj["msgType"] = Message::convertToString(msg.getMsgType());
-        obj["msgData"] = msg.getData();
-        sendMsg(obj);
-    }
-*/
 
 void Endpoint::sendMsg(const moba::JsonObject &obj) {
     std::string s = obj.getJsonString();

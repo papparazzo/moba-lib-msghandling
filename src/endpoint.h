@@ -45,9 +45,7 @@ class Endpoint {
         void sendMsg(const std::string &msgType, const std::string &msgData);
 
         void sendMsg(const std::string &msgType);
-/*
-        void sendMsg(const Message &msg);
-*/
+
         void sendMsg(const moba::JsonObject &obj);
 
     protected:
