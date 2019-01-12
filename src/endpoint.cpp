@@ -44,7 +44,6 @@ long Endpoint::connect(const std::string &appName, moba::Version version, const 
 }
 
 long Endpoint::connect() {
-    init();
     return registerApp();
 }
 
