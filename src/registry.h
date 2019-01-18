@@ -23,6 +23,10 @@
 #include <unordered_map>
 #include <string>
 
+struct Message {
+    
+};
+
 struct MessageA {
 
 };
@@ -51,7 +55,7 @@ class Registry {
         }
 
     protected:
-        std::unordered_map<std::string, t> handlers;
+        std::unordered_map<std::string, int> handlers;
 };
 
 
