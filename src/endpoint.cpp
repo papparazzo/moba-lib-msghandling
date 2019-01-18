@@ -29,6 +29,8 @@
 #include <moba/jsonmsgdecoder.h>
 #include <moba/jsonstreamreadersocket.h>
 
+#include "registry.h"
+
 /**
  VOID
 ECHO_REQ
@@ -69,8 +71,8 @@ long Endpoint::registerApp() {
     (*obj)["version"  ] = version.toJsonPtr();
     (*obj)["msgGroups"] = groups;
 
-    Message msg{"CLIENT_START", obj};
-    sendMsg(msg);
+   // Message msg{"CLIENT_START", obj};
+    //sendMsg(msg);
     auto mptr = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
 /*
     if(!mptr || mptr->getMsgType() != Message::MT_CLIENT_CONNECTED) {
