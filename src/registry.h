@@ -24,16 +24,39 @@
 #include <string>
 
 struct Message {
-    
+
+    std::string getMessageName() {
+        return Message::MESSAGE_NAME;
+    }
+
+    protected:
+        static const std::string MESSAGE_NAME;
 };
 
-struct MessageA {
+struct MessageVoid : public Message {
 
 };
 
-struct MessageB {
+struct MessageEchoReq : public Message {
 
 };
+
+const std::string Message::MESSAGE_NAME = "VOID";
+//const std::string Message::MESSAGE_NAME = "ECHO_REQ"
+
+/*
+
+
+ECHO_RES
+ERROR
+CLIENT_START
+CLIENT_CONNECTED
+CLIENT_CLOSE
+CLIENT_SHUTDOWN
+CLIENT_RESET
+CLIENT_SELF_TESTING
+*/
+
 
 class Registry {
     public:
@@ -43,10 +66,10 @@ class Registry {
 
         template<typename T>
         void registerHandler(int i, std::function<void(const T&)> cb) {
-            auto x = [cb](const std::string input) {
-                cb(convert(input));
-            }
-            handlers[i] = x;
+            //auto x = [cb](const std::string input) {
+            //    cb(convert(input));
+            //}
+            //handlers[i] = x;
         }
 
         void handleMsg() {
