@@ -24,9 +24,6 @@
 const std::string BaseMessage::MSG_HEADER  = "msgType";
 const std::string BaseMessage::DATA_HEADER = "msgData";
 
-BaseMessage::BaseMessage(const BaseMessage& orig) {
-}
-
 BaseMessage::~BaseMessage() {
 }
 

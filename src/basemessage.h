@@ -28,12 +28,12 @@ class BaseMessage {
         static const std::string MSG_HEADER;
         static const std::string DATA_HEADER;
 
-        //BaseMessage::BaseMessage() {
-        //}
+        BaseMessage() {
+        }
 
         BaseMessage(moba::JsonItemPtr data) : data{data} {
         }
-        BaseMessage(const BaseMessage& orig);
+
         virtual ~BaseMessage();
 
         virtual std::string getMessageName() = 0;
@@ -49,5 +49,3 @@ class BaseMessage {
 
     private:
 };
-
-
