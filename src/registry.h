@@ -22,78 +22,61 @@
 
 #include <unordered_map>
 #include <string>
+#include <functional>
 
-struct Message {
+#include "basemessage.h"
+#include <moba/jsonabstractitem.h>
 
-    std::string getMessageName() {
-        return Message::MESSAGE_NAME;
-    }
+template <typename T>
+T convert(const std::string &input) {
+    return reinterpret_cast<T> (input);
+}
 
-    protected:
-        static const std::string MESSAGE_NAME;
-};
-
-struct MessageVoid : public Message {
-
-};
-
-struct MessageEchoReq : public Message {
-
-};
-
-const std::string Message::MESSAGE_NAME = "VOID";
-//const std::string Message::MESSAGE_NAME = "ECHO_REQ"
-
-/*
-
-
-ECHO_RES
-ERROR
-CLIENT_START
-CLIENT_CONNECTED
-CLIENT_CLOSE
-CLIENT_SHUTDOWN
-CLIENT_RESET
-CLIENT_SELF_TESTING
-*/
+//void handlerForMessageA(const MessageA &);
+//void handlerForMessageB(const MessageB &);
 
 
 class Registry {
     public:
+        using DefHandler = std::function<void(moba::JsonItemPtr)>;
+
         Registry();
         Registry(const Registry& orig);
         virtual ~Registry();
 
         template<typename T>
-        void registerHandler(int i, std::function<void(const T&)> cb) {
-            //auto x = [cb](const std::string input) {
-            //    cb(convert(input));
-            //}
-            //handlers[i] = x;
+        void registerHandler(std::function<void(const T&)> fn) {
+            T msg;
+            handlers[msg.MESSAGE_NAME] = [fn](const std::string &input) {
+                //convert(input);
+                //fn(convert(input));
+            };
         }
 
-        void handleMsg() {
+        void registerDefaultHandler(DefHandler fn) {
+            defHandler = fn;
+        }
 
+        bool handleMsg() {
+            std::string msgKey = "";
+
+            auto iter = handlers.find(msgKey);
+            if(iter != handlers.end()) {
+                iter->second("bal");
+                return true;
+            }
+
+            if(defHandler) {
+               // defHandler();
+            }
 
         }
 
     protected:
-        std::unordered_map<std::string, int> handlers;
+        using HandlerFnWrapper = std::function<void(const std::string&)>;
+        using HandlerMap = std::unordered_map<std::string, HandlerFnWrapper>;
+
+        HandlerMap handlers;
+        DefHandler defHandler;
 };
 
-
-/*
-void handlerForMessageA(const MessageA &);
-void handlerForMessageB(const MessageB &);
-
-
-Registry reg;
-
-reg.register(1, handlerForMessageA);
-
-
-template <typename T>
-T convert(const std::string &input) {
-    return reinpret_cast<T> (input);
-}
-*/
