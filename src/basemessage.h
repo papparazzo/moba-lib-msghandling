@@ -25,27 +25,36 @@
 
 class BaseMessage {
     public:
-        static const std::string MSG_HEADER;
-        static const std::string DATA_HEADER;
+        static const std::string MSG_HEADER_NAME;
+        static const std::string MSG_HEADER_DATA;
 
-        BaseMessage() {
+        virtual ~BaseMessage() {
         }
-
-        BaseMessage(moba::JsonItemPtr data) : data{data} {
-        }
-
-        virtual ~BaseMessage();
 
         virtual std::string getMessageName() = 0;
 
-        moba::JsonItemPtr getData() const {
-            return this->data;
+    protected:
+        BaseMessage() {
+        }
+};
+
+class RecieveMessage : public BaseMessage {
+};
+
+class DispatchMessage : public BaseMessage {
+    public:
+        virtual std::string getRawMessage() {
+            moba::JsonObject obj;
+
+            obj["msgMame"] = moba::toJsonStringPtr(getMessageName());
+            obj["msgData"] = getData();
+            return obj.getJsonString();
         }
 
-        std::string getRawMessage();
-
-    protected:
-        moba::JsonItemPtr data;
-
-    private:
+        virtual moba::JsonItemPtr getData() {
+            return moba::toJsonNULLPtr();
+        }
 };
+
+const std::string BaseMessage::MSG_HEADER_NAME = "msgName";
+const std::string BaseMessage::MSG_HEADER_DATA = "msgData";
