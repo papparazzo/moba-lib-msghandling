@@ -46,9 +46,9 @@ class SocketException : public std::exception {
 class Socket {
     public:
         Socket(const std::string &host, int port);
-        virtual ~Socket();
+        virtual ~Socket() noexcept;
 
-        int getSocket() {
+        int getSocket() const {
             return socket;
         }
 

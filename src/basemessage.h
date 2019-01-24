@@ -28,7 +28,7 @@ class BaseMessage {
         static const std::string MSG_HEADER_NAME;
         static const std::string MSG_HEADER_DATA;
 
-        virtual ~BaseMessage() {
+        virtual ~BaseMessage() noexcept {
         }
 
         virtual std::string getMessageName() const = 0;

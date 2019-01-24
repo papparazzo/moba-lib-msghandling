@@ -30,7 +30,7 @@
 class Endpoint {
     public:
         Endpoint(SocketPtr socket);
-        virtual ~Endpoint();
+        virtual ~Endpoint() noexcept;
 
         long connect();
 
