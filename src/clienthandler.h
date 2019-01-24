@@ -135,8 +135,8 @@ class ClientConnected : public RecieveMessage {
         long appId;
 };
 
-struct ClientClose : public RecieveMessage {
-    static std::string getName() {
+struct ClientClose : public DispatchMessage {
+    virtual std::string getMessageName() const override {
         return "CLIENT_CLOSE";
     }
 };
