@@ -25,7 +25,7 @@
 
 class ClientVoid : public RecieveMessage, public DispatchMessage {
     public:
-        virtual std::string getMessageName() override {
+        virtual std::string getMessageName() const override {
             return "CLIENT_VOID";
         }
 };
@@ -35,17 +35,16 @@ class ClientEchoReq : public DispatchMessage {
         ClientEchoReq(const std::string &payload) : payload{payload} {
         }
 
-        virtual std::string getMessageName() override {
+        virtual std::string getMessageName() const override {
             return "CLIENT_ECHO_REQ";
         }
 
-        virtual moba::JsonItemPtr getData() override {
+        virtual moba::JsonItemPtr getData() const override {
             return moba::toJsonStringPtr(payload);
         }
 
     protected:
         std::string payload;
-
 };
 
 class ClientEchoRes : public RecieveMessage {
@@ -54,7 +53,7 @@ class ClientEchoRes : public RecieveMessage {
             payload = moba::castToString(data);
         }
 
-        virtual std::string getMessageName() override {
+        virtual std::string getMessageName() const override {
             return "CLIENT_ECHO_RES";
         }
 
@@ -74,7 +73,7 @@ class ClientError : public RecieveMessage {
             additionalMsg = moba::castToString(o->at("additonalMsg"));
         }
 
-        virtual std::string getMessageName() override {
+        virtual std::string getMessageName() const override {
             return "CLIENT_ERROR";
         }
 
@@ -98,11 +97,11 @@ class ClientStart : public DispatchMessage {
         appName{appName}, version{version}, groups{groups} {
         }
 
-        virtual std::string getMessageName() override {
+        virtual std::string getMessageName() const override {
             return "CLIENT_START";
         }
 
-        virtual moba::JsonItemPtr getData() override {
+        virtual moba::JsonItemPtr getData() const override {
             moba::JsonObjectPtr obj(new moba::JsonObject());
             (*obj)["appName"  ] = moba::toJsonStringPtr(appName);
             (*obj)["version"  ] = version.toJsonPtr();
@@ -123,7 +122,7 @@ class ClientConnected : public RecieveMessage {
             appId = moba::castToInt(data);
         }
 
-        virtual std::string getMessageName() override {
+        virtual std::string getMessageName() const override {
             return "CLIENT_CONNECTED";
         }
 
