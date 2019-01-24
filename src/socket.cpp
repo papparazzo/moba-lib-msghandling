@@ -33,7 +33,6 @@ Socket::Socket(const std::string &host, int port) : socket{-1} {
 }
 
 Socket::~Socket() {
-    //sendMsg(Message::MT_CLIENT_CLOSE);
     if (socket != -1) {
         close(socket);
     }
