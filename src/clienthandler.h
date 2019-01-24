@@ -88,7 +88,6 @@ class ClientError : public RecieveMessage {
     protected:
         std::string errorId;
         std::string additionalMsg;
-
 };
 
 class ClientStart : public DispatchMessage {
@@ -113,7 +112,6 @@ class ClientStart : public DispatchMessage {
         std::string appName;
         moba::Version version;
         moba::JsonArrayPtr groups;
-
 };
 
 class ClientConnected : public RecieveMessage {
