@@ -32,22 +32,21 @@ T convert(const std::string &input) {
     return reinterpret_cast<T> (input);
 }
 
-//void handlerForMessageA(const MessageA &);
-//void handlerForMessageB(const MessageB &);
-
-
 class Registry {
     public:
         using DefHandler = std::function<void(moba::JsonItemPtr)>;
 
         Registry();
         Registry(const Registry& orig);
-        virtual ~Registry();
+        virtual ~Registry() noexcept;
 
         template<typename T>
         void registerHandler(std::function<void(const T&)> fn) {
             T msg;
-            handlers[msg.MESSAGE_NAME] = [fn](const std::string &input) {
+            handlers[msg.getMessageName()] = [fn](const std::string &input) {
+
+                T m{};
+
                 //convert(input);
                 //fn(convert(input));
             };

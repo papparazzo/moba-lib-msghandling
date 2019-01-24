@@ -56,7 +56,7 @@ long Endpoint::registerApp() {
 
     ClientStart msg{appName, version, groups};
 
-    //sendMsg(msg);
+    sendMsg(msg);
     auto mptr = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
 /*
     if(!mptr || mptr->getMsgType() != Message::MT_CLIENT_CONNECTED) {
