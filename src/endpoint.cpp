@@ -18,7 +18,6 @@
  *
  */
 
-#include "endpoint.h"
 #include <string>
 #include <memory>
 
@@ -30,27 +29,15 @@
 #include <moba/jsonstreamreadersocket.h>
 
 #include "registry.h"
-
-/**
- VOID
-ECHO_REQ
-ECHO_RES
-ERROR
-CLIENT_START
-CLIENT_CONNECTED
-CLIENT_CLOSE
-CLIENT_SHUTDOWN
-CLIENT_RESET
-CLIENT_SELF_TESTING
-
- */
-
+#include "clienthandler.h"
+#include "endpoint.h"
 
 Endpoint::Endpoint(SocketPtr socket) : socket{socket} {
 }
 
 Endpoint::~Endpoint() {
-    sendMsg("CLIENT_CLOSE");
+    ClientClose msg;
+    sendMsg(msg);
 }
 
 long Endpoint::connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups) {
@@ -67,11 +54,8 @@ long Endpoint::connect() {
 long Endpoint::registerApp() {
     moba::JsonObjectPtr obj{new moba::JsonObject{}};
 
-    (*obj)["appName"  ] = moba::toJsonStringPtr(appName);
-    (*obj)["version"  ] = version.toJsonPtr();
-    (*obj)["msgGroups"] = groups;
+    ClientStart msg{appName, version, groups};
 
-   // Message msg{"CLIENT_START", obj};
     //sendMsg(msg);
     auto mptr = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
 /*
@@ -111,29 +95,8 @@ moba::MessagePtr Endpoint::recieveMsg(time_t timeoutSec) {
     return decoder.decodeMsg();
 }
 
-void Endpoint::sendMsg(const std::string &msgType, const moba::JsonItemPtr &msgData) {
-    moba::JsonObject obj;
-    obj["msgType"] = moba::toJsonStringPtr(msgType);
-    obj["msgData"] = msgData;
-    sendMsg(obj);
-}
-
-void Endpoint::sendMsg(const std::string &msgType, const std::string &msgData) {
-    moba::JsonObject obj;
-    obj["msgType"] = moba::toJsonStringPtr(msgType);
-    obj["msgData"] = moba::toJsonStringPtr(msgData);
-    sendMsg(obj);
-}
-
-void Endpoint::sendMsg(const std::string &msgType) {
-    moba::JsonObject obj;
-    obj["msgType"] = moba::toJsonStringPtr(msgType);
-    obj["msgData"] = moba::toJsonNULLPtr();
-    sendMsg(obj);
-}
-
-void Endpoint::sendMsg(const moba::JsonObject &obj) {
-    std::string s = obj.getJsonString();
+void Endpoint::sendMsg(const DispatchMessage &msg) {
+    std::string s = msg.getRawMessage();
     ssize_t c = ::send(socket->getSocket(), s.c_str(), s.length(), 0);
     if(c == -1 || c != s.length()) {
         throw SocketException{"sending <" + s + "> failed"};

@@ -20,11 +20,12 @@
 
 #pragma once
 
-#include "socket.h"
-
 #include <moba/version.h>
 #include <moba/jsonabstractitem.h>
 #include <moba/message.h>
+
+#include "basemessage.h"
+#include "socket.h"
 
 class Endpoint {
     public:
@@ -39,18 +40,7 @@ class Endpoint {
 
         auto recieveMsg(time_t timeoutSec) -> moba::MessagePtr;
 
-        void sendVoid() {sendMsg("VOID");}
-
-        void sendEchoReq(const std::string &data) {sendMsg("ECHO_REQ", data);}
-
-        // ---- message transmission ----
-        void sendMsg(const std::string &msgType, const moba::JsonItemPtr &msgData);
-
-        void sendMsg(const std::string &msgType, const std::string &msgData);
-
-        void sendMsg(const std::string &msgType);
-
-        void sendMsg(const moba::JsonObject &obj);
+        void sendMsg(const DispatchMessage &msg);
 
     protected:
         SocketPtr socket;
