@@ -20,8 +20,10 @@
 
 #pragma once
 
-#include "basemessage.h"
 #include <moba/version.h>
+#include <memory>
+
+#include "basemessage.h"
 
 class ClientVoid : public RecieveMessage, public DispatchMessage {
     public:
