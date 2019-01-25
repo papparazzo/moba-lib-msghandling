@@ -23,6 +23,7 @@
 #include <unordered_map>
 #include <string>
 #include <functional>
+#include <memory>
 
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
@@ -34,7 +35,7 @@ T convert(const std::string &input) {
 
 class Registry {
     public:
-        using DefHandler = std::function<void(moba::JsonItemPtr)>;
+        using HandlerFnWrapper = std::function<void(moba::JsonItemPtr)>;
 
         Registry();
         Registry(const Registry& orig);
@@ -43,39 +44,37 @@ class Registry {
         template<typename T>
         void registerHandler(std::function<void(const T&)> fn) {
             T msg;
-            handlers[msg.getMessageName()] = [fn](const std::string &input) {
-
-                T m{};
-
-                //convert(input);
-                //fn(convert(input));
+            handlers[msg.getMessageName()] = [fn](moba::JsonItemPtr data) {
+                T m{data};
+                fn(m);
             };
         }
 
-        void registerDefaultHandler(DefHandler fn) {
+        void registerDefaultHandler(HandlerFnWrapper fn) {
             defHandler = fn;
         }
 
-        bool handleMsg() {
-            std::string msgKey = "";
+        auto handleMsg(moba::JsonItemPtr data) -> bool {
+            auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+            auto msgKey = moba::castToString(o->at(BaseMessage::MSG_HEADER_NAME));
+            auto msgData = o->at(BaseMessage::MSG_HEADER_DATA);
 
             auto iter = handlers.find(msgKey);
             if(iter != handlers.end()) {
-                iter->second("bal");
+                iter->second(msgData);
                 return true;
             }
 
             if(defHandler) {
-               // defHandler();
+                defHandler(msgData);
             }
-
+            return false;
         }
 
     protected:
-        using HandlerFnWrapper = std::function<void(const std::string&)>;
         using HandlerMap = std::unordered_map<std::string, HandlerFnWrapper>;
 
-        HandlerMap handlers;
-        DefHandler defHandler;
+        HandlerMap       handlers;
+        HandlerFnWrapper defHandler;
 };
 
