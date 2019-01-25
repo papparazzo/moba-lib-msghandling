@@ -57,20 +57,20 @@ long Endpoint::registerApp() {
     ClientStart msg{appName, version, groups};
 
     sendMsg(msg);
-    auto mptr = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
-/*
-    if(!mptr || mptr->getMsgType() != Message::MT_CLIENT_CONNECTED) {
+    auto data = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
+    auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+    auto msgKey = moba::castToString(o->at(BaseMessage::MSG_HEADER_NAME));
+    auto msgData = o->at(BaseMessage::MSG_HEADER_DATA);
+
+    ClientConnected mptr{msgData};
+
+    if(msgKey != mptr.getMessageName()) {
         throw SocketException{"did not recieve CLIENT_CONNECTED"};
     }
-
-    auto item = mptr->getData();
-
-    std::shared_ptr<moba::JsonNumber<long int>> o = std::dynamic_pointer_cast<moba::JsonNumber<long int>>(item);
-    return appId = o->getVal();
- */
+    return appId = mptr.getAppId();
 }
 
-moba::MessagePtr Endpoint::recieveMsg(time_t timeoutSec) {
+moba::JsonItemPtr Endpoint::recieveMsg(time_t timeoutSec) {
     struct timeval timeout;
     fd_set         read_sock;
 
@@ -87,12 +87,12 @@ moba::MessagePtr Endpoint::recieveMsg(time_t timeoutSec) {
     }
 
     if(!FD_ISSET(sd, &read_sock)) {
-        return moba::MessagePtr{};
+        return moba::toJsonNULLPtr();
     }
 
-    moba::JsonStreamReaderSocketPtr reader{new moba::JsonStreamReaderSocket(sd)};
-    moba::JsonMsgDecoder decoder(reader);
-    return decoder.decodeMsg();
+    moba::JsonStreamReaderSocketPtr reader{new moba::JsonStreamReaderSocket{sd}};
+    moba::JsonDecoder decoder(reader);
+    return decoder.decode();
 }
 
 void Endpoint::sendMsg(const DispatchMessage &msg) {
