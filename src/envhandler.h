@@ -81,6 +81,29 @@ class EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
 
 
 /*
+    void MsgEnvHandler::sendSetAmbience(
+        JsonToggleState::ToggleState curtainUp, JsonToggleState::ToggleState mainLightOn
+    ) {
+        JsonObjectPtr obj(new JsonObject());
+        (*obj)["curtainUp"   ] = toJsonToggleStatePtr(curtainUp);
+        (*obj)["mainLightOn" ] = toJsonToggleStatePtr(mainLightOn);
+        msgep->sendMsg(Message(Message::MT_SET_AMBIENCE, obj));
+    }
+
+    void MsgEnvHandler::sendSetAmbientLight(const MsgEnvHandler::AmbientLightData &ald) {
+        JsonObjectPtr obj(new JsonObject());
+        (*obj)["red"  ] = toJsonNumberPtr(ald.red);
+        (*obj)["blue" ] = toJsonNumberPtr(ald.blue);
+        (*obj)["green"] = toJsonNumberPtr(ald.blue);
+        (*obj)["white"] = toJsonNumberPtr(ald.white);
+        msgep->sendMsg(Message(Message::MT_SET_AMBIENT_LIGHT, obj));
+    }
+}
+ * */
+
+
+
+/*
 namespace moba {
 
     class MsgEnvHandler {
