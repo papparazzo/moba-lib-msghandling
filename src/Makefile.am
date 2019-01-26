@@ -3,7 +3,8 @@ noinst_LIBRARIES = \
     libmsghandling.a
 libmsghandling_a_SOURCES = \
     socket.cpp \
-    endpoint.cpp 
+    endpoint.cpp \
+    envhandler.cpp
 
 LDFLAGS += -L/usr/local/lib
 
