@@ -24,16 +24,16 @@
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
 
-class GetEnvironment : public DispatchMessage {
+class EnvGetEnvironment : public DispatchMessage {
     public:
         virtual std::string getMessageName() const override {
             return "ENV_GET_ENVIRONMENT";
         }
 };
 
-class SetEnvironment : public RecieveMessage, public DispatchMessage {
+class EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
     public:
-        SetEnvironment(
+        EnvSetEnvironment(
             moba::JsonSwitch::Switch thunder,
             moba::JsonSwitch::Switch wind,
             moba::JsonSwitch::Switch rain,
@@ -41,9 +41,10 @@ class SetEnvironment : public RecieveMessage, public DispatchMessage {
             moba::JsonSwitch::Switch aux1,
             moba::JsonSwitch::Switch aux2,
             moba::JsonSwitch::Switch aux3
-        );
+        ) : thunder{thunder}, wind{wind}, rain{rain}, environmentSound{environmentSound}, aux1{aux1}, aux2{aux2}, aux3{aux3} {
+        }
 
-        SetEnvironment(moba::JsonItemPtr data) {
+        EnvSetEnvironment(moba::JsonItemPtr data) {
             //payload = moba::castToString(data);
         }
 
@@ -51,7 +52,17 @@ class SetEnvironment : public RecieveMessage, public DispatchMessage {
             return "ENV_SET_ENVIRONMENT";
         }
 
-        virtual moba::JsonItemPtr getData() const override;
+        virtual moba::JsonItemPtr getData() const override {
+            moba::JsonObjectPtr obj(new moba::JsonObject());
+            (*obj)["thunderStorm"      ] = moba::toJsonSwitchPtr(thunder);
+            (*obj)["wind"              ] = moba::toJsonSwitchPtr(wind);
+            (*obj)["rain"              ] = moba::toJsonSwitchPtr(rain);
+            (*obj)["environmentSound"  ] = moba::toJsonSwitchPtr(environmentSound);
+            (*obj)["aux01"             ] = moba::toJsonSwitchPtr(aux1);
+            (*obj)["aux02"             ] = moba::toJsonSwitchPtr(aux2);
+            (*obj)["aux03"             ] = moba::toJsonSwitchPtr(aux3);
+            return obj;
+        }
 
         moba::JsonSwitch::Switch getThunder() const {
             return thunder;
