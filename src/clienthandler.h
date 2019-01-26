@@ -22,6 +22,7 @@
 
 #include <moba/version.h>
 #include <memory>
+#include <string>
 
 #include "basemessage.h"
 
