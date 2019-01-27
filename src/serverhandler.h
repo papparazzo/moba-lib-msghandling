@@ -21,6 +21,8 @@
 #pragma once
 
 #include <string>
+#include <memory>
+
 #include <moba/jsonabstractitem.h>
 #include "basemessage.h"
 
@@ -44,18 +46,31 @@ class ServerMaxClientCount : public RecieveMessage {
 
 class ServerNewClientStarted : public RecieveMessage {
     public:
+        ServerNewClientStarted(moba::JsonItemPtr data) {
+            auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
+            appId = moba::castToInt(o->at("appID"));
+            addr = moba::castToString(o->at("addr"));
+            port = moba::castToInt(o->at("port"));
+            upTime = moba::castToString(o->at("upTime"));
+
+            auto oi = std::dynamic_pointer_cast<moba::JsonObject>(o->at("appInfo"));
+            appName = moba::castToString(oi->at("appName"));
+            version = moba::castToString(oi->at("version"));
+        }
+
         virtual std::string getMessageName() const override {
             return "SERVER_NEW_CLIENT_STARTED";
         }
 
-        /*
-         * appInfo	AppData
-appID	Integer
-upTime	Time
-addr	IP4
-port	Integer
+    protected:
+        int appId;
+        int port;
 
-         */
+        std::string addr;
+        std::string upTime;
+
+        std::string appName;
+        std::string version;
 };
 
 class ServerClientClosed : public RecieveMessage {
@@ -86,9 +101,6 @@ SERVER_INFO_RES
 SERVER_CON_CLIENTS_REQ
 SERVER_CON_CLIENTS_RES
 SERVER_SELF_TESTING_CLIENT
- * /
-
-
 
 
 #include "msgendpoint.h"
