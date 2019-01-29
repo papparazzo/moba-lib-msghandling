@@ -45,7 +45,14 @@ class EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
         }
 
         EnvSetEnvironment(moba::JsonItemPtr data) {
-            //payload = moba::castToString(data);
+            auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+            thunder = moba::castToSwitch(o->at("thunderStorm"));
+            wind = moba::castToSwitch(o->at("wind"));
+            rain = moba::castToSwitch(o->at("rain"));
+            environmentSound = moba::castToSwitch(o->at("environmentSound"));
+            aux01 = moba::castToSwitch(o->at("aux1"));
+            aux02 = moba::castToSwitch(o->at("aux2"));
+            aux03 = moba::castToSwitch(o->at("aux3"));
         }
 
         virtual std::string getMessageName() const override {
@@ -66,6 +73,30 @@ class EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
 
         moba::JsonSwitch::Switch getThunder() const {
             return thunder;
+        }
+
+        moba::JsonSwitch::Switch getWind() const {
+            return wind;
+        }
+
+        moba::JsonSwitch::Switch getRain() const {
+            return rain;
+        }
+
+        moba::JsonSwitch::Switch getEnvironmentSound() const {
+            return environmentSound;
+        }
+
+        moba::JsonSwitch::Switch getAux1() const {
+            return aux1;
+        }
+
+        moba::JsonSwitch::Switch getAux2() const {
+            return aux2;
+        }
+
+        moba::JsonSwitch::Switch getAux3() const {
+            return aux3;
         }
 
     protected:
