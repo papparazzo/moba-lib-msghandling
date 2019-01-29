@@ -67,7 +67,7 @@ class SystemSetStandbyMode : public DispatchMessage {
         }
 
         virtual moba::JsonItemPtr getData() const override {
-            return moba::toJsonBoolPtr(emergencyStopActive);
+            return moba::toJsonBoolPtr(standbyActive);
         }
 
     protected:
@@ -81,47 +81,54 @@ class SystemGetHardwareState : public DispatchMessage {
         }
 };
 
+class SystemHardwareStateChanged : public RecieveMessage {
+    public:
+        enum HardwareState {
+            ERROR,
+            STANDBY,
+            EMERGENCY_STOP,
+            MANUEL,
+            AUTOMATIC
+        };
 
+        SystemHardwareStateChanged(moba::JsonItemPtr data) {
+            std::string status = moba::castToString(data);
+            if(status == "ERROR") {
+                hardwareState = ERROR;
+            } else if(status == "EMERGENCY_STOP") {
+                hardwareState = EMERGENCY_STOP;
+            } else if(status == "STANDBY") {
+                hardwareState = STANDBY;
+            } else if(status == "MANUEL") {
+                hardwareState = MANUEL;
+            } else if(status == "AUTOMATIC") {
+                hardwareState = AUTOMATIC;
+            }
+        }
 
+        virtual std::string getMessageName() const override {
+            return "SYSTEM_HARDWARE_STATE_CHANGED";
+        }
 
+        int getHardwareState() {
+            return hardwareState;
+        }
 
-/*
+    protected:
+        HardwareState hardwareState;
+};
 
+class SystemHardwareShutdown : public DispatchMessage {
+    public:
+        virtual std::string getMessageName() const override {
+            return "SYSTEM_HARDWARE_SHUTDOWN";
+        }
+};
 
-SYSTEM_HARDWARE_STATE_CHANGED
-SYSTEM_HARDWARE_SHUTDOWN
-SYSTEM_HARDWARE_RESET
-
- */
-
-
-
-
-
-
-
-
-            void sendSetAutomaticMode(bool on) {msgep->sendMsg(Message::MT_SET_AUTOMATIC_MODE, toJsonBoolPtr(on));}
-
-            void sendSetEmergencyStop(bool on) {msgep->sendMsg(Message::MT_SET_EMERGENCY_STOP, toJsonBoolPtr(on));}
-
-            void sendSetStandByMode(bool on) {msgep->sendMsg(Message::MT_SET_STANDBY_MODE, toJsonBoolPtr(on));}
-
-            void sendGetHardwareState()  {msgep->sendMsg(Message::MT_GET_HARDWARE_STATE);}
-
-            void sendHardwareShutdown() {msgep->sendMsg(Message::MT_HARDWARE_SHUTDOWN);}
-
-            void sendHardwareReset() {msgep->sendMsg(Message::MT_HARDWARE_RESET);}
-
-            enum NoticeType {
-                NT_INFO,
-                NT_WARNING,
-                NT_ERROR
-            };
-
-            void sendSystemNotice(NoticeType type, const std::string &caption, const std::string &text);
-
-        protected:
-            MsgEndpointPtr msgep;
-    };
+class SystemHardwareReset : public DispatchMessage {
+    public:
+        virtual std::string getMessageName() const override {
+            return "SYSTEM_HARDWARE_RESET";
+        }
+};
 
