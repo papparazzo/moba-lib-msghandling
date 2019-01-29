@@ -71,7 +71,7 @@ class ClientEchoRes : public RecieveMessage {
 class ClientError : public RecieveMessage {
     public:
         ClientError(moba::JsonItemPtr data) {
-            moba::JsonObjectPtr o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+            auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
             errorId = moba::castToString(o->at("errorId"));
             additionalMsg = moba::castToString(o->at("additonalMsg"));
         }
