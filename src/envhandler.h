@@ -109,62 +109,105 @@ class EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
         moba::JsonSwitch::Switch aux3;
 };
 
+class EnvGetAmbience : public DispatchMessage {
+    public:
+        virtual std::string getMessageName() const override {
+            return "ENV_GET_AMBIENCE";
+        }
+};
 
+class EnvSetAmbience : public RecieveMessage, public DispatchMessage {
+    public:
+        EnvSetAmbience(
+            moba::JsonToggleState::ToggleState curtainUp,
+            moba::JsonToggleState::ToggleState mainLightOn
+        ) : curtainUp{curtainUp}, mainLightOn{mainLightOn} {
+        }
 
-/*
-    void MsgEnvHandler::sendSetAmbience(
-        JsonToggleState::ToggleState curtainUp, JsonToggleState::ToggleState mainLightOn
-    ) {
-        JsonObjectPtr obj(new JsonObject());
-        (*obj)["curtainUp"   ] = toJsonToggleStatePtr(curtainUp);
-        (*obj)["mainLightOn" ] = toJsonToggleStatePtr(mainLightOn);
-        msgep->sendMsg(Message(Message::MT_SET_AMBIENCE, obj));
-    }
+        EnvSetAmbience(moba::JsonItemPtr data) {
+            auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+            curtainUp = moba::castToJsonToggleState(o->at("curtainUp"));
+            mainLightOn = moba::castToJsonToggleState(o->at("mainLightOn"));
+        }
 
-    void MsgEnvHandler::sendSetAmbientLight(const MsgEnvHandler::AmbientLightData &ald) {
-        JsonObjectPtr obj(new JsonObject());
-        (*obj)["red"  ] = toJsonNumberPtr(ald.red);
-        (*obj)["blue" ] = toJsonNumberPtr(ald.blue);
-        (*obj)["green"] = toJsonNumberPtr(ald.blue);
-        (*obj)["white"] = toJsonNumberPtr(ald.white);
-        msgep->sendMsg(Message(Message::MT_SET_AMBIENT_LIGHT, obj));
-    }
-}
- * */
+        virtual std::string getMessageName() const override {
+            return "ENV_SET_AMBIENCE";
+        }
 
+        virtual moba::JsonItemPtr getData() const override {
+            moba::JsonObjectPtr obj(new moba::JsonObject());
+            (*obj)["curtainUp"  ] = moba::toJsonToggleStatePtr(curtainUp);
+            (*obj)["mainLightOn"] = moba::toJsonToggleStatePtr(mainLightOn);
+            return obj;
+        }
 
+        moba::JsonSwitch::Switch getCurtainUp() const {
+            return curtainUp;
+        }
 
-/*
-namespace moba {
+        moba::JsonSwitch::Switch getMainLightOn() const {
+            return mainLightOn;
+        }
 
-    class MsgEnvHandler {
-        public:
+    protected:
+        moba::JsonToggleState::ToggleState curtainUp,
+        moba::JsonToggleState::ToggleState mainLightOn
+};
 
-            void sendGetAmbience() {msgep->sendMsg(Message::MT_GET_AMBIENCE);}
+class EnvGetAmbientLight : public DispatchMessage {
+    public:
+        virtual std::string getMessageName() const override {
+            return "ENV_GET_AMBIENT_LIGHT";
+        }
+};
 
-            void sendSetAmbience(JsonToggleState::ToggleState curtainUp, JsonToggleState::ToggleState mainLightOn);
+class EnvSetAmbientLight : public RecieveMessage, public DispatchMessage {
+    public:
+        EnvSetAmbientLight(
+            int red, int blue, int green, int white
+        ) : red{red}, blue{blue}, green{green}, white{white} {
+        }
 
-            void sendGetAmbientLight() {msgep->sendMsg(Message::MT_GET_AMBIENT_LIGHT);}
+        EnvSetAmbience(moba::JsonItemPtr data) {
+            auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+            red = moba::castToInt(o->at("red"));
+            blue = moba::castToInt(o->at("blue"));
+            green = moba::castToInt(o->at("green"));
+            white = moba::castToInt(o->at("white"));
+        }
 
-            struct AmbientLightData {
-                AmbientLightData() {};
-                AmbientLightData(int red, int blue, int green, int white) {
-                    this->red = red;
-                    this->blue = blue;
-                    this->green = green;
-                    this->white = white;
-                }
-                int red;
-                int blue;
-                int green;
-                int white;
-            };
+        virtual std::string getMessageName() const override {
+            return "ENV_SET_AMBIENT_LIGHT";
+        }
 
-            void sendSetAmbientLight(const AmbientLightData &ald);
+        virtual moba::JsonItemPtr getData() const override {
+            moba::JsonObjectPtr obj(new moba::JsonObject());
+            (*obj)["red"  ] = moba::toJsonNumberPtr(red);
+            (*obj)["blue" ] = moba::toJsonNumberPtr(blue);
+            (*obj)["green"] = moba::toJsonNumberPtr(green);
+            (*obj)["white"] = moba::toJsonNumberPtr(white);
+            return obj;
+        }
 
-        protected:
-            MsgEndpointPtr msgep;
+        int getRed() const {
+            return red;
+        }
 
-    };
-}
-*/
+        int getBlue() const {
+            return blue;
+        }
+
+        int getGreen() const {
+            return green;
+        }
+
+        int getWhite() const {
+            return white;
+        }
+
+    protected:
+        int red;
+        int blue;
+        int green;
+        int white;
+};
