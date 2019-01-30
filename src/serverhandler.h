@@ -108,11 +108,10 @@ class ServerResetClient : public DispatchMessage {
         long appId;
 };
 
-class ServerInfoReq : public DispatchMessage {
-    public:
-        virtual std::string getMessageName() const override {
-            return "SERVER_INFO_REQ";
-        }
+struct ServerInfoReq : public DispatchMessage {
+    virtual std::string getMessageName() const override {
+        return "SERVER_INFO_REQ";
+    }
 };
 
 class ServerInfoRes : public RecieveMessage {
@@ -206,22 +205,8 @@ class ServerInfoRes : public RecieveMessage {
         std::string fwVersion;
 };
 
-
-
-/*
-
-
-
-SERVER_CON_CLIENTS_REQ
-SERVER_CON_CLIENTS_RES
-SERVER_SELF_TESTING_CLIENT
-
-
-
-void sendSelfTestingClient(long id) {msgep->sendMsg(Message::MT_SELF_TESTING_CLIENT, toJsonNumberPtr(id));}
-
-void sendServerInfoReq() {msgep->sendMsg(Message::MT_SERVER_INFO_REQ);}
-
-void sendConClientsReq() {msgep->sendMsg(Message::MT_CON_CLIENTS_REQ);}
-
-*/
+struct ServerConClientsReq : public DispatchMessage {
+    virtual std::string getMessageName() const override {
+        return "SERVER_CON_CLIENTS_REQ";
+    }
+};
