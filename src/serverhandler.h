@@ -115,22 +115,113 @@ class ServerInfoReq : public DispatchMessage {
         }
 };
 
+class ServerInfoRes : public RecieveMessage {
+    public:
+        ServerInfoRes(moba::JsonItemPtr data) {
+            auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
+            appName = moba::castToString(o->at("appName"));
+            version = moba::Version{moba::castToString(o->at("version"))};
+            buildDate = moba::castToString(o->at("buildDate"));
+            startTime = moba::castToString(o->at("startTime"));
+            upTime = moba::castToString(o->at("upTime"));
+            maxClients = moba::castToInt(o->at("maxClients"));
+            connectedClients = moba::castToInt(o->at("connectedClients"));
+            supportedMessages = moba::castToString(o->at("supportedMessages"));
+            osArch = moba::castToString(o->at("osArch"));
+            osName = moba::castToString(o->at("osName"));
+            osVersion = moba::castToString(o->at("osVersion"));
+            fwType = moba::castToString(o->at("fwType"));
+            fwVersion = moba::castToString(o->at("fwVersion"));
+        }
+
+        virtual std::string getMessageName() const override {
+            return "SERVER_INFO_RES";
+        }
+
+        std::string getAppName() {
+            return appName;
+        }
+
+        moba::Version getVersion() {
+            return version;
+        }
+
+        std::string getBuildDate() {
+            return buildDate;
+        }
+
+        std::string getStartTime() {
+            return startTime;
+        }
+
+        std::string getUpTime() {
+            return upTime;
+        }
+
+        int getMaxClients() {
+            return maxClients;
+        }
+
+        int getConnectedClients() {
+            return connectedClients;
+        }
+
+        std::string getSupportedMessages() {
+            return supportedMessages;
+        }
+
+        std::string getOsArch() {
+            return osArch;
+        }
+
+        std::string getOsName() {
+            return osName;
+        }
+
+        std::string getOsVersion() {
+            return osVersion;
+        }
+
+        std::string getFwType() {
+            return fwType;
+        }
+
+        std::string getFwVersion() {
+            return fwVersion;
+        }
+
+    protected:
+        std::string appName;
+        moba::Version version;
+        std::string buildDate;
+        std::string startTime;
+        std::string upTime;
+        int maxClients;
+        int connectedClients;
+        std::string supportedMessages;
+        std::string osArch;
+        std::string osName;
+        std::string osVersion;
+        std::string fwType;
+        std::string fwVersion;
+};
+
 
 
 /*
 
 
-SERVER_INFO_RES
+
 SERVER_CON_CLIENTS_REQ
 SERVER_CON_CLIENTS_RES
 SERVER_SELF_TESTING_CLIENT
 
 
 
-            void sendSelfTestingClient(long id) {msgep->sendMsg(Message::MT_SELF_TESTING_CLIENT, toJsonNumberPtr(id));}
+void sendSelfTestingClient(long id) {msgep->sendMsg(Message::MT_SELF_TESTING_CLIENT, toJsonNumberPtr(id));}
 
-            void sendServerInfoReq() {msgep->sendMsg(Message::MT_SERVER_INFO_REQ);}
+void sendServerInfoReq() {msgep->sendMsg(Message::MT_SERVER_INFO_REQ);}
 
-            void sendConClientsReq() {msgep->sendMsg(Message::MT_CON_CLIENTS_REQ);}
+void sendConClientsReq() {msgep->sendMsg(Message::MT_CON_CLIENTS_REQ);}
 
 */
