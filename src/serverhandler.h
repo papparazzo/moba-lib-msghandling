@@ -91,34 +91,41 @@ class ServerClientClosed : public RecieveMessage {
         int clientId;
 };
 
+class ServerResetClient : public DispatchMessage {
+    public:
+        ServerResetClient(long appId) : appId{appId} {
+        }
+
+        virtual std::string getMessageName() const override {
+            return "SERVER_RESET_CLIENT";
+        }
+
+        virtual moba::JsonItemPtr getData() const override {
+            return moba::toJsonNumberPtr(appId);
+        }
+
+    protected:
+        long appId;
+};
+
+class ServerInfoReq : public DispatchMessage {
+    public:
+        virtual std::string getMessageName() const override {
+            return "SERVER_INFO_REQ";
+        }
+};
 
 
 
 /*
-SERVER_RESET_CLIENT
-SERVER_INFO_REQ
+
+
 SERVER_INFO_RES
 SERVER_CON_CLIENTS_REQ
 SERVER_CON_CLIENTS_RES
 SERVER_SELF_TESTING_CLIENT
 
 
-#include "msgendpoint.h"
-#include "jsonabstractitem.h"
-#include "message.h"
-
-namespace moba {
-
-    class MsgServerHandler {
-
-        public:
-            MsgServerHandler(MsgEndpointPtr msgep) : msgep(msgep) {
-            }
-
-            virtual ~MsgServerHandler() {
-            }
-
-            void sendResetClient(long id) {msgep->sendMsg(Message::MT_RESET_CLIENT, toJsonNumberPtr(id));}
 
             void sendSelfTestingClient(long id) {msgep->sendMsg(Message::MT_SELF_TESTING_CLIENT, toJsonNumberPtr(id));}
 
@@ -126,8 +133,4 @@ namespace moba {
 
             void sendConClientsReq() {msgep->sendMsg(Message::MT_CON_CLIENTS_REQ);}
 
-        protected:
-            MsgEndpointPtr msgep;
-    };
-}
 */
