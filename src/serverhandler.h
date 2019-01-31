@@ -24,88 +24,74 @@
 #include <memory>
 
 #include <moba/jsonabstractitem.h>
+
 #include "basemessage.h"
+#include "shared.h"
 
-class ServerMaxClientCount : public RecieveMessage {
-    public:
-        ServerMaxClientCount(moba::JsonItemPtr data) {
-            maxClientCount = moba::castToInt(data);
-        }
+struct ServerMaxClientCount : public RecieveMessage {
+    ServerMaxClientCount(moba::JsonItemPtr data) {
+        maxClientCount = moba::castToInt(data);
+    }
 
-        virtual std::string getMessageName() const override {
-            return "SERVER_MAX_CLIENT_COUNT";
-        }
+    virtual std::string getMessageName() const override {
+        return "SERVER_MAX_CLIENT_COUNT";
+    }
 
-        std::string getMaxClientCount() {
-            return maxClientCount;
-        }
-
-    protected:
-        int maxClientCount;
+    int maxClientCount;
 };
 
-class ServerNewClientStarted : public RecieveMessage {
-    public:
-        ServerNewClientStarted(moba::JsonItemPtr data) {
-            auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-            appId = moba::castToInt(o->at("appID"));
-            addr = moba::castToString(o->at("addr"));
-            port = moba::castToInt(o->at("port"));
-            upTime = moba::castToString(o->at("upTime"));
+struct ServerNewClientStarted : public RecieveMessage {
+    ServerNewClientStarted(moba::JsonItemPtr data) {
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
+        appId = moba::castToInt(o->at("appID"));
+        addr = moba::castToString(o->at("addr"));
+        port = moba::castToInt(o->at("port"));
+        upTime = moba::castToString(o->at("upTime"));
 
-            auto oi = std::dynamic_pointer_cast<moba::JsonObject>(o->at("appInfo"));
-            appName = moba::castToString(oi->at("appName"));
-            version = moba::castToString(oi->at("version"));
-        }
+        auto oi = std::dynamic_pointer_cast<moba::JsonObject>(o->at("appInfo"));
+        appName = moba::castToString(oi->at("appName"));
+        version = moba::castToString(oi->at("version"));
+    }
 
-        virtual std::string getMessageName() const override {
-            return "SERVER_NEW_CLIENT_STARTED";
-        }
+    virtual std::string getMessageName() const override {
+        return "SERVER_NEW_CLIENT_STARTED";
+    }
 
-    protected:
-        int appId;
-        int port;
+    int appId;
+    int port;
 
-        std::string addr;
-        std::string upTime;
+    std::string addr;
+    std::string upTime;
 
-        std::string appName;
-        std::string version;
+    std::string appName;
+    std::string version;
 };
 
-class ServerClientClosed : public RecieveMessage {
-    public:
-        ServerClientClosed(moba::JsonItemPtr data) {
-            clientId = moba::castToInt(data);
-        }
+struct ServerClientClosed : public RecieveMessage {
+    ServerClientClosed(moba::JsonItemPtr data) {
+        clientId = moba::castToInt(data);
+    }
 
-        virtual std::string getMessageName() const override {
-            return "SERVER_CLIENT_CLOSED";
-        }
+    virtual std::string getMessageName() const override {
+        return "SERVER_CLIENT_CLOSED";
+    }
 
-        int getClientId() {
-            return clientId;
-        }
-
-    protected:
-        int clientId;
+    int clientId;
 };
 
-class ServerResetClient : public DispatchMessage {
-    public:
-        ServerResetClient(long appId) : appId{appId} {
-        }
+struct ServerResetClient : public DispatchMessage {
+    ServerResetClient(long appId) : appId{appId} {
+    }
 
-        virtual std::string getMessageName() const override {
-            return "SERVER_RESET_CLIENT";
-        }
+    virtual std::string getMessageName() const override {
+        return "SERVER_RESET_CLIENT";
+    }
 
-        virtual moba::JsonItemPtr getData() const override {
-            return moba::toJsonNumberPtr(appId);
-        }
+    virtual moba::JsonItemPtr getData() const override {
+        return moba::toJsonNumberPtr(appId);
+    }
 
-    protected:
-        long appId;
+    long appId;
 };
 
 struct ServerInfoReq : public DispatchMessage {
@@ -114,99 +100,72 @@ struct ServerInfoReq : public DispatchMessage {
     }
 };
 
-class ServerInfoRes : public RecieveMessage {
-    public:
-        ServerInfoRes(moba::JsonItemPtr data) {
-            auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-            appName = moba::castToString(o->at("appName"));
-            version = moba::Version{moba::castToString(o->at("version"))};
-            buildDate = moba::castToString(o->at("buildDate"));
-            startTime = moba::castToString(o->at("startTime"));
-            upTime = moba::castToString(o->at("upTime"));
-            maxClients = moba::castToInt(o->at("maxClients"));
-            connectedClients = moba::castToInt(o->at("connectedClients"));
-            supportedMessages = moba::castToString(o->at("supportedMessages"));
-            osArch = moba::castToString(o->at("osArch"));
-            osName = moba::castToString(o->at("osName"));
-            osVersion = moba::castToString(o->at("osVersion"));
-            fwType = moba::castToString(o->at("fwType"));
-            fwVersion = moba::castToString(o->at("fwVersion"));
-        }
+struct ServerInfoRes : public RecieveMessage {
+    ServerInfoRes(moba::JsonItemPtr data) {
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
+        appName = moba::castToString(o->at("appName"));
+        version = moba::Version{moba::castToString(o->at("version"))};
+        buildDate = moba::castToString(o->at("buildDate"));
+        startTime = moba::castToString(o->at("startTime"));
+        upTime = moba::castToString(o->at("upTime"));
+        maxClients = moba::castToInt(o->at("maxClients"));
+        connectedClients = moba::castToInt(o->at("connectedClients"));
+        supportedMessages = moba::castToString(o->at("supportedMessages"));
+        osArch = moba::castToString(o->at("osArch"));
+        osName = moba::castToString(o->at("osName"));
+        osVersion = moba::castToString(o->at("osVersion"));
+        fwType = moba::castToString(o->at("fwType"));
+        fwVersion = moba::castToString(o->at("fwVersion"));
+    }
 
-        virtual std::string getMessageName() const override {
-            return "SERVER_INFO_RES";
-        }
+    virtual std::string getMessageName() const override {
+        return "SERVER_INFO_RES";
+    }
 
-        std::string getAppName() {
-            return appName;
-        }
-
-        moba::Version getVersion() {
-            return version;
-        }
-
-        std::string getBuildDate() {
-            return buildDate;
-        }
-
-        std::string getStartTime() {
-            return startTime;
-        }
-
-        std::string getUpTime() {
-            return upTime;
-        }
-
-        int getMaxClients() {
-            return maxClients;
-        }
-
-        int getConnectedClients() {
-            return connectedClients;
-        }
-
-        std::string getSupportedMessages() {
-            return supportedMessages;
-        }
-
-        std::string getOsArch() {
-            return osArch;
-        }
-
-        std::string getOsName() {
-            return osName;
-        }
-
-        std::string getOsVersion() {
-            return osVersion;
-        }
-
-        std::string getFwType() {
-            return fwType;
-        }
-
-        std::string getFwVersion() {
-            return fwVersion;
-        }
-
-    protected:
-        std::string appName;
-        moba::Version version;
-        std::string buildDate;
-        std::string startTime;
-        std::string upTime;
-        int maxClients;
-        int connectedClients;
-        std::string supportedMessages;
-        std::string osArch;
-        std::string osName;
-        std::string osVersion;
-        std::string fwType;
-        std::string fwVersion;
+    std::string appName;
+    moba::Version version;
+    std::string buildDate;
+    std::string startTime;
+    std::string upTime;
+    int maxClients;
+    int connectedClients;
+    std::string supportedMessages;
+    std::string osArch;
+    std::string osName;
+    std::string osVersion;
+    std::string fwType;
+    std::string fwVersion;
 };
 
 struct ServerConClientsReq : public DispatchMessage {
     virtual std::string getMessageName() const override {
         return "SERVER_CON_CLIENTS_REQ";
     }
+};
+
+struct ServerConClientsRes : public RecieveMessage {
+    ServerClientClosed(moba::JsonItemPtr data) {
+        clientId = moba::castToInt(data);
+    }
+
+    virtual std::string getMessageName() const override {
+        return "SERVER_CON_CLIENTS_RES";
+    }
+
+    int clientId;
+};
+
+struct ServerResetClient : public DispatchMessage {
+    ServerResetClient(long appId) : appId{appId} {
+    }
+
+    virtual std::string getMessageName() const override {
+        return "SERVER_SELF_TESTING_CLIENT";
+    }
+
+    virtual moba::JsonItemPtr getData() const override {
+        return moba::toJsonNumberPtr(appId);
+    }
+
+    long appId;
 };

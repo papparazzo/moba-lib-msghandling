@@ -23,112 +23,98 @@
 #include <moba/jsonabstractitem.h>
 #include "basemessage.h"
 
-class SystemSetAutomaticMode : public DispatchMessage {
-    public:
-        SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
-        }
+struct SystemSetAutomaticMode : public DispatchMessage {
 
-        virtual std::string getMessageName() const override {
-            return "SYSTEM_SET_AUTOMATIC_MODE";
-        }
+    SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
+    }
 
-        virtual moba::JsonItemPtr getData() const override {
-            return moba::toJsonBoolPtr(automaticActive);
-        }
+    virtual std::string getMessageName() const override {
+        return "SYSTEM_SET_AUTOMATIC_MODE";
+    }
 
-    protected:
-        bool automaticActive;
+    virtual moba::JsonItemPtr getData() const override {
+        return moba::toJsonBoolPtr(automaticActive);
+    }
+
+    bool automaticActive;
 };
 
-class SystemSetEmergencyStop : public DispatchMessage {
-    public:
-        SystemSetEmergencyStop(bool emergencyStopActive) : emergencyStopActive{emergencyStopActive} {
-        }
+struct SystemSetEmergencyStop : public DispatchMessage {
 
-        virtual std::string getMessageName() const override {
-            return "SYSTEM_SET_EMERGENCY_STOP";
-        }
+    SystemSetEmergencyStop(bool emergencyStopActive) : emergencyStopActive{emergencyStopActive} {
+    }
 
-        virtual moba::JsonItemPtr getData() const override {
-            return moba::toJsonBoolPtr(emergencyStopActive);
-        }
+    virtual std::string getMessageName() const override {
+        return "SYSTEM_SET_EMERGENCY_STOP";
+    }
 
-    protected:
-        bool emergencyStopActive;
+    virtual moba::JsonItemPtr getData() const override {
+        return moba::toJsonBoolPtr(emergencyStopActive);
+    }
+
+    bool emergencyStopActive;
 };
 
-class SystemSetStandbyMode : public DispatchMessage {
-    public:
-        SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
-        }
+struct SystemSetStandbyMode : public DispatchMessage {
+    SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
+    }
 
-        virtual std::string getMessageName() const override {
-            return "SYSTEM_SET_STANDBY_MODE";
-        }
+    virtual std::string getMessageName() const override {
+        return "SYSTEM_SET_STANDBY_MODE";
+    }
 
-        virtual moba::JsonItemPtr getData() const override {
-            return moba::toJsonBoolPtr(standbyActive);
-        }
+    virtual moba::JsonItemPtr getData() const override {
+        return moba::toJsonBoolPtr(standbyActive);
+    }
 
-    protected:
-        bool standbyActive;
+    bool standbyActive;
 };
 
-class SystemGetHardwareState : public DispatchMessage {
-    public:
-        virtual std::string getMessageName() const override {
-            return "SYSTEM_SET_STANDBY_MODE";
-        }
+struct SystemGetHardwareState : public DispatchMessage {
+    virtual std::string getMessageName() const override {
+        return "SYSTEM_SET_STANDBY_MODE";
+    }
 };
 
-class SystemHardwareStateChanged : public RecieveMessage {
-    public:
-        enum HardwareState {
-            ERROR,
-            STANDBY,
-            EMERGENCY_STOP,
-            MANUEL,
-            AUTOMATIC
-        };
+struct SystemHardwareStateChanged : public RecieveMessage {
+    enum HardwareState {
+        ERROR,
+        STANDBY,
+        EMERGENCY_STOP,
+        MANUEL,
+        AUTOMATIC
+    };
 
-        SystemHardwareStateChanged(moba::JsonItemPtr data) {
-            std::string status = moba::castToString(data);
-            if(status == "ERROR") {
-                hardwareState = ERROR;
-            } else if(status == "EMERGENCY_STOP") {
-                hardwareState = EMERGENCY_STOP;
-            } else if(status == "STANDBY") {
-                hardwareState = STANDBY;
-            } else if(status == "MANUEL") {
-                hardwareState = MANUEL;
-            } else if(status == "AUTOMATIC") {
-                hardwareState = AUTOMATIC;
-            }
+    SystemHardwareStateChanged(moba::JsonItemPtr data) {
+        std::string status = moba::castToString(data);
+        if(status == "ERROR") {
+            hardwareState = ERROR;
+        } else if(status == "EMERGENCY_STOP") {
+            hardwareState = EMERGENCY_STOP;
+        } else if(status == "STANDBY") {
+            hardwareState = STANDBY;
+        } else if(status == "MANUEL") {
+            hardwareState = MANUEL;
+        } else if(status == "AUTOMATIC") {
+            hardwareState = AUTOMATIC;
         }
+    }
 
-        virtual std::string getMessageName() const override {
-            return "SYSTEM_HARDWARE_STATE_CHANGED";
-        }
+    virtual std::string getMessageName() const override {
+        return "SYSTEM_HARDWARE_STATE_CHANGED";
+    }
 
-        int getHardwareState() {
-            return hardwareState;
-        }
-
-    protected:
-        HardwareState hardwareState;
+    HardwareState hardwareState;
 };
 
-class SystemHardwareShutdown : public DispatchMessage {
-    public:
-        virtual std::string getMessageName() const override {
-            return "SYSTEM_HARDWARE_SHUTDOWN";
-        }
+struct SystemHardwareShutdown : public DispatchMessage {
+    virtual std::string getMessageName() const override {
+        return "SYSTEM_HARDWARE_SHUTDOWN";
+    }
 };
 
-class SystemHardwareReset : public DispatchMessage {
-    public:
-        virtual std::string getMessageName() const override {
-            return "SYSTEM_HARDWARE_RESET";
-        }
+struct SystemHardwareReset : public DispatchMessage {
+    virtual std::string getMessageName() const override {
+        return "SYSTEM_HARDWARE_RESET";
+    }
 };
-
