@@ -67,7 +67,7 @@ long Endpoint::registerApp() {
     if(msgKey != mptr.getMessageName()) {
         throw SocketException{"did not recieve CLIENT_CONNECTED"};
     }
-    return appId = mptr.getAppId();
+    return appId = mptr.appId;
 }
 
 moba::JsonItemPtr Endpoint::recieveMsg(time_t timeoutSec) {
