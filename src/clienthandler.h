@@ -25,6 +25,7 @@
 #include <string>
 
 #include "basemessage.h"
+#include "shared.h"
 
 struct ClientVoid : public RecieveMessage, public DispatchMessage {
     virtual std::string getMessageName() const override {
@@ -75,9 +76,7 @@ struct ClientError : public RecieveMessage {
 };
 
 struct ClientStart : public DispatchMessage {
-    ClientStart(
-        const std::string &appName, const moba::Version &version, moba::JsonArrayPtr groups
-    ) : appName{appName}, version{version}, groups{groups} {
+    ClientStart(const AppData &appData) : appData{appData} {
     }
 
     virtual std::string getMessageName() const override {
@@ -86,15 +85,13 @@ struct ClientStart : public DispatchMessage {
 
     virtual moba::JsonItemPtr getData() const override {
         moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["appName"  ] = moba::toJsonStringPtr(appName);
-        (*obj)["version"  ] = version.toJsonPtr();
-        (*obj)["msgGroups"] = groups;
+        (*obj)["appName"  ] = moba::toJsonStringPtr(appData.appName);
+        (*obj)["version"  ] = appData.version.toJsonPtr();
+        (*obj)["msgGroups"] = appData.groups;
         return obj;
     }
 
-    std::string appName;
-    moba::Version version;
-    moba::JsonArrayPtr groups;
+    AppData appData;
 };
 
 struct ClientConnected : public RecieveMessage {
