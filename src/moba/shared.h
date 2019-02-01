@@ -35,7 +35,7 @@ struct AppData {
     AppData(moba::JsonObjectPtr appData) {
         appName = moba::castToString(appData->at("appName"));
         version = moba::castToString(appData->at("version"));
-        groups = std::dynamic_pointer_cast<moba::JsonArray>(appData->at("msgGroups"));
+        groups = boost::dynamic_pointer_cast<moba::JsonArray>(appData->at("msgGroups"));
     }
 
     std::string appName;
@@ -51,13 +51,13 @@ struct EndpointData {
     }
 
     EndpointData(moba::JsonObjectPtr appData) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(appData);
+        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(appData);
         appId = moba::castToInt(o->at("appID"));
         addr = moba::castToString(o->at("addr"));
         port = moba::castToInt(o->at("port"));
         upTime = moba::castToString(o->at("upTime"));
 
-        auto oi = std::dynamic_pointer_cast<moba::JsonObject>(o->at("appInfo"));
+        auto oi = boost::dynamic_pointer_cast<moba::JsonObject>(o->at("appInfo"));
         appInfo = AppData{oi};
     }
 
