@@ -47,7 +47,7 @@ struct AppData {
 struct EndpointData {
     EndpointData(
         const AppData &appInfo, long appId, const std::string &upTime, const std::string &addr, long port
-    ) : appInfo{appInfo}, appId{appInfo}, upTime{upTime}, addr{addr} {
+    ) : appInfo{appInfo}, appId{appId}, upTime{upTime}, addr{addr} {
     }
 
     EndpointData(moba::JsonObjectPtr appData) {
