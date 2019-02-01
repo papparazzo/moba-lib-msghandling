@@ -24,6 +24,9 @@
 #include <memory>
 
 struct AppData {
+    AppData() {
+    }
+
     AppData(
         const std::string &appName, const moba::Version &version, moba::JsonArrayPtr groups
     ) : appName{appName}, version{version}, groups{groups} {
