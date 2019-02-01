@@ -42,21 +42,25 @@ struct AppData {
 };
 
 struct EndpointData {
+    EndpointData(
+        const AppData &appInfo, long appId, const std::string &upTime, const std::string &addr, long port
+    ) : appInfo{appInfo}, appId{appInfo}, upTime{upTime}, addr{addr} {
+    }
+
+    EndpointData(moba::JsonObjectPtr appData) {
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(appData);
+        appId = moba::castToInt(o->at("appID"));
+        addr = moba::castToString(o->at("addr"));
+        port = moba::castToInt(o->at("port"));
+        upTime = moba::castToString(o->at("upTime"));
+
+        auto oi = std::dynamic_pointer_cast<moba::JsonObject>(o->at("appInfo"));
+        appInfo = AppData{oi};
+    }
 
     AppData     appInfo;
-    long        appID;
+    long        appId;
     std::string upTime;
     std::string addr;
     long        port;
 };
-
-
-/*
-        ServerNewClientStarted(moba::JsonItemPtr data) {
-            auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-            appId = moba::castToInt(o->at("appID"));
-            addr = moba::castToString(o->at("addr"));
-            port = moba::castToInt(o->at("port"));
-            upTime = moba::castToString(o->at("upTime"));
-
- */
