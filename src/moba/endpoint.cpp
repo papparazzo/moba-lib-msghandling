@@ -54,7 +54,7 @@ long Endpoint::connect() {
 long Endpoint::registerApp() {
     moba::JsonObjectPtr obj{new moba::JsonObject{}};
 
-    ClientStart msg{appName, version, groups};
+    ClientStart msg{AppData{appName, version, groups}};
 
     sendMsg(msg);
     auto data = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
