@@ -2,7 +2,7 @@ AC_PREREQ([2.69])
 AC_INIT([moba-lib-msghandling], [0.1.0-0000], [pappi-@gmx.de])
 
 AC_CONFIG_AUX_DIR([.])
-AC_CONFIG_SRCDIR([src])
+AC_CONFIG_SRCDIR([src/moba])
 AC_CONFIG_HEADERS([config.h])
 
 AC_PROG_RANLIB
@@ -28,7 +28,7 @@ AC_TYPE_UINT8_T
 
 AC_CONFIG_FILES([
   Makefile
-  src/Makefile
+  src/moba/Makefile
 ])
 
 AC_OUTPUT
