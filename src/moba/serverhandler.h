@@ -41,8 +41,7 @@ struct ServerMaxClientCount : public RecieveMessage {
 };
 
 struct ServerNewClientStarted : public RecieveMessage {
-    ServerNewClientStarted(moba::JsonItemPtr data) {
-        EndpointData endpoint{std::dynamic_pointer_cast<moba::JsonObject>(data)};
+    ServerNewClientStarted(moba::JsonItemPtr data) : endpoint{boost::dynamic_pointer_cast<moba::JsonObject>(data)} {
     }
 
     virtual std::string getMessageName() const override {
@@ -87,7 +86,7 @@ struct ServerInfoReq : public DispatchMessage {
 
 struct ServerInfoRes : public RecieveMessage {
     ServerInfoRes(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
         appName = moba::castToString(o->at("appName"));
         version = moba::Version{moba::castToString(o->at("version"))};
         buildDate = moba::castToString(o->at("buildDate"));
@@ -129,10 +128,10 @@ struct ServerConClientsReq : public DispatchMessage {
 };
 
 struct ServerConClientsRes : public RecieveMessage {
-    ServerClientClosed(moba::JsonItemPtr data) {
+    ServerConClientsRes(moba::JsonItemPtr data) {
         auto a = boost::dynamic_pointer_cast<moba::JsonArray>(data);
-        for(auto iter : a) {
-            endpoints.push_back(EndpointData{*iter});
+        for(auto iter : *a) {
+            endpoints.push_back(EndpointData{boost::dynamic_pointer_cast<moba::JsonObject>(iter)});
         }
     }
 
@@ -143,8 +142,8 @@ struct ServerConClientsRes : public RecieveMessage {
     std::vector<EndpointData> endpoints;
 };
 
-struct ServerResetClient : public DispatchMessage {
-    ServerResetClient(long appId) : appId{appId} {
+struct ServerSelfTestingClient : public DispatchMessage {
+    ServerSelfTestingClient(long appId) : appId{appId} {
     }
 
     virtual std::string getMessageName() const override {
