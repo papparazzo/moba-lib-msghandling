@@ -55,6 +55,3 @@ class DispatchMessage : public BaseMessage {
             return moba::toJsonNULLPtr();
         }
 };
-
-const std::string BaseMessage::MSG_HEADER_NAME = "msgName";
-const std::string BaseMessage::MSG_HEADER_DATA = "msgData";
