@@ -46,8 +46,8 @@ class DispatchMessage : public BaseMessage {
         virtual std::string getRawMessage() const {
             moba::JsonObject obj;
 
-            obj["msgMame"] = moba::toJsonStringPtr(getMessageName());
-            obj["msgData"] = getData();
+            obj[BaseMessage::MSG_HEADER_NAME] = moba::toJsonStringPtr(getMessageName());
+            obj[BaseMessage::MSG_HEADER_DATA] = getData();
             return obj.getJsonString();
         }
 
