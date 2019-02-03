@@ -23,6 +23,7 @@
 #include <moba/version.h>
 #include <moba/jsonabstractitem.h>
 #include <moba/message.h>
+#include <memory>
 
 #include "basemessage.h"
 #include "socket.h"
@@ -56,3 +57,5 @@ class Endpoint {
 
         long registerApp();
 };
+
+using EndpointPtr = std::shared_ptr<Endpoint>;
