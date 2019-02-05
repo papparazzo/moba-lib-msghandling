@@ -37,9 +37,12 @@ class Registry {
     public:
         using HandlerFnWrapper = std::function<void(moba::JsonItemPtr)>;
 
-        Registry();
-        Registry(const Registry& orig);
-        virtual ~Registry() noexcept;
+        Registry() {
+        }
+        
+        Registry(const Registry& orig) = delete;
+        virtual ~Registry() noexcept {
+        }
 
         template<typename T>
         void registerHandler(std::function<void(const T&)> fn) {
