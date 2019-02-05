@@ -39,7 +39,7 @@ class Endpoint {
 
         long getAppId() {return appId;}
 
-        auto recieveMsg(time_t timeoutSec) -> moba::JsonItemPtr;
+        auto recieveMsg(time_t timeoutSec = 0) -> moba::JsonItemPtr;
 
         void sendMsg(const DispatchMessage &msg);
 
