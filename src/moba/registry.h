@@ -28,6 +28,8 @@
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
 
+#include <iostream>
+
 template <typename T>
 T convert(const std::string &input) {
     return reinterpret_cast<T> (input);
@@ -39,7 +41,7 @@ class Registry {
 
         Registry() {
         }
-        
+
         Registry(const Registry& orig) = delete;
         virtual ~Registry() noexcept {
         }
@@ -59,6 +61,10 @@ class Registry {
 
         auto handleMsg(moba::JsonItemPtr data) -> bool {
             auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+            if(!o) {
+                return false;
+            }
+
             auto msgKey = moba::castToString(o->at(BaseMessage::MSG_HEADER_NAME));
             auto msgData = o->at(BaseMessage::MSG_HEADER_DATA);
 
