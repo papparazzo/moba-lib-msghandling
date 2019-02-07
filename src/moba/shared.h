@@ -41,7 +41,6 @@ struct AppData {
     std::string appName;
     moba::Version version;
     moba::JsonArrayPtr groups;
-
 };
 
 struct EndpointData {
