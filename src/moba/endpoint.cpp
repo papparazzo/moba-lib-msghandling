@@ -37,7 +37,7 @@ Endpoint::Endpoint(SocketPtr socket) : socket{socket} {
 
 Endpoint::~Endpoint() {
     ClientClose msg;
-    sendMsg(msg);
+    //sendMsg(msg);
 }
 
 long Endpoint::connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups) {

@@ -48,8 +48,7 @@ class Registry {
 
         template<typename T>
         void registerHandler(std::function<void(const T&)> fn) {
-            T msg;
-            handlers[msg.getMessageName()] = [fn](moba::JsonItemPtr data) {
+            handlers[T::getMessageName()] = [fn](moba::JsonItemPtr data) {
                 T m{data};
                 fn(m);
             };

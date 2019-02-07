@@ -33,7 +33,7 @@ struct ServerMaxClientCount : public RecieveMessage {
         maxClientCount = moba::castToInt(data);
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SERVER_MAX_CLIENT_COUNT";
     }
 
@@ -44,7 +44,7 @@ struct ServerNewClientStarted : public RecieveMessage {
     ServerNewClientStarted(moba::JsonItemPtr data) : endpoint{boost::dynamic_pointer_cast<moba::JsonObject>(data)} {
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SERVER_NEW_CLIENT_STARTED";
     }
 
@@ -56,18 +56,18 @@ struct ServerClientClosed : public RecieveMessage {
         clientId = moba::castToInt(data);
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SERVER_CLIENT_CLOSED";
     }
 
     int clientId;
 };
 
-struct ServerResetClient : public DispatchMessage {
+struct ServerResetClient : public DispatchMessageType<ServerResetClient> {
     ServerResetClient(long appId) : appId{appId} {
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SERVER_RESET_CLIENT";
     }
 
@@ -78,8 +78,8 @@ struct ServerResetClient : public DispatchMessage {
     long appId;
 };
 
-struct ServerInfoReq : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+struct ServerInfoReq : public DispatchMessageType<ServerInfoReq> {
+    static std::string getMessageName() {
         return "SERVER_INFO_REQ";
     }
 };
@@ -94,7 +94,7 @@ struct ServerInfoRes : public RecieveMessage {
         upTime = moba::castToString(o->at("upTime"));
         maxClients = moba::castToInt(o->at("maxClients"));
         connectedClients = moba::castToInt(o->at("connectedClients"));
-        supportedMessages = moba::castToString(o->at("supportedMessages"));
+        //supportedMessages = moba::castToString(o->at("supportedMessages"));
         osArch = moba::castToString(o->at("osArch"));
         osName = moba::castToString(o->at("osName"));
         osVersion = moba::castToString(o->at("osVersion"));
@@ -102,7 +102,7 @@ struct ServerInfoRes : public RecieveMessage {
         fwVersion = moba::castToString(o->at("fwVersion"));
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SERVER_INFO_RES";
     }
 
@@ -121,8 +121,8 @@ struct ServerInfoRes : public RecieveMessage {
     std::string fwVersion;
 };
 
-struct ServerConClientsReq : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+struct ServerConClientsReq : public DispatchMessageType<ServerConClientsReq> {
+    static std::string getMessageName() {
         return "SERVER_CON_CLIENTS_REQ";
     }
 };
@@ -135,18 +135,18 @@ struct ServerConClientsRes : public RecieveMessage {
         }
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SERVER_CON_CLIENTS_RES";
     }
 
     std::vector<EndpointData> endpoints;
 };
 
-struct ServerSelfTestingClient : public DispatchMessage {
+struct ServerSelfTestingClient : public DispatchMessageType<ServerSelfTestingClient> {
     ServerSelfTestingClient(long appId) : appId{appId} {
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SERVER_SELF_TESTING_CLIENT";
     }
 

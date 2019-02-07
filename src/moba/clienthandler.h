@@ -27,17 +27,17 @@
 #include "basemessage.h"
 #include "shared.h"
 
-struct ClientVoid : public RecieveMessage, public DispatchMessage {
-    virtual std::string getMessageName() const override {
+struct ClientVoid : public RecieveMessage, public DispatchMessageType<ClientVoid> {
+    static std::string getMessageName() {
         return "CLIENT_VOID";
     }
 };
 
-struct ClientEchoReq : public DispatchMessage {
+struct ClientEchoReq : public DispatchMessageType<ClientEchoReq> {
     ClientEchoReq(const std::string &payload) : payload{payload} {
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "CLIENT_ECHO_REQ";
     }
 
@@ -53,7 +53,7 @@ struct ClientEchoRes : public RecieveMessage {
         payload = moba::castToString(data);
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "CLIENT_ECHO_RES";
     }
 
@@ -67,7 +67,7 @@ struct ClientError : public RecieveMessage {
         additionalMsg = moba::castToString(o->at("additonalMsg"));
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "CLIENT_ERROR";
     }
 
@@ -75,11 +75,11 @@ struct ClientError : public RecieveMessage {
     std::string additionalMsg;
 };
 
-struct ClientStart : public DispatchMessage {
+struct ClientStart : public DispatchMessageType<ClientStart> {
     ClientStart(const AppData &appData) : appData{appData} {
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "CLIENT_START";
     }
 
@@ -99,33 +99,33 @@ struct ClientConnected : public RecieveMessage {
         appId = moba::castToInt(data);
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "CLIENT_CONNECTED";
     }
 
     long appId;
 };
 
-struct ClientClose : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+struct ClientClose : public DispatchMessageType<ClientClose> {
+    static std::string getMessageName() {
         return "CLIENT_CLOSE";
     }
 };
 
 struct ClientShutdown : public RecieveMessage {
-    virtual std::string getMessageName() {
+    static std::string getMessageName() {
         return "CLIENT_SHUTDOWN";
     }
 };
 
 struct ClientReset : public RecieveMessage {
-    virtual std::string getMessageName() {
+    static std::string getMessageName() {
         return "CLIENT_RESET";
     }
 };
 
 struct ClientSelfTesting : public RecieveMessage {
-    virtual std::string getMessageName() {
+    static std::string getMessageName() {
         return "CLIENT_SELF_TESTING";
     }
 };

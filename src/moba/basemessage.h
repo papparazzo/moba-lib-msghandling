@@ -31,8 +31,6 @@ class BaseMessage {
         virtual ~BaseMessage() noexcept {
         }
 
-        virtual std::string getMessageName() const = 0;
-
     protected:
         BaseMessage() {
         }
@@ -43,10 +41,16 @@ class RecieveMessage : public BaseMessage {
 
 class DispatchMessage : public BaseMessage {
     public:
+        virtual std::string getRawMessage() const = 0;
+};
+
+template<typename T = int>
+class DispatchMessageType : public DispatchMessage {
+    public:
         virtual std::string getRawMessage() const {
             moba::JsonObject obj;
 
-            obj[BaseMessage::MSG_HEADER_NAME] = moba::toJsonStringPtr(getMessageName());
+            obj[BaseMessage::MSG_HEADER_NAME] = moba::toJsonStringPtr(T::getMessageName());
             obj[BaseMessage::MSG_HEADER_DATA] = getData();
             return obj.getJsonString();
         }

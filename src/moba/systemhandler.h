@@ -23,12 +23,12 @@
 #include <moba/jsonabstractitem.h>
 #include "basemessage.h"
 
-struct SystemSetAutomaticMode : public DispatchMessage {
+struct SystemSetAutomaticMode : public DispatchMessageType<SystemSetAutomaticMode> {
 
     SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SYSTEM_SET_AUTOMATIC_MODE";
     }
 
@@ -39,12 +39,12 @@ struct SystemSetAutomaticMode : public DispatchMessage {
     bool automaticActive;
 };
 
-struct SystemSetEmergencyStop : public DispatchMessage {
+struct SystemSetEmergencyStop : public DispatchMessageType<SystemSetEmergencyStop> {
 
     SystemSetEmergencyStop(bool emergencyStopActive) : emergencyStopActive{emergencyStopActive} {
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SYSTEM_SET_EMERGENCY_STOP";
     }
 
@@ -55,11 +55,11 @@ struct SystemSetEmergencyStop : public DispatchMessage {
     bool emergencyStopActive;
 };
 
-struct SystemSetStandbyMode : public DispatchMessage {
+struct SystemSetStandbyMode : public DispatchMessageType<SystemSetStandbyMode> {
     SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SYSTEM_SET_STANDBY_MODE";
     }
 
@@ -70,8 +70,8 @@ struct SystemSetStandbyMode : public DispatchMessage {
     bool standbyActive;
 };
 
-struct SystemGetHardwareState : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+struct SystemGetHardwareState : public DispatchMessageType<SystemGetHardwareState> {
+    static std::string getMessageName() {
         return "SYSTEM_SET_STANDBY_MODE";
     }
 };
@@ -100,21 +100,21 @@ struct SystemHardwareStateChanged : public RecieveMessage {
         }
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() {
         return "SYSTEM_HARDWARE_STATE_CHANGED";
     }
 
     HardwareState hardwareState;
 };
 
-struct SystemHardwareShutdown : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+struct SystemHardwareShutdown : public DispatchMessageType<SystemHardwareShutdown> {
+    static std::string getMessageName() {
         return "SYSTEM_HARDWARE_SHUTDOWN";
     }
 };
 
-struct SystemHardwareReset : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+struct SystemHardwareReset : public DispatchMessageType<SystemHardwareReset> {
+    static std::string getMessageName() {
         return "SYSTEM_HARDWARE_RESET";
     }
 };

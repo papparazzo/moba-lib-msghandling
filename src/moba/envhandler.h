@@ -25,7 +25,7 @@
 #include <moba/jsonabstractitem.h>
 
 struct EnvGetEnvironment : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() const {
         return "ENV_GET_ENVIRONMENT";
     }
 };
@@ -53,7 +53,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
         aux03 = moba::castToSwitch(o->at("aux3"));
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() const {
         return "ENV_SET_ENVIRONMENT";
     }
 
@@ -79,7 +79,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
 };
 
 struct EnvGetAmbience : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() const {
         return "ENV_GET_AMBIENCE";
     }
 };
@@ -97,7 +97,7 @@ struct EnvSetAmbience : public RecieveMessage, public DispatchMessage {
         mainLightOn = moba::castToJsonToggleState(o->at("mainLightOn"));
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() const {
         return "ENV_SET_AMBIENCE";
     }
 
@@ -113,7 +113,7 @@ struct EnvSetAmbience : public RecieveMessage, public DispatchMessage {
 };
 
 struct EnvGetAmbientLight : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() const {
         return "ENV_GET_AMBIENT_LIGHT";
     }
 };
@@ -133,7 +133,7 @@ struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessage {
         white = moba::castToInt(o->at("white"));
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() const {
         return "ENV_SET_AMBIENT_LIGHT";
     }
 

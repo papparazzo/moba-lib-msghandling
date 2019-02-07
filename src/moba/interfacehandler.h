@@ -25,7 +25,7 @@
 #include <moba/jsonabstractitem.h>
 
 struct InterfaceSetConnectivity : public DispatchMessage {
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() const {
         return "INTERFACE_SET_CONNECTIVITY";
     }
 };
@@ -55,7 +55,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
         aux03 = moba::castToSwitch(o->at("aux3"));
     }
 
-    virtual std::string getMessageName() const override {
+    static std::string getMessageName() const {
         return "ENV_SET_ENVIRONMENT";
     }
 
