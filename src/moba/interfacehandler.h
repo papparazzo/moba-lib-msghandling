@@ -24,58 +24,28 @@
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
 
-struct InterfaceSetConnectivity : public DispatchMessage {
+struct InterfaceSetConnectivity : public DispatchMessageType<InterfaceSetConnectivity> {
+    enum Connectivity {
+        CO_CONNECTED,
+        CO_ERROR
+    };
+
+    InterfaceSetConnectivity(Connectivity connectivity) : connectivity{connectivity} {
+    }
+
     static std::string getMessageName() const {
         return "INTERFACE_SET_CONNECTIVITY";
     }
-};
-
-
-
-struct EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
-    EnvSetEnvironment(
-        moba::JsonSwitch::Switch thunder,
-        moba::JsonSwitch::Switch wind,
-        moba::JsonSwitch::Switch rain,
-        moba::JsonSwitch::Switch environmentSound,
-        moba::JsonSwitch::Switch aux1,
-        moba::JsonSwitch::Switch aux2,
-        moba::JsonSwitch::Switch aux3
-    ) : thunder{thunder}, wind{wind}, rain{rain}, environmentSound{environmentSound}, aux1{aux1}, aux2{aux2}, aux3{aux3} {
-    }
-
-    EnvSetEnvironment(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
-        thunder = moba::castToSwitch(o->at("thunderStorm"));
-        wind = moba::castToSwitch(o->at("wind"));
-        rain = moba::castToSwitch(o->at("rain"));
-        environmentSound = moba::castToSwitch(o->at("environmentSound"));
-        aux01 = moba::castToSwitch(o->at("aux1"));
-        aux02 = moba::castToSwitch(o->at("aux2"));
-        aux03 = moba::castToSwitch(o->at("aux3"));
-    }
-
-    static std::string getMessageName() const {
-        return "ENV_SET_ENVIRONMENT";
-    }
 
     virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["thunderStorm"      ] = moba::toJsonSwitchPtr(thunder);
-        (*obj)["wind"              ] = moba::toJsonSwitchPtr(wind);
-        (*obj)["rain"              ] = moba::toJsonSwitchPtr(rain);
-        (*obj)["environmentSound"  ] = moba::toJsonSwitchPtr(environmentSound);
-        (*obj)["aux01"             ] = moba::toJsonSwitchPtr(aux1);
-        (*obj)["aux02"             ] = moba::toJsonSwitchPtr(aux2);
-        (*obj)["aux03"             ] = moba::toJsonSwitchPtr(aux3);
-        return obj;
+        switch(connectivity) {
+            case CO_CONNECTED:
+                return moba::toJsonStringPtr("CONNECTED");
+
+            case CO_ERROR:
+                return moba::toJsonStringPtr("ERROR");
+        }
     }
 
-    moba::JsonSwitch::Switch thunder;
-    moba::JsonSwitch::Switch wind;
-    moba::JsonSwitch::Switch rain;
-    moba::JsonSwitch::Switch environmentSound;
-    moba::JsonSwitch::Switch aux1;
-    moba::JsonSwitch::Switch aux2;
-    moba::JsonSwitch::Switch aux3;
+    Connectivity connectivity;
 };
