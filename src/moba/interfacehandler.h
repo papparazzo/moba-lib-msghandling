@@ -25,9 +25,9 @@
 #include <moba/jsonabstractitem.h>
 
 struct InterfaceSetConnectivity : public DispatchMessageType<InterfaceSetConnectivity> {
-    enum Connectivity {
-        CO_CONNECTED,
-        CO_ERROR
+    enum class Connectivity {
+        CONNECTED,
+        ERROR
     };
 
     InterfaceSetConnectivity(Connectivity connectivity) : connectivity{connectivity} {
@@ -39,10 +39,10 @@ struct InterfaceSetConnectivity : public DispatchMessageType<InterfaceSetConnect
 
     virtual moba::JsonItemPtr getData() const override {
         switch(connectivity) {
-            case CO_CONNECTED:
+            case Connectivity::CONNECTED:
                 return moba::toJsonStringPtr("CONNECTED");
 
-            case CO_ERROR:
+            case Connectivity::ERROR:
                 return moba::toJsonStringPtr("ERROR");
         }
     }

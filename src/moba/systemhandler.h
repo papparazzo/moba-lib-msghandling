@@ -77,7 +77,7 @@ struct SystemGetHardwareState : public DispatchMessageType<SystemGetHardwareStat
 };
 
 struct SystemHardwareStateChanged : public RecieveMessage {
-    enum HardwareState {
+    enum class HardwareState {
         ERROR,
         STANDBY,
         EMERGENCY_STOP,
@@ -88,15 +88,15 @@ struct SystemHardwareStateChanged : public RecieveMessage {
     SystemHardwareStateChanged(moba::JsonItemPtr data) {
         std::string status = moba::castToString(data);
         if(status == "ERROR") {
-            hardwareState = ERROR;
+            hardwareState = HardwareState::ERROR;
         } else if(status == "EMERGENCY_STOP") {
-            hardwareState = EMERGENCY_STOP;
+            hardwareState = HardwareState::EMERGENCY_STOP;
         } else if(status == "STANDBY") {
-            hardwareState = STANDBY;
+            hardwareState = HardwareState::STANDBY;
         } else if(status == "MANUEL") {
-            hardwareState = MANUEL;
+            hardwareState = HardwareState::MANUEL;
         } else if(status == "AUTOMATIC") {
-            hardwareState = AUTOMATIC;
+            hardwareState = HardwareState::AUTOMATIC;
         }
     }
 
