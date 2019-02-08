@@ -32,7 +32,7 @@
 
 class Registry {
     public:
-        using HandlerFnWrapper = std::function<void(moba::JsonItemPtr)>;
+        using HandlerFnWrapper = std::function<void(const std::string&, moba::JsonItemPtr)>;
 
         Registry() {
         }
@@ -69,13 +69,13 @@ class Registry {
             }
 
             if(defHandler) {
-                defHandler(msgData);
+                defHandler(msgKey, msgData);
             }
             return false;
         }
 
     protected:
-        using HandlerMap = std::unordered_map<std::string, HandlerFnWrapper>;
+        using HandlerMap = std::unordered_map<std::string, std::function<void(moba::JsonItemPtr)>>;
 
         HandlerMap       handlers;
         HandlerFnWrapper defHandler;
