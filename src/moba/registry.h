@@ -30,11 +30,6 @@
 
 #include <iostream>
 
-template <typename T>
-T convert(const std::string &input) {
-    return reinterpret_cast<T> (input);
-}
-
 class Registry {
     public:
         using HandlerFnWrapper = std::function<void(moba::JsonItemPtr)>;
