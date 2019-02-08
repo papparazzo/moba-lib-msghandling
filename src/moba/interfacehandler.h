@@ -33,7 +33,7 @@ struct InterfaceSetConnectivity : public DispatchMessageType<InterfaceSetConnect
     InterfaceSetConnectivity(Connectivity connectivity) : connectivity{connectivity} {
     }
 
-    static std::string getMessageName() const {
+    static std::string getMessageName() {
         return "INTERFACE_SET_CONNECTIVITY";
     }
 

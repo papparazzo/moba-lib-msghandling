@@ -25,7 +25,7 @@
 #include <moba/jsonabstractitem.h>
 
 struct EnvGetEnvironment : public DispatchMessageType<EnvGetEnvironment> {
-    static std::string getMessageName() const {
+    static std::string getMessageName() {
         return "ENV_GET_ENVIRONMENT";
     }
 };
@@ -53,7 +53,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<Env
         aux03 = moba::castToSwitch(o->at("aux3"));
     }
 
-    static std::string getMessageName() const {
+    static std::string getMessageName() {
         return "ENV_SET_ENVIRONMENT";
     }
 
@@ -79,7 +79,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<Env
 };
 
 struct EnvGetAmbience : public DispatchMessageType<EnvGetAmbience> {
-    static std::string getMessageName() const {
+    static std::string getMessageName() {
         return "ENV_GET_AMBIENCE";
     }
 };
@@ -97,7 +97,7 @@ struct EnvSetAmbience : public RecieveMessage, public DispatchMessageType<EnvSet
         mainLightOn = moba::castToJsonToggleState(o->at("mainLightOn"));
     }
 
-    static std::string getMessageName() const {
+    static std::string getMessageName() {
         return "ENV_SET_AMBIENCE";
     }
 
@@ -113,7 +113,7 @@ struct EnvSetAmbience : public RecieveMessage, public DispatchMessageType<EnvSet
 };
 
 struct EnvGetAmbientLight : public DispatchMessageType<EnvGetAmbientLight> {
-    static std::string getMessageName() const {
+    static std::string getMessageName() {
         return "ENV_GET_AMBIENT_LIGHT";
     }
 };
@@ -133,7 +133,7 @@ struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessageType<En
         white = moba::castToInt(o->at("white"));
     }
 
-    static std::string getMessageName() const {
+    static std::string getMessageName() {
         return "ENV_SET_AMBIENT_LIGHT";
     }
 
