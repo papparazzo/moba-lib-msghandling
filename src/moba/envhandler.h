@@ -24,13 +24,13 @@
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
 
-struct EnvGetEnvironment : public DispatchMessage {
+struct EnvGetEnvironment : public DispatchMessageType<EnvGetEnvironment> {
     static std::string getMessageName() const {
         return "ENV_GET_ENVIRONMENT";
     }
 };
 
-struct EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
+struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<EnvSetEnvironment> {
     EnvSetEnvironment(
         moba::JsonSwitch::Switch thunder,
         moba::JsonSwitch::Switch wind,
@@ -78,13 +78,13 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessage {
     moba::JsonSwitch::Switch aux3;
 };
 
-struct EnvGetAmbience : public DispatchMessage {
+struct EnvGetAmbience : public DispatchMessageType<EnvGetAmbience> {
     static std::string getMessageName() const {
         return "ENV_GET_AMBIENCE";
     }
 };
 
-struct EnvSetAmbience : public RecieveMessage, public DispatchMessage {
+struct EnvSetAmbience : public RecieveMessage, public DispatchMessageType<EnvSetAmbience> {
     EnvSetAmbience(
         moba::JsonToggleState::ToggleState curtainUp,
         moba::JsonToggleState::ToggleState mainLightOn
@@ -112,13 +112,13 @@ struct EnvSetAmbience : public RecieveMessage, public DispatchMessage {
     moba::JsonToggleState::ToggleState mainLightOn
 };
 
-struct EnvGetAmbientLight : public DispatchMessage {
+struct EnvGetAmbientLight : public DispatchMessageType<EnvGetAmbientLight> {
     static std::string getMessageName() const {
         return "ENV_GET_AMBIENT_LIGHT";
     }
 };
 
-struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessage {
+struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessageType<EnvSetAmbientLight> {
 
     EnvSetAmbientLight(
         int red, int blue, int green, int white
