@@ -1,7 +1,7 @@
 /*
- *  Project:    moba-common
+ *  Project:    moba-lib-msghandling
  *
- *  Copyright (C) 2016 Stefan Paproth <pappi-@gmx.de>
+ *  Copyright (C) 2019 Stefan Paproth <pappi-@gmx.de>
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as

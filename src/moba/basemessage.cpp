@@ -1,5 +1,5 @@
 /*
- *  Project:    moba-systemmanager
+ *  Project:    moba-lib-msghandling
  *
  *  Copyright (C) 2019 Stefan Paproth <pappi-@gmx.de>
  *
