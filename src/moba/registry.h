@@ -58,9 +58,12 @@ class Registry {
             if(!o) {
                 return false;
             }
+            return handleMsg(o);
+        }
 
-            auto msgKey = moba::castToString(o->at(BaseMessage::MSG_HEADER_NAME));
-            auto msgData = o->at(BaseMessage::MSG_HEADER_DATA);
+        auto handleMsg(moba::JsonObjectPtr data) -> bool {
+            auto msgKey = moba::castToString(data->at(BaseMessage::MSG_HEADER_NAME));
+            auto msgData = data->at(BaseMessage::MSG_HEADER_DATA);
 
             auto iter = handlers.find(msgKey);
             if(iter != handlers.end()) {
