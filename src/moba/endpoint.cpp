@@ -25,7 +25,6 @@
 #include <sys/socket.h>
 
 #include <moba/jsondecoder.h>
-#include <moba/jsonmsgdecoder.h>
 #include <moba/jsonstreamreadersocket.h>
 
 #include "registry.h"
