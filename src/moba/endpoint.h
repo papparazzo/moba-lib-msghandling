@@ -22,7 +22,6 @@
 
 #include <moba/version.h>
 #include <moba/jsonabstractitem.h>
-#include <moba/message.h>
 #include <memory>
 
 #include "basemessage.h"
