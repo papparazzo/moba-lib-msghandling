@@ -72,7 +72,7 @@ struct SystemSetStandbyMode : public DispatchMessageType<SystemSetStandbyMode> {
 
 struct SystemGetHardwareState : public DispatchMessageType<SystemGetHardwareState> {
     static std::string getMessageName() {
-        return "SYSTEM_SET_STANDBY_MODE";
+        return "SYSTEM_GET_HARDWARE_STATE";
     }
 };
 
