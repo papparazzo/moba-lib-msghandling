@@ -44,6 +44,24 @@ class DispatchMessage : public BaseMessage {
         virtual std::string getRawMessage() const = 0;
 };
 
+class DispatchGenericMessage : public DispatchMessage {
+    public:
+        DispatchGenericMessage(const std::string msgName, moba::JsonItemPtr data) : msgName{msgName}, data{data} {
+        }
+
+        virtual std::string getRawMessage() const {
+            moba::JsonObject obj;
+
+            obj[BaseMessage::MSG_HEADER_NAME] = moba::toJsonStringPtr(msgName);
+            obj[BaseMessage::MSG_HEADER_DATA] = data;
+            return obj.getJsonString();
+        };
+
+    protected:
+        moba::JsonItemPtr data;
+        std::string msgName;
+};
+
 template<typename T = int>
 class DispatchMessageType : public DispatchMessage {
     public:
