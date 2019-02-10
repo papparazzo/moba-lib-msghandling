@@ -49,6 +49,9 @@ class DispatchGenericMessage : public DispatchMessage {
         DispatchGenericMessage(const std::string msgName, moba::JsonItemPtr data) : msgName{msgName}, data{data} {
         }
 
+        DispatchGenericMessage(const std::string msgName) : msgName{msgName}, data{moba::toJsonNULLPtr()} {
+        }
+
         virtual std::string getRawMessage() const {
             moba::JsonObject obj;
 
