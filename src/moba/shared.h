@@ -65,3 +65,28 @@ struct EndpointData {
     std::string addr;
     long        port;
 };
+
+struct TrackLayoutData{
+    TrackLayoutData(
+        int id, const std::string &name, const std::string &description,
+        const std::string &created, const std::string &modified, int locked
+    ) : id{id}, name{name}, description{description}, created{created}, modified{modified}, locked{locked} {
+
+    }
+
+    TrackLayoutData(moba::JsonObjectPtr appData) {
+        id = moba::castToInt(appData->at("id"));
+        name = moba::castToString(appData->at("name"));
+        description = moba::castToString(appData->at("description"));
+        created = moba::castToString(appData->at("created"));
+        modified = moba::castToString(appData->at("modified"));
+        locked = moba::castToInt(appData->at("locked"));
+    }
+
+	int id;
+    std::string name;
+    std::string description;
+    std::string created;
+    std::string modified;
+    int locked;
+};
