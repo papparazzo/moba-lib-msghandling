@@ -94,7 +94,10 @@ struct ServerInfoRes : public RecieveMessage {
         upTime = moba::castToString(o->at("upTime"));
         maxClients = moba::castToInt(o->at("maxClients"));
         connectedClients = moba::castToInt(o->at("connectedClients"));
-        //supportedMessages = moba::castToString(o->at("supportedMessages"));
+        auto a = boost::dynamic_pointer_cast<moba::JsonArray>(o->at("supportedMessages"));
+        for(auto iter : *a) {
+            supportedMessages.push_back(moba::castToString(iter));
+        }
         osArch = moba::castToString(o->at("osArch"));
         osName = moba::castToString(o->at("osName"));
         osVersion = moba::castToString(o->at("osVersion"));
@@ -113,7 +116,7 @@ struct ServerInfoRes : public RecieveMessage {
     std::string upTime;
     int maxClients;
     int connectedClients;
-    std::string supportedMessages;
+    std::vector<std::string> supportedMessages;
     std::string osArch;
     std::string osName;
     std::string osVersion;
