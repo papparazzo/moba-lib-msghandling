@@ -43,7 +43,7 @@ long Endpoint::connect(const std::string &appName, moba::Version version, const 
     this->appName = appName;
     this->version = version;
     this->groups = groups;
-    connect();
+    return connect();
 }
 
 long Endpoint::connect() {
