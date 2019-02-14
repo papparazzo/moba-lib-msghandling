@@ -89,7 +89,10 @@ moba::JsonItemPtr Endpoint::recieveMsg(time_t timeoutSec) {
     if(!FD_ISSET(sd, &read_sock)) {
         return moba::toJsonNULLPtr();
     }
+    return waitForNewMsg();
+}
 
+moba::JsonItemPtr Endpoint::waitForNewMsg() {
     moba::JsonDecoder decoder(reader);
     return decoder.decode();
 }

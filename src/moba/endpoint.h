@@ -40,6 +40,8 @@ class Endpoint {
 
         auto recieveMsg(time_t timeoutSec = 0) -> moba::JsonItemPtr;
 
+        auto waitForNewMsg() -> moba::JsonItemPtr;
+
         void sendMsg(const DispatchMessage &msg);
 
     protected:
