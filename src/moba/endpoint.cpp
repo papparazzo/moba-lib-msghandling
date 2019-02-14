@@ -47,6 +47,7 @@ long Endpoint::connect(const std::string &appName, moba::Version version, const 
 }
 
 long Endpoint::connect() {
+    reader.reset(new moba::JsonStreamReaderSocket{socket->getSocket()});
     return registerApp();
 }
 
@@ -89,7 +90,6 @@ moba::JsonItemPtr Endpoint::recieveMsg(time_t timeoutSec) {
         return moba::toJsonNULLPtr();
     }
 
-    moba::JsonStreamReaderSocketPtr reader{new moba::JsonStreamReaderSocket{sd}};
     moba::JsonDecoder decoder(reader);
     return decoder.decode();
 }

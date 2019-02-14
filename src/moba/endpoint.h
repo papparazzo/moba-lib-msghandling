@@ -55,6 +55,8 @@ class Endpoint {
         static const int MSG_HANDLER_TIME_OUT_USEC = 0;
 
         long registerApp();
+
+        moba::JsonStreamReaderSocketPtr reader;
 };
 
 using EndpointPtr = std::shared_ptr<Endpoint>;
