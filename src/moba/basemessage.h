@@ -61,8 +61,8 @@ class DispatchGenericMessage : public DispatchMessage {
         };
 
     protected:
-        moba::JsonItemPtr data;
         std::string msgName;
+        moba::JsonItemPtr data;
 };
 
 template<typename T = int>
