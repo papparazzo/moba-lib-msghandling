@@ -22,6 +22,7 @@
 
 #include <moba/version.h>
 #include <moba/jsonabstractitem.h>
+#include <moba/jsonstreamreadersocket.h>
 #include <memory>
 
 #include "basemessage.h"
