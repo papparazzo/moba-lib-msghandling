@@ -66,7 +66,7 @@ struct EndpointData {
     long        port;
 };
 
-struct TrackLayoutData{
+struct TrackLayoutData {
     TrackLayoutData(
         int id, const std::string &name, const std::string &description,
         const std::string &created, const std::string &modified, int locked
