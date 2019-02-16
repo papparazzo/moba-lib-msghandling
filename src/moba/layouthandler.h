@@ -20,8 +20,11 @@
 
 #pragma once
 
+#include <vector>
+
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
+#include "shared.h"
 
 struct LayoutGetLayoutReq : public DispatchMessageType<LayoutGetLayoutReq> {
 
@@ -39,23 +42,16 @@ struct LayoutGetLayoutReq : public DispatchMessageType<LayoutGetLayoutReq> {
     int layoutId;
 };
 
-/*
 struct LayoutGetLayoutRes : public RecieveMessage {
-
-    ServerConClientsRes(moba::JsonItemPtr data) {
-        auto a = boost::dynamic_pointer_cast<moba::JsonArray>(data);
-        for(auto iter : *a) {
-            endpoints.push_back(EndpointData{boost::dynamic_pointer_cast<moba::JsonObject>(iter)});
-        }
+    LayoutGetLayoutRes(moba::JsonItemPtr data) : layoutData{boost::dynamic_pointer_cast<moba::JsonObject>(data)} {
     }
 
     static std::string getMessageName() {
         return "LAYOUT_GET_LAYOUT_RES";
     }
 
-    std::vector<EndpointData> endpoints;
+    SpecificLayoutData layoutData;
 };
-*/
 
 
 
