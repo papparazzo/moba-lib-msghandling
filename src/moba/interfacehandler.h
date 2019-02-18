@@ -24,17 +24,23 @@
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
 
-struct InterfaceSetConnectivity : public DispatchMessageType<InterfaceSetConnectivity> {
+struct InterfaceConnectivityReq : public RecieveMessage {
+    static std::string getMessageName() {
+        return "INTERFACE_CONNECTIVITY_REQ";
+    }
+};
+
+struct InterfaceConnectivityRes : public DispatchMessageType<InterfaceConnectivityRes> {
     enum class Connectivity {
         CONNECTED,
         ERROR
     };
 
-    InterfaceSetConnectivity(Connectivity connectivity) : connectivity{connectivity} {
+    InterfaceConnectivityRes(Connectivity connectivity) : connectivity{connectivity} {
     }
 
     static std::string getMessageName() {
-        return "INTERFACE_SET_CONNECTIVITY";
+        return "INTERFACE_CONNECTIVITY_RES";
     }
 
     virtual moba::JsonItemPtr getData() const override {
