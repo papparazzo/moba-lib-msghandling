@@ -53,6 +53,10 @@ class Registry {
             defHandler = fn;
         }
 
+        void registerAuxiliaryHandler(HandlerFnWrapper fn) {
+            auxHandler = fn;
+        }
+
         auto handleMsg(moba::JsonItemPtr data) -> bool {
             auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
             if(!o) {
@@ -64,6 +68,10 @@ class Registry {
         auto handleMsg(moba::JsonObjectPtr data) -> bool {
             auto msgKey = moba::castToString(data->at(BaseMessage::MSG_HEADER_NAME));
             auto msgData = data->at(BaseMessage::MSG_HEADER_DATA);
+
+            if(auxHandler) {
+                auxHandler(msgKey, msgData);
+            }
 
             auto iter = handlers.find(msgKey);
             if(iter != handlers.end()) {
@@ -82,5 +90,6 @@ class Registry {
 
         HandlerMap       handlers;
         HandlerFnWrapper defHandler;
+        HandlerFnWrapper auxHandler;
 };
 
