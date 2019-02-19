@@ -36,7 +36,6 @@ Socket::Socket(const std::string &host, int port) : socket{-1} {
     }
     this->host = host;
     this->port = port;
-    init();
 }
 
 Socket::~Socket() {
