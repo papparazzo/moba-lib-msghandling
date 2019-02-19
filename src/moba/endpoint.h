@@ -33,9 +33,9 @@ class Endpoint {
         Endpoint(SocketPtr socket);
         virtual ~Endpoint() noexcept;
 
-        long connect();
-
         long connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups);
+
+        long reconnect();
 
         long getAppId() {return appId;}
 

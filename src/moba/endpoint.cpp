@@ -43,10 +43,12 @@ long Endpoint::connect(const std::string &appName, moba::Version version, const 
     this->appName = appName;
     this->version = version;
     this->groups = groups;
-    return connect();
+    reader.reset(new moba::JsonStreamReaderSocket{socket->getSocket()});
+    return registerApp();
 }
 
-long Endpoint::connect() {
+long Endpoint::reconnect() {
+    socket->init();
     reader.reset(new moba::JsonStreamReaderSocket{socket->getSocket()});
     return registerApp();
 }
