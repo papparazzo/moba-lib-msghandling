@@ -91,7 +91,6 @@ struct ServerInfoRes : public RecieveMessage {
         version = moba::Version{moba::castToString(o->at("version"))};
         buildDate = moba::castToString(o->at("buildDate"));
         startTime = moba::castToString(o->at("startTime"));
-        upTime = moba::castToString(o->at("upTime"));
         maxClients = moba::castToInt(o->at("maxClients"));
         connectedClients = moba::castToInt(o->at("connectedClients"));
         auto a = boost::dynamic_pointer_cast<moba::JsonArray>(o->at("supportedMessages"));
@@ -113,7 +112,6 @@ struct ServerInfoRes : public RecieveMessage {
     moba::Version version;
     std::string buildDate;
     std::string startTime;
-    std::string upTime;
     int maxClients;
     int connectedClients;
     std::vector<std::string> supportedMessages;
