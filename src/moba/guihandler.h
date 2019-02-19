@@ -34,11 +34,11 @@ struct GuiSystemNotice : public RecieveMessage {
     GuiSystemNotice(moba::JsonItemPtr data) {
         moba::JsonObjectPtr o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
         std::string type = moba::castToString(o->at("type"));
-        std::string caption = moba::castToString(o->at("caption"));
-        std::string text = moba::castToString(o->at("text"));
+        caption = moba::castToString(o->at("caption"));
+        text = moba::castToString(o->at("text"));
 
         if(type == "INFO") {
-            noticeType = NoticeType::ERROR;
+            noticeType = NoticeType::INFO;
         } else if(type == "WARNING") {
             noticeType = NoticeType::WARNING;
         } else if(type == "ERROR") {
