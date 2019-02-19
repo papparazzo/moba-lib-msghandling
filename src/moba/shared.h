@@ -45,15 +45,15 @@ struct AppData {
 
 struct EndpointData {
     EndpointData(
-        const AppData &appInfo, long appId, const std::string &upTime, const std::string &addr, long port
-    ) : appInfo{appInfo}, appId{appId}, upTime{upTime}, addr{addr} {
+        const AppData &appInfo, long appId, const std::string &startTime, const std::string &addr, long port
+    ) : appInfo{appInfo}, appId{appId}, startTime{startTime}, addr{addr} {
     }
 
     EndpointData(moba::JsonObjectPtr appData) {
         appId = moba::castToInt(appData->at("appID"));
         addr = moba::castToString(appData->at("addr"));
         port = moba::castToInt(appData->at("port"));
-        upTime = moba::castToString(appData->at("upTime"));
+        startTime = moba::castToString(appData->at("startTime"));
 
         auto oi = boost::dynamic_pointer_cast<moba::JsonObject>(appData->at("appInfo"));
         appInfo = AppData{oi};
@@ -61,7 +61,7 @@ struct EndpointData {
 
     AppData     appInfo;
     long        appId;
-    std::string upTime;
+    std::string startTime;
     std::string addr;
     long        port;
 };
