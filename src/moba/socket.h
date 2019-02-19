@@ -51,13 +51,12 @@ class Socket {
         int getSocket() const {
             return socket;
         }
+        void init();
 
     protected:
         int socket;
         std::string host;
         int port;
-
-        void init();
 };
 
 using SocketPtr = std::shared_ptr<Socket>;
