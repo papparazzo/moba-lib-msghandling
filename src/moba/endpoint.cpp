@@ -31,7 +31,9 @@
 #include "clienthandler.h"
 #include "endpoint.h"
 
-Endpoint::Endpoint(SocketPtr socket) : socket{socket} {
+Endpoint::Endpoint(
+    SocketPtr socket, const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups
+) : socket{socket}, appName{appName}, version{version}, groups{groups} {
 }
 
 Endpoint::~Endpoint() {
@@ -39,15 +41,7 @@ Endpoint::~Endpoint() {
     sendMsg(msg);
 }
 
-long Endpoint::connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups) {
-    this->appName = appName;
-    this->version = version;
-    this->groups = groups;
-    reader.reset(new moba::JsonStreamReaderSocket{socket->getSocket()});
-    return registerApp();
-}
-
-long Endpoint::reconnect() {
+long Endpoint::connect() {
     socket->init();
     reader.reset(new moba::JsonStreamReaderSocket{socket->getSocket()});
     return registerApp();

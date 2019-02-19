@@ -30,12 +30,10 @@
 
 class Endpoint {
     public:
-        Endpoint(SocketPtr socket);
+        Endpoint(SocketPtr socket, const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups);
         virtual ~Endpoint() noexcept;
 
-        long connect(const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups);
-
-        long reconnect();
+        long connect();
 
         long getAppId() {return appId;}
 
