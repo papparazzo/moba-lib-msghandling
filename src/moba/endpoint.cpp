@@ -54,7 +54,7 @@ long Endpoint::registerApp() {
 
     sendMsg(msg);
     auto data = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
-    auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+    auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
     auto msgKey = moba::castToString(o->at(BaseMessage::MSG_HEADER_NAME));
     auto msgData = o->at(BaseMessage::MSG_HEADER_DATA);
 

@@ -62,7 +62,7 @@ struct ClientEchoRes : public RecieveMessage {
 
 struct ClientError : public RecieveMessage {
     ClientError(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         errorId = moba::castToString(o->at("errorId"));
         additionalMsg = moba::castToString(o->at("additonalMsg"));
     }

@@ -58,7 +58,7 @@ class Registry {
         }
 
         auto handleMsg(moba::JsonItemPtr data) -> bool {
-            auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+            auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
             if(!o) {
                 return false;
             }
