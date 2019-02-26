@@ -30,7 +30,7 @@
 
 struct TimerGlobalTimerEvent  : public RecieveMessage {
     TimerGlobalTimerEvent(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         curModelTime = moba::castToString(o->at("curModelTime"));
         multiplicator = moba::castToInt(o->at("multiplicator"));
     }
@@ -55,7 +55,7 @@ struct TimerSetGlobalTimer : public RecieveMessage, public DispatchMessageType<T
     }
 
     TimerSetGlobalTimer(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         curModelTime = moba::castToString(o->at("curModelTime"));
         multiplicator = moba::castToInt(o->at("multiplicator"));
     }
@@ -87,7 +87,7 @@ struct TimerSetColorTheme : public RecieveMessage, public DispatchMessageType<Ti
     }
 
     TimerSetColorTheme(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         dimTime = moba::castToString(o->at("dimTime"));
         brightTime = moba::castToString(o->at("brightTime"));
         condition = moba::castToThreeState(o->at("condition"));

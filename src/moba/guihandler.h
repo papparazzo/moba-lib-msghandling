@@ -21,8 +21,10 @@
 #pragma once
 
 #include <string>
-#include "basemessage.h"
+#include <memory>
 #include <moba/jsonabstractitem.h>
+
+#include "basemessage.h"
 
 struct GuiSystemNotice : public RecieveMessage {
     enum class NoticeType {
@@ -32,7 +34,7 @@ struct GuiSystemNotice : public RecieveMessage {
     };
 
     GuiSystemNotice(moba::JsonItemPtr data) {
-        moba::JsonObjectPtr o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        moba::JsonObjectPtr o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         std::string type = moba::castToString(o->at("type"));
         caption = moba::castToString(o->at("caption"));
         text = moba::castToString(o->at("text"));

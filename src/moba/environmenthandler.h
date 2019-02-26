@@ -21,6 +21,7 @@
 #pragma once
 
 #include <string>
+#include <memory>
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
 
@@ -43,7 +44,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<Env
     }
 
     EnvSetEnvironment(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         thunder = moba::castToSwitch(o->at("thunderStorm"));
         wind = moba::castToSwitch(o->at("wind"));
         rain = moba::castToSwitch(o->at("rain"));
@@ -92,7 +93,7 @@ struct EnvSetAmbience : public RecieveMessage, public DispatchMessageType<EnvSet
     }
 
     EnvSetAmbience(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         curtainUp = moba::castToJsonToggleState(o->at("curtainUp"));
         mainLightOn = moba::castToJsonToggleState(o->at("mainLightOn"));
     }
@@ -126,7 +127,7 @@ struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessageType<En
     }
 
     EnvSetAmbience(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         red = moba::castToInt(o->at("red"));
         blue = moba::castToInt(o->at("blue"));
         green = moba::castToInt(o->at("green"));

@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include <moba/jsonabstractitem.h>
 #include "shared.h"
@@ -34,9 +35,9 @@ struct LayoutsGetLayoutsReq : public DispatchMessageType<LayoutsGetLayoutsReq> {
 
 struct LayoutsGetLayoutsRes : public RecieveMessage {
     LayoutsGetLayoutsRes(moba::JsonItemPtr data) {
-        auto a = boost::dynamic_pointer_cast<moba::JsonArray>(data);
+        auto a = std::dynamic_pointer_cast<moba::JsonArray>(data);
         for(auto iter : *a) {
-            layouts.push_back(TrackLayoutData{boost::dynamic_pointer_cast<moba::JsonObject>(iter)});
+            layouts.push_back(TrackLayoutData{std::dynamic_pointer_cast<moba::JsonObject>(iter)});
         }
     }
 
@@ -105,7 +106,7 @@ struct LayoutsCreateLayoutRes : public RecieveMessage {
 };
 
 struct LayoutsLayoutCreated : public RecieveMessage {
-    LayoutsLayoutCreated(moba::JsonItemPtr data) : tracklayout{boost::dynamic_pointer_cast<moba::JsonObject>(data)} {
+    LayoutsLayoutCreated(moba::JsonItemPtr data) : tracklayout{std::dynamic_pointer_cast<moba::JsonObject>(data)} {
     }
 
     static std::string getMessageName() {
@@ -135,7 +136,7 @@ struct LayoutsUpdateLayout : public DispatchMessageType<LayoutsUpdateLayout> {
 };
 
 struct LayoutsLayoutUpdated : public RecieveMessage {
-    LayoutsLayoutUpdated(moba::JsonItemPtr data) : tracklayout{boost::dynamic_pointer_cast<moba::JsonObject>(data)} {
+    LayoutsLayoutUpdated(moba::JsonItemPtr data) : tracklayout{std::dynamic_pointer_cast<moba::JsonObject>(data)} {
     }
 
     static std::string getMessageName() {

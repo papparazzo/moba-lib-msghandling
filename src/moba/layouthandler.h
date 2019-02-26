@@ -21,6 +21,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 #include "basemessage.h"
 #include <moba/jsonabstractitem.h>
@@ -43,7 +44,7 @@ struct LayoutGetLayoutReq : public DispatchMessageType<LayoutGetLayoutReq> {
 };
 
 struct LayoutGetLayoutRes : public RecieveMessage {
-    LayoutGetLayoutRes(moba::JsonItemPtr data) : layoutData{boost::dynamic_pointer_cast<moba::JsonObject>(data)} {
+    LayoutGetLayoutRes(moba::JsonItemPtr data) : layoutData{std::dynamic_pointer_cast<moba::JsonObject>(data)} {
     }
 
     static std::string getMessageName() {

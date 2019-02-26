@@ -41,7 +41,7 @@ struct ServerMaxClientCount : public RecieveMessage {
 };
 
 struct ServerNewClientStarted : public RecieveMessage {
-    ServerNewClientStarted(moba::JsonItemPtr data) : endpoint{boost::dynamic_pointer_cast<moba::JsonObject>(data)} {
+    ServerNewClientStarted(moba::JsonItemPtr data) : endpoint{std::dynamic_pointer_cast<moba::JsonObject>(data)} {
     }
 
     static std::string getMessageName() {
@@ -86,14 +86,14 @@ struct ServerInfoReq : public DispatchMessageType<ServerInfoReq> {
 
 struct ServerInfoRes : public RecieveMessage {
     ServerInfoRes(moba::JsonItemPtr data) {
-        auto o = boost::dynamic_pointer_cast<moba::JsonObject>(data);
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         appName = moba::castToString(o->at("appName"));
         version = moba::Version{moba::castToString(o->at("version"))};
         buildDate = moba::castToString(o->at("buildDate"));
         startTime = moba::castToString(o->at("startTime"));
         maxClients = moba::castToInt(o->at("maxClients"));
         connectedClients = moba::castToInt(o->at("connectedClients"));
-        auto a = boost::dynamic_pointer_cast<moba::JsonArray>(o->at("supportedMessages"));
+        auto a = std::dynamic_pointer_cast<moba::JsonArray>(o->at("supportedMessages"));
         for(auto iter : *a) {
             supportedMessages.push_back(moba::castToString(iter));
         }
@@ -130,9 +130,9 @@ struct ServerConClientsReq : public DispatchMessageType<ServerConClientsReq> {
 
 struct ServerConClientsRes : public RecieveMessage {
     ServerConClientsRes(moba::JsonItemPtr data) {
-        auto a = boost::dynamic_pointer_cast<moba::JsonArray>(data);
+        auto a = std::dynamic_pointer_cast<moba::JsonArray>(data);
         for(auto iter : *a) {
-            endpoints.push_back(EndpointData{boost::dynamic_pointer_cast<moba::JsonObject>(iter)});
+            endpoints.push_back(EndpointData{std::dynamic_pointer_cast<moba::JsonObject>(iter)});
         }
     }
 
