@@ -20,6 +20,7 @@
 
 #include "socket.h"
 #include <cstring>
+#include <string>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -48,34 +49,37 @@ void Socket::init() {
     if(socket != -1) {
         close(socket);
     }
-    socket = ::socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+
+    struct in6_addr serveraddr;
+    struct addrinfo hints;
+    struct addrinfo *result = nullptr;
+
+    memset(&hints, 0x00, sizeof(hints));
+    hints.ai_flags    = AI_NUMERICSERV;
+    hints.ai_family   = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+
+    if(inet_pton(AF_INET, host.c_str(), &serveraddr) == 1) {
+        hints.ai_family = AF_INET;
+        hints.ai_flags |= AI_NUMERICHOST;
+    } else if(inet_pton(AF_INET6, host.c_str(), &serveraddr) == 1) {
+        hints.ai_family = AF_INET6;
+        hints.ai_flags |= AI_NUMERICHOST;
+    }
+
+    if (getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &result) != 0) {
+        throw SocketException{"resolving url failed"};
+    }
+
+    socket = ::socket(result->ai_family, result->ai_socktype, result->ai_protocol);
     if(socket == -1) {
+        freeaddrinfo(result);
         throw SocketException{"socket creation failed"};
     }
 
-    struct sockaddr_in host_addr;
-
-    memset(&host_addr, 0, sizeof (host_addr));
-    host_addr.sin_family = AF_INET;
-    host_addr.sin_port = htons(port);
-    host_addr.sin_addr.s_addr = inet_addr(host.c_str());
-
-    if(host_addr.sin_addr.s_addr == INADDR_NONE) {
-        struct hostent *hostn;
-
-        hostn = gethostbyname(host.c_str());
-
-        if(hostn == nullptr) {
-            throw SocketException{"resolving url failed"};
-        }
-        memcpy(
-            (char*) &host_addr.sin_addr.s_addr,
-            hostn->h_addr_list[0],
-            hostn->h_length
-        );
-    }
-
-    if(::connect(socket, (struct sockaddr*) &host_addr, sizeof (host_addr)) == -1) {
+    if(::connect(socket, result->ai_addr, result->ai_addrlen) == -1) {
+        freeaddrinfo(result);
         throw SocketException{"connection to host failed"};
     }
+    freeaddrinfo(result);
 }
