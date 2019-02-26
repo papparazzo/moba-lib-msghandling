@@ -24,6 +24,7 @@
 #include <moba/jsonabstractitem.h>
 #include <moba/jsonstreamreadersocket.h>
 #include <memory>
+#include <mutex>
 
 #include "basemessage.h"
 #include "socket.h"
@@ -58,6 +59,8 @@ class Endpoint {
         long registerApp();
 
         moba::JsonStreamReaderSocketPtr reader;
+
+        std::mutex m;
 };
 
 using EndpointPtr = std::shared_ptr<Endpoint>;
