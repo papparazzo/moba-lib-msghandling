@@ -47,6 +47,8 @@ class Endpoint {
     protected:
         SocketPtr socket;
 
+        std::mutex m;
+
         long appId;
 
         std::string appName;
@@ -59,8 +61,6 @@ class Endpoint {
         long registerApp();
 
         moba::JsonStreamReaderSocketPtr reader;
-
-        std::mutex m;
 };
 
 using EndpointPtr = std::shared_ptr<Endpoint>;
