@@ -94,7 +94,8 @@ moba::JsonItemPtr Endpoint::waitForNewMsg() {
 }
 
 void Endpoint::sendMsg(const DispatchMessage &msg) {
-    std::lock_guard<std::mutex> lock(m);
+    std::lock_guard<std::mutex> l{m};
+
     std::string s = msg.getRawMessage();
     ssize_t c = ::send(socket->getSocket(), s.c_str(), s.length(), 0);
     if(c == -1 || c != s.length()) {
