@@ -91,14 +91,10 @@ struct TrackLayoutData {
     int locked;
 };
 
-struct Position {
-    int xPos;
-    int yPos;
-};
-
 struct TrackLayoutSymbolData {
 	int id;
-	Position position;
+    int xPos;
+    int yPos;
 	int symbol;
 };
 
@@ -111,7 +107,6 @@ struct SpecificLayoutData {
         //groups = std::dynamic_pointer_cast<moba::JsonArray>(appData->at("msgGroups"));
 
     }
-
 
     int id;
     int width;
