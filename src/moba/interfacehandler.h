@@ -22,6 +22,7 @@
 
 #include <string>
 #include "basemessage.h"
+#include "shared.h"
 #include <moba/jsonabstractitem.h>
 
 struct InterfaceConnectivityStateChanged : public DispatchMessageType<InterfaceConnectivityStateChanged> {
@@ -62,4 +63,41 @@ struct Contact {
 
     int modulAddr;
     int contactNb;
+
+struct InterfaceContactTriggered : public DispatchMessageType<InterfaceContactTriggered> {
+    InterfaceContactTriggered(const ContactTrigger &contactTrigger) : contactTrigger{contactTrigger} {
+    }
+
+    static std::string getMessageName() {
+        return "INTERFACE_CONTACT_TRIGGERED";
+    }
+
+    /*
+    virtual moba::JsonItemPtr getData() const override {
+
+        moba::JsonObjectPtr c(new moba::JsonObject());
+        (*c)["modulAddr"] = moba::toJsonNumberPtr(contactTrigger.contact.modulAddr);
+        (*c)["contactNb"] = moba::toJsonNumberPtr(contactTrigger.contact.contactNb);
+        moba::JsonObjectPtr o(new moba::JsonObject());
+
+
+        (*o)["contact"] = c;
+        (*o)["state"  ] = moba::toJsonSwitchPtr(wind);
+        (*o)["time"   ] = moba::toJsonSwitchPtr(rain);
+        return o;
+
+    ContactTrigger	contact
+		Bool
+		Integer
+
+    }
+
+    ContactTrigger contactTrigger;
+     */
+};
+
+struct InterfaceSetBrakeVector : public RecieveMessage {
+    static std::string getMessageName() {
+        return "INTERFACE_SET_BRAKE_VECTOR";
+    }
 };
