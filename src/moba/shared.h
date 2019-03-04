@@ -115,3 +115,15 @@ struct SpecificLayoutData {
     std::vector<TrackLayoutSymbolData> symbols;
 };
 
+struct Contact {
+    int modulAddr;
+    int contactNb;
+
+};
+
+struct ContactTrigger {
+    Contact contact;
+	bool state;
+	int time;
+};
+
