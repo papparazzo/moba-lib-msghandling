@@ -116,9 +116,13 @@ struct SpecificLayoutData {
 };
 
 struct Contact {
+    Contact(moba::JsonObjectPtr data) {
+        modulAddr = moba::castToInt(data->at("modulAddr"));
+        contactNb = moba::castToInt(data->at("contactNb"));
+    }
+    
     int modulAddr;
     int contactNb;
-
 };
 
 struct ContactTrigger {
@@ -128,6 +132,12 @@ struct ContactTrigger {
 };
 
 struct BrakeVectorContact {
+    BrakeVectorContact(moba::JsonObjectPtr data) {
+        auto oi = std::dynamic_pointer_cast<moba::JsonObject>(data->at("contact"));
+        contact = Contact{oi};
+        locId = moba::castToInt(data->at("locId"));
+    }
+
     Contact contact;
     int locId;
 };
