@@ -97,7 +97,16 @@ struct InterfaceContactTriggered : public DispatchMessageType<InterfaceContactTr
 };
 
 struct InterfaceSetBrakeVector : public RecieveMessage {
+    InterfaceSetBrakeVector(moba::JsonItemPtr data) {
+        auto a = std::dynamic_pointer_cast<moba::JsonArray>(data);
+        for(auto iter : *a) {
+            layouts.push_back(TrackLayoutData{std::dynamic_pointer_cast<moba::JsonObject>(iter)});
+        }
+    }
+
     static std::string getMessageName() {
         return "INTERFACE_SET_BRAKE_VECTOR";
     }
+
+    std::vector<TrackLayoutData> layouts;
 };
