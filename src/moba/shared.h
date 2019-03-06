@@ -127,3 +127,7 @@ struct ContactTrigger {
 	int time;
 };
 
+struct BrakeVectorContact {
+    Contact contact;
+    int locId;
+};
