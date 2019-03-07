@@ -116,11 +116,14 @@ struct SpecificLayoutData {
 };
 
 struct Contact {
+    Contact(int modulAddr = 0, int contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
+    }
+
     Contact(moba::JsonObjectPtr data) {
         modulAddr = moba::castToInt(data->at("modulAddr"));
         contactNb = moba::castToInt(data->at("contactNb"));
     }
-    
+
     int modulAddr;
     int contactNb;
 };
