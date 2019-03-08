@@ -72,35 +72,26 @@ struct InterfaceContactTriggered : public DispatchMessageType<InterfaceContactTr
         return "INTERFACE_CONTACT_TRIGGERED";
     }
 
-    /*
     virtual moba::JsonItemPtr getData() const override {
-
         moba::JsonObjectPtr c(new moba::JsonObject());
         (*c)["modulAddr"] = moba::toJsonNumberPtr(contactTrigger.contact.modulAddr);
         (*c)["contactNb"] = moba::toJsonNumberPtr(contactTrigger.contact.contactNb);
         moba::JsonObjectPtr o(new moba::JsonObject());
 
-
         (*o)["contact"] = c;
-        (*o)["state"  ] = moba::toJsonSwitchPtr(wind);
-        (*o)["time"   ] = moba::toJsonSwitchPtr(rain);
+        (*o)["state"  ] = moba::toJsonBoolPtr(contactTrigger.state);
+        (*o)["time"   ] = moba::toJsonNumberPtr(contactTrigger.time);
         return o;
-
-    ContactTrigger	contact
-		Bool
-		Integer
-
     }
-     */
-    ContactTrigger contactTrigger;
 
+    ContactTrigger contactTrigger;
 };
 
 struct InterfaceSetBrakeVector : public RecieveMessage {
     InterfaceSetBrakeVector(moba::JsonItemPtr data) {
         auto a = std::dynamic_pointer_cast<moba::JsonArray>(data);
         for(auto iter : *a) {
-            layouts.push_back(BrakeVectorContact{std::dynamic_pointer_cast<moba::JsonObject>(iter)});
+            items.push_back(BrakeVectorContact{std::dynamic_pointer_cast<moba::JsonObject>(iter)});
         }
     }
 
@@ -108,5 +99,5 @@ struct InterfaceSetBrakeVector : public RecieveMessage {
         return "INTERFACE_SET_BRAKE_VECTOR";
     }
 
-    std::vector<BrakeVectorContact> layouts;
+    std::vector<BrakeVectorContact> items;
 };
