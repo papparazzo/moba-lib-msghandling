@@ -129,6 +129,12 @@ struct Contact {
 };
 
 struct ContactTrigger {
+    ContactTrigger(
+        int modulAddr, int contactNb, bool state, int time
+    ) : contact{modulAddr, contactNb}, state{state}, time{time} {
+        
+    }
+
     Contact contact;
 	bool state;
 	int time;
