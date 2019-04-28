@@ -32,7 +32,7 @@
 #include "endpoint.h"
 
 Endpoint::Endpoint(
-    SocketPtr socket, const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups
+    SocketPtr socket, const std::string &appName, moba::Version version, Groups groups
 ) : socket{socket}, appName{appName}, version{version}, groups{groups} {
 }
 
@@ -50,7 +50,7 @@ long Endpoint::connect() {
 long Endpoint::registerApp() {
     moba::JsonObjectPtr obj{new moba::JsonObject{}};
 
-    ClientStart msg{AppData{appName, version, groups}};
+    ClientStart msg{AppData{appName, version, convertIntoGroupArray(groups)}};
 
     sendMsg(msg);
     auto data = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
@@ -101,4 +101,36 @@ void Endpoint::sendMsg(const DispatchMessage &msg) {
     if(c == -1 || c != s.length()) {
         throw SocketException{"sending <" + s + "> failed"};
     }
+}
+
+moba::JsonArrayPtr Endpoint::convertIntoGroupArray(Groups groups) {
+    auto groupsArray = std::make_shared<moba::JsonArray>();
+    if((groups & Groups::CLIENT) == Groups::CLIENT) {
+        groupsArray->push_back(moba::toJsonStringPtr("CLIENT"));
+    }
+    if((groups & Groups::SERVER) == Groups::SERVER) {
+        groupsArray->push_back(moba::toJsonStringPtr("SERVER"));
+    }
+    if((groups & Groups::TIMER) == Groups::TIMER) {
+        groupsArray->push_back(moba::toJsonStringPtr("TIMER"));
+    }
+    if((groups & Groups::ENVIRONMENT) == Groups::ENVIRONMENT) {
+        groupsArray->push_back(moba::toJsonStringPtr("ENVIRONMENT"));
+    }
+    if((groups & Groups::INTERFACE) == Groups::INTERFACE) {
+        groupsArray->push_back(moba::toJsonStringPtr("INTERFACE"));
+    }
+    if((groups & Groups::SYSTEM) == Groups::SYSTEM) {
+        groupsArray->push_back(moba::toJsonStringPtr("SYSTEM"));
+    }
+    if((groups & Groups::LAYOUT) == Groups::LAYOUT) {
+        groupsArray->push_back(moba::toJsonStringPtr("LAYOUT"));
+    }
+    if((groups & Groups::CONTROL) == Groups::CONTROL) {
+        groupsArray->push_back(moba::toJsonStringPtr("CONTROL"));
+    }
+    if((groups & Groups::GUI) == Groups::GUI) {
+        groupsArray->push_back(moba::toJsonStringPtr("GUI"));
+    }
+    return groupsArray;
 }

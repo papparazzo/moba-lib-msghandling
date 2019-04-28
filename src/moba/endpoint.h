@@ -28,10 +28,11 @@
 
 #include "basemessage.h"
 #include "socket.h"
+#include "groups.h"
 
 class Endpoint {
     public:
-        Endpoint(SocketPtr socket, const std::string &appName, moba::Version version, const moba::JsonArrayPtr &groups);
+        Endpoint(SocketPtr socket, const std::string &appName, moba::Version version, Groups groups);
         virtual ~Endpoint() noexcept;
 
         long connect();
@@ -53,7 +54,7 @@ class Endpoint {
 
         std::string appName;
         moba::Version version;
-        moba::JsonArrayPtr groups;
+        Groups groups;
 
         static const int MSG_HANDLER_TIME_OUT_SEC = 2;
         static const int MSG_HANDLER_TIME_OUT_USEC = 0;
@@ -61,6 +62,8 @@ class Endpoint {
         long registerApp();
 
         moba::JsonStreamReaderSocketPtr reader;
+
+        moba::JsonArrayPtr convertIntoGroupArray(Groups groups);
 };
 
 using EndpointPtr = std::shared_ptr<Endpoint>;
