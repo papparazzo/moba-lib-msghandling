@@ -33,6 +33,9 @@
 class Endpoint {
     public:
         Endpoint(SocketPtr socket, const std::string &appName, moba::Version version, Groups groups);
+
+        Endpoint(SocketPtr socket, const std::string &appName, moba::Version version);
+
         virtual ~Endpoint() noexcept;
 
         long connect();

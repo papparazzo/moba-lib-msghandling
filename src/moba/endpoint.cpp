@@ -36,6 +36,11 @@ Endpoint::Endpoint(
 ) : socket{socket}, appName{appName}, version{version}, groups{groups} {
 }
 
+Endpoint::Endpoint(
+    SocketPtr socket, const std::string &appName, moba::Version version
+) : socket{socket}, appName{appName}, version{version}, groups{Groups::ALL} {
+}
+
 Endpoint::~Endpoint() {
     try {
         ClientClose msg;
@@ -109,6 +114,10 @@ void Endpoint::sendMsg(const DispatchMessage &msg) {
 
 moba::JsonArrayPtr Endpoint::convertIntoGroupArray(Groups groups) {
     auto groupsArray = std::make_shared<moba::JsonArray>();
+
+    if(groups == Groups::ALL) {
+        return groupsArray;
+    }
     if((groups & Groups::CLIENT) == Groups::CLIENT) {
         groupsArray->push_back(moba::toJsonStringPtr("CLIENT"));
     }
