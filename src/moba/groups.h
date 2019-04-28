@@ -23,6 +23,7 @@
 #include <type_traits>
 
 enum class Groups {
+    ALL         = 0x0000,
     CLIENT      = 0x0001,
     SERVER      = 0x0002,
     TIMER       = 0x0004,
