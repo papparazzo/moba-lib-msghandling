@@ -37,8 +37,12 @@ Endpoint::Endpoint(
 }
 
 Endpoint::~Endpoint() {
-    ClientClose msg;
-    sendMsg(msg);
+    try {
+        ClientClose msg;
+        sendMsg(msg);
+    } catch(...) {
+        // noop
+    }
 }
 
 long Endpoint::connect() {
