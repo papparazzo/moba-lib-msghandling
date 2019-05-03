@@ -216,6 +216,21 @@ struct LayoutGetLayoutReq : public DispatchMessageType<LayoutGetLayoutReq> {
     int layoutId;
 };
 
+struct LayoutGetLayoutReadOnlyReq : public DispatchMessageType<LayoutGetLayoutReadOnlyReq> {
+    LayoutGetLayoutReadOnlyReq(int layoutId) : layoutId{layoutId} {
+    }
+
+    static std::string getMessageName() {
+        return "LAYOUT_GET_LAYOUT_READ_ONLY_REQ";
+    }
+
+    virtual moba::JsonItemPtr getData() const override {
+        return moba::toJsonNumberPtr(layoutId);
+    }
+
+    int layoutId;
+};
+
 struct LayoutGetLayoutRes : public RecieveMessage {
     LayoutGetLayoutRes(moba::JsonItemPtr data) : layoutData{std::dynamic_pointer_cast<moba::JsonObject>(data)} {
     }
