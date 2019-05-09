@@ -101,16 +101,11 @@ struct TrackLayoutSymbolData {
 struct SpecificLayoutData {
     SpecificLayoutData(moba::JsonObjectPtr appData) {
         id = moba::castToInt(appData->at("id"));
-        width = moba::castToInt(appData->at("width"));
-        height = moba::castToInt(appData->at("height"));
-
         //groups = std::dynamic_pointer_cast<moba::JsonArray>(appData->at("msgGroups"));
 
     }
 
     int id;
-    int width;
-    int height;
 
     std::vector<TrackLayoutSymbolData> symbols;
 };
@@ -132,7 +127,7 @@ struct ContactTrigger {
     ContactTrigger(
         int modulAddr, int contactNb, bool state, int time
     ) : contact{modulAddr, contactNb}, state{state}, time{time} {
-        
+
     }
 
     Contact contact;
