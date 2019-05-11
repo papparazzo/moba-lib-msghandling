@@ -68,9 +68,14 @@ struct EndpointData {
 
 struct TrackLayoutData {
     TrackLayoutData(
-        int id, const std::string &name, const std::string &description,
-        const std::string &created, const std::string &modified, int locked
-    ) : id{id}, name{name}, description{description}, created{created}, modified{modified}, locked{locked} {
+        int id, const std::string &name, const std::string &description, const std::string &created, const std::string &modified, bool active, int locked
+    ) : id{id}, name{name}, description{description}, created{created}, modified{modified}, active{active}, locked{locked} {
+
+    }
+
+    TrackLayoutData(
+        const std::string &name, const std::string &description, bool active
+    ) : name{name}, description{description}, active{active} {
 
     }
 
@@ -80,6 +85,7 @@ struct TrackLayoutData {
         description = moba::castToString(appData->at("description"));
         created = moba::castToString(appData->at("created"));
         modified = moba::castToString(appData->at("modified"));
+        active = moba::castToBool(appData->at("active"));
         locked = moba::castToInt(appData->at("locked"));
     }
 
@@ -88,6 +94,7 @@ struct TrackLayoutData {
     std::string description;
     std::string created;
     std::string modified;
+    bool active;
     int locked;
 };
 
@@ -106,7 +113,6 @@ struct SpecificLayoutData {
     }
 
     int id;
-
     std::vector<TrackLayoutSymbolData> symbols;
 };
 
