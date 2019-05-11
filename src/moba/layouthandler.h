@@ -76,12 +76,12 @@ struct LayoutLayoutDeleted : public RecieveMessage {
     int layoutId;
 };
 
-struct LayoutCreateLayoutReq : public DispatchMessageType<LayoutCreateLayoutReq> {
+struct LayoutCreateLayout : public DispatchMessageType<LayoutCreateLayout> {
     LayoutCreateLayoutReq(const TrackLayoutData &tracklayout) : tracklayout{tracklayout} {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_CREATE_LAYOUT_REQ";
+        return "LAYOUT_CREATE_LAYOU";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -92,18 +92,6 @@ struct LayoutCreateLayoutReq : public DispatchMessageType<LayoutCreateLayoutReq>
     }
 
     TrackLayoutData tracklayout;
-};
-
-struct LayoutCreateLayoutRes : public RecieveMessage {
-    LayoutCreateLayoutRes(moba::JsonItemPtr data) {
-        layoutId = moba::castToInt(data);
-    }
-
-    static std::string getMessageName() {
-        return "LAYOUT_CREATE_LAYOUT_RES";
-    }
-
-    int layoutId;
 };
 
 struct LayoutLayoutCreated : public RecieveMessage {
