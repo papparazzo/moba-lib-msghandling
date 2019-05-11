@@ -80,6 +80,9 @@ struct LayoutCreateLayout : public DispatchMessageType<LayoutCreateLayout> {
     LayoutCreateLayoutReq(const TrackLayoutData &tracklayout) : tracklayout{tracklayout} {
     }
 
+    LayoutCreateLayoutReq(const std::string &name, const std::string &description, bool active) : tracklayout{name, description, active} {
+    }
+
     static std::string getMessageName() {
         return "LAYOUT_CREATE_LAYOU";
     }
@@ -88,6 +91,7 @@ struct LayoutCreateLayout : public DispatchMessageType<LayoutCreateLayout> {
         moba::JsonObjectPtr obj(new moba::JsonObject());
         (*obj)["name"       ] = moba::toJsonStringPtr(tracklayout.name);
         (*obj)["description"] = moba::toJsonStringPtr(tracklayout.description);
+        (*obj)["active"     ] = moba::toJsonBoolPtr(tracklayout.active);
         return obj;
     }
 
