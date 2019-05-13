@@ -233,3 +233,14 @@ struct LayoutGetLayoutRes : public RecieveMessage {
 
     SpecificLayoutData layoutData;
 };
+
+struct LayoutSaveLayout : public DispatchMessageType<LayoutSaveLayout> {
+    static std::string getMessageName() {
+        return "LAYOUT_SAVE_LAYOUT";
+    }
+
+    virtual moba::JsonItemPtr getData() const override {
+
+        //return moba::toJsonNumberPtr(layoutId);
+    }
+};
