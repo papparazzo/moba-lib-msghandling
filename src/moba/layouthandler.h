@@ -84,7 +84,7 @@ struct LayoutCreateLayout : public DispatchMessageType<LayoutCreateLayout> {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_CREATE_LAYOU";
+        return "LAYOUT_CREATE_LAYOUT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
