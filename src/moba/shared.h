@@ -99,6 +99,12 @@ struct TrackLayoutData {
 };
 
 struct TrackLayoutSymbolData {
+    TrackLayoutSymbolData(moba::JsonObjectPtr s) {
+        id = moba::castToInt(s->at("id"));
+        xPos = moba::castToInt(s->at("xPos"));
+        yPos = moba::castToInt(s->at("yPos"));
+        symbol = moba::castToInt(s->at("symbol"));
+    }
 	int id;
     int xPos;
     int yPos;
@@ -108,7 +114,13 @@ struct TrackLayoutSymbolData {
 struct SpecificLayoutData {
     SpecificLayoutData(moba::JsonObjectPtr appData) {
         id = moba::castToInt(appData->at("id"));
-        //groups = std::dynamic_pointer_cast<moba::JsonArray>(appData->at("msgGroups"));
+        auto v = std::dynamic_pointer_cast<moba::JsonArray>(appData->at("symbols"));
+        for(auto iter = v->begin(); iter != v->end(); ++iter) {
+            symbols.push_back(std::dynamic_pointer_cast<moba::JsonObject>(*iter));
+        }
+
+
+        //groups = appData->at("msgGroups"));
 
     }
 
