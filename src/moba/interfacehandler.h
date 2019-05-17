@@ -52,19 +52,6 @@ struct InterfaceConnectivityStateChanged : public DispatchMessageType<InterfaceC
     Connectivity connectivity;
 };
 
-struct Contact {
-    Contact(int modulAddr, int contactNb) : modulAddr{modulAddr}, contactNb{contactNb} {
-    }
-
-    Contact(moba::JsonObjectPtr appData) {
-        modulAddr = moba::castToInt(appData->at("modulAddr"));
-        contactNb = moba::castToInt(appData->at("contactNb"));
-    }
-
-    int modulAddr;
-    int contactNb;
-};
-
 struct InterfaceContactTriggered : public DispatchMessageType<InterfaceContactTriggered> {
     InterfaceContactTriggered(const ContactTrigger &contactTrigger) : contactTrigger{contactTrigger} {
     }
