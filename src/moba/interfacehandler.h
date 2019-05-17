@@ -63,6 +63,7 @@ struct Contact {
 
     int modulAddr;
     int contactNb;
+};
 
 struct InterfaceContactTriggered : public DispatchMessageType<InterfaceContactTriggered> {
     InterfaceContactTriggered(const ContactTrigger &contactTrigger) : contactTrigger{contactTrigger} {
