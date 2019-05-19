@@ -224,23 +224,26 @@ struct LayoutGetLayoutReadOnlyReq : public DispatchMessageType<LayoutGetLayoutRe
 };
 
 struct LayoutGetLayoutRes : public RecieveMessage {
-    LayoutGetLayoutRes(moba::JsonItemPtr data) : layoutData{std::dynamic_pointer_cast<moba::JsonObject>(data)} {
+    LayoutGetLayoutRes(moba::JsonItemPtr data) : data{data} {
     }
 
     static std::string getMessageName() {
         return "LAYOUT_GET_LAYOUT_RES";
     }
 
-    SpecificLayoutData layoutData;
+    moba::JsonItemPtr data;
 };
 
 struct LayoutSaveLayout : public DispatchMessageType<LayoutSaveLayout> {
+    LayoutSaveLayout(moba::JsonItemPtr data) : data{data} {
+    }
+
     static std::string getMessageName() {
         return "LAYOUT_SAVE_LAYOUT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
-
-        //return moba::toJsonNumberPtr(layoutId);
+        return data;
     }
+    moba::JsonItemPtr data;
 };
