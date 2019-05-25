@@ -36,7 +36,7 @@ struct TimerGlobalTimerEvent  : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "TIMER_GLOBAL_TIMER_EVENT";
+        return "GLOBAL_TIMER_EVENT";
     }
 
     std::string curModelTime;
@@ -45,7 +45,7 @@ struct TimerGlobalTimerEvent  : public RecieveMessage {
 
 struct TimerGetGlobalTimer : public DispatchMessageType<TimerGetGlobalTimer> {
     static std::string getMessageName() {
-        return "TIMER_GET_GLOBAL_TIMER";
+        return "GET_GLOBAL_TIMER";
     }
 };
 
@@ -61,7 +61,7 @@ struct TimerSetGlobalTimer : public RecieveMessage, public DispatchMessageType<T
     }
 
     static std::string getMessageName() {
-        return "TIMER_SET_GLOBAL_TIMER";
+        return "SET_GLOBAL_TIMER";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -77,7 +77,7 @@ struct TimerSetGlobalTimer : public RecieveMessage, public DispatchMessageType<T
 
 struct TimerGetColorTheme : public DispatchMessageType<TimerGetColorTheme> {
     static std::string getMessageName() {
-        return "TIMER_GET_COLOR_THEME";
+        return "GET_COLOR_THEME";
     }
 };
 
@@ -94,7 +94,7 @@ struct TimerSetColorTheme : public RecieveMessage, public DispatchMessageType<Ti
     }
 
     static std::string getMessageName() {
-        return "TIMER_SET_COLOR_THEME";
+        return "SET_COLOR_THEME";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -126,7 +126,7 @@ struct TimerColorThemeEvent  : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "TIMER_COLOR_THEME_EVENT";
+        return "COLOR_THEME_EVENT";
     }
 
     ColorTheme colorTheme;

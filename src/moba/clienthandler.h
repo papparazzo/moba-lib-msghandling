@@ -29,7 +29,7 @@
 
 struct ClientVoid : public RecieveMessage, public DispatchMessageType<ClientVoid> {
     static std::string getMessageName() {
-        return "CLIENT_VOID";
+        return "VOID";
     }
 };
 
@@ -38,7 +38,7 @@ struct ClientEchoReq : public DispatchMessageType<ClientEchoReq> {
     }
 
     static std::string getMessageName() {
-        return "CLIENT_ECHO_REQ";
+        return "ECHO_REQ";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -54,7 +54,7 @@ struct ClientEchoRes : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "CLIENT_ECHO_RES";
+        return "ECHO_RES";
     }
 
     std::string payload;
@@ -68,7 +68,7 @@ struct ClientError : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "CLIENT_ERROR";
+        return "ERROR";
     }
 
     std::string errorId;
@@ -80,7 +80,7 @@ struct ClientStart : public DispatchMessageType<ClientStart> {
     }
 
     static std::string getMessageName() {
-        return "CLIENT_START";
+        return "START";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -100,7 +100,7 @@ struct ClientConnected : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "CLIENT_CONNECTED";
+        return "CONNECTED";
     }
 
     long appId;
@@ -108,24 +108,24 @@ struct ClientConnected : public RecieveMessage {
 
 struct ClientClose : public DispatchMessageType<ClientClose> {
     static std::string getMessageName() {
-        return "CLIENT_CLOSE";
+        return "CLOSE";
     }
 };
 
 struct ClientShutdown : public RecieveMessage {
     static std::string getMessageName() {
-        return "CLIENT_SHUTDOWN";
+        return "SHUTDOWN";
     }
 };
 
 struct ClientReset : public RecieveMessage {
     static std::string getMessageName() {
-        return "CLIENT_RESET";
+        return "RESET";
     }
 };
 
 struct ClientSelfTesting : public RecieveMessage {
     static std::string getMessageName() {
-        return "CLIENT_SELF_TESTING";
+        return "SELF_TESTING";
     }
 };

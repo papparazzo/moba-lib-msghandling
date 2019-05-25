@@ -34,7 +34,7 @@ struct ServerMaxClientCount : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "SERVER_MAX_CLIENT_COUNT";
+        return "MAX_CLIENT_COUNT";
     }
 
     int maxClientCount;
@@ -45,7 +45,7 @@ struct ServerNewClientStarted : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "SERVER_NEW_CLIENT_STARTED";
+        return "NEW_CLIENT_STARTED";
     }
 
     EndpointData endpoint;
@@ -57,7 +57,7 @@ struct ServerClientClosed : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "SERVER_CLIENT_CLOSED";
+        return "CLIENT_CLOSED";
     }
 
     int clientId;
@@ -68,7 +68,7 @@ struct ServerResetClient : public DispatchMessageType<ServerResetClient> {
     }
 
     static std::string getMessageName() {
-        return "SERVER_RESET_CLIENT";
+        return "RESET_CLIENT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -80,7 +80,7 @@ struct ServerResetClient : public DispatchMessageType<ServerResetClient> {
 
 struct ServerInfoReq : public DispatchMessageType<ServerInfoReq> {
     static std::string getMessageName() {
-        return "SERVER_INFO_REQ";
+        return "INFO_REQ";
     }
 };
 
@@ -105,7 +105,7 @@ struct ServerInfoRes : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "SERVER_INFO_RES";
+        return "INFO_RES";
     }
 
     std::string appName;
@@ -124,7 +124,7 @@ struct ServerInfoRes : public RecieveMessage {
 
 struct ServerConClientsReq : public DispatchMessageType<ServerConClientsReq> {
     static std::string getMessageName() {
-        return "SERVER_CON_CLIENTS_REQ";
+        return "CON_CLIENTS_REQ";
     }
 };
 
@@ -137,7 +137,7 @@ struct ServerConClientsRes : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "SERVER_CON_CLIENTS_RES";
+        return "CON_CLIENTS_RES";
     }
 
     std::vector<EndpointData> endpoints;
@@ -148,7 +148,7 @@ struct ServerSelfTestingClient : public DispatchMessageType<ServerSelfTestingCli
     }
 
     static std::string getMessageName() {
-        return "SERVER_SELF_TESTING_CLIENT";
+        return "SELF_TESTING_CLIENT";
     }
 
     virtual moba::JsonItemPtr getData() const override {

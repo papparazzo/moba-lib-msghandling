@@ -30,7 +30,7 @@
 
 struct LayoutGetLayoutsReq : public DispatchMessageType<LayoutGetLayoutsReq> {
     static std::string getMessageName() {
-        return "LAYOUT_GET_LAYOUTS_REQ";
+        return "GET_LAYOUTS_REQ";
     }
 };
 
@@ -43,7 +43,7 @@ struct LayoutGetLayoutsRes : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_GET_LAYOUTS_RES";
+        return "GET_LAYOUTS_RES";
     }
 
     std::vector<TrackLayoutData> layouts;
@@ -54,7 +54,7 @@ struct LayoutDeleteLayout : public DispatchMessageType<LayoutDeleteLayout> {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_DELETE_LAYOUT";
+        return "DELETE_LAYOUT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -70,7 +70,7 @@ struct LayoutLayoutDeleted : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_LAYOUT_DELETED";
+        return "LAYOUT_DELETED";
     }
 
     int layoutId;
@@ -84,7 +84,7 @@ struct LayoutCreateLayout : public DispatchMessageType<LayoutCreateLayout> {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_CREATE_LAYOUT";
+        return "CREATE_LAYOUT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -103,7 +103,7 @@ struct LayoutLayoutCreated : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_LAYOUT_CREATED";
+        return "LAYOUT_CREATED";
     }
 
     TrackLayoutData tracklayout;
@@ -114,7 +114,7 @@ struct LayoutUpdateLayout : public DispatchMessageType<LayoutUpdateLayout> {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_UPDATE_LAYOUT";
+        return "UPDATE_LAYOUT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -133,7 +133,7 @@ struct LayoutLayoutUpdated : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_LAYOUT_UPDATED";
+        return "LAYOUT_UPDATED";
     }
 
     TrackLayoutData tracklayout;
@@ -144,7 +144,7 @@ struct LayoutUnlockLayout : public DispatchMessageType<LayoutUnlockLayout> {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_UNLOCK_LAYOUT";
+        return "UNLOCK_LAYOUT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -160,7 +160,7 @@ struct LayoutLayoutUnlocked : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_LAYOUT_UNLOCKED";
+        return "LAYOUT_UNLOCKED";
     }
 
     int layoutId;
@@ -171,7 +171,7 @@ struct LayoutLockLayout : public DispatchMessageType<LayoutLockLayout> {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_LOCK_LAYOUT";
+        return "LOCK_LAYOUT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -187,7 +187,7 @@ struct LayoutLayoutLocked : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_LAYOUT_LOCKED";
+        return "LAYOUT_LOCKED";
     }
 
     int layoutId;
@@ -198,7 +198,7 @@ struct LayoutGetLayoutReq : public DispatchMessageType<LayoutGetLayoutReq> {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_GET_LAYOUT_REQ";
+        return "GET_LAYOUT_REQ";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -213,7 +213,7 @@ struct LayoutGetLayoutReadOnlyReq : public DispatchMessageType<LayoutGetLayoutRe
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_GET_LAYOUT_READ_ONLY_REQ";
+        return "GET_LAYOUT_READ_ONLY_REQ";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -228,7 +228,7 @@ struct LayoutGetLayoutRes : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_GET_LAYOUT_RES";
+        return "GET_LAYOUT_RES";
     }
 
     moba::JsonItemPtr data;
@@ -239,7 +239,7 @@ struct LayoutSaveLayout : public DispatchMessageType<LayoutSaveLayout> {
     }
 
     static std::string getMessageName() {
-        return "LAYOUT_SAVE_LAYOUT";
+        return "SAVE_LAYOUT";
     }
 
     virtual moba::JsonItemPtr getData() const override {

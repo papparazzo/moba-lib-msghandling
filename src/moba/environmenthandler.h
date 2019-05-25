@@ -27,7 +27,7 @@
 
 struct EnvGetEnvironment : public DispatchMessageType<EnvGetEnvironment> {
     static std::string getMessageName() {
-        return "ENVIRONMENT_GET_ENVIRONMENT";
+        return "GET_ENVIRONMENT";
     }
 };
 
@@ -55,7 +55,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<Env
     }
 
     static std::string getMessageName() {
-        return "ENVIRONMENT_SET_ENVIRONMENT";
+        return "SET_ENVIRONMENT";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -81,7 +81,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<Env
 
 struct EnvGetAmbience : public DispatchMessageType<EnvGetAmbience> {
     static std::string getMessageName() {
-        return "ENVIRONMENT_GET_AMBIENCE";
+        return "GET_AMBIENCE";
     }
 };
 
@@ -99,7 +99,7 @@ struct EnvSetAmbience : public RecieveMessage, public DispatchMessageType<EnvSet
     }
 
     static std::string getMessageName() {
-        return "ENVIRONMENT_SET_AMBIENCE";
+        return "SET_AMBIENCE";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -115,7 +115,7 @@ struct EnvSetAmbience : public RecieveMessage, public DispatchMessageType<EnvSet
 
 struct EnvGetAmbientLight : public DispatchMessageType<EnvGetAmbientLight> {
     static std::string getMessageName() {
-        return "ENVIRONMENT_GET_AMBIENT_LIGHT";
+        return "GET_AMBIENT_LIGHT";
     }
 };
 
@@ -135,7 +135,7 @@ struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessageType<En
     }
 
     static std::string getMessageName() {
-        return "ENVIRONMENT_SET_AMBIENT_LIGHT";
+        return "SET_AMBIENT_LIGHT";
     }
 
     virtual moba::JsonItemPtr getData() const override {

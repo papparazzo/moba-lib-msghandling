@@ -35,7 +35,7 @@ struct InterfaceConnectivityStateChanged : public DispatchMessageType<InterfaceC
     }
 
     static std::string getMessageName() {
-        return "INTERFACE_CONNECTIVITY_STATE_CHANGED";
+        return "CONNECTIVITY_STATE_CHANGED";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -57,7 +57,7 @@ struct InterfaceContactTriggered : public DispatchMessageType<InterfaceContactTr
     }
 
     static std::string getMessageName() {
-        return "INTERFACE_CONTACT_TRIGGERED";
+        return "CONTACT_TRIGGERED";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -84,7 +84,7 @@ struct InterfaceSetBrakeVector : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "INTERFACE_SET_BRAKE_VECTOR";
+        return "SET_BRAKE_VECTOR";
     }
 
     std::vector<BrakeVectorContact> items;

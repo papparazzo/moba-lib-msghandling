@@ -29,7 +29,7 @@ struct SystemSetAutomaticMode : public DispatchMessageType<SystemSetAutomaticMod
     }
 
     static std::string getMessageName() {
-        return "SYSTEM_SET_AUTOMATIC_MODE";
+        return "SET_AUTOMATIC_MODE";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -45,7 +45,7 @@ struct SystemSetEmergencyStop : public DispatchMessageType<SystemSetEmergencySto
     }
 
     static std::string getMessageName() {
-        return "SYSTEM_SET_EMERGENCY_STOP";
+        return "SET_EMERGENCY_STOP";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -60,7 +60,7 @@ struct SystemSetStandbyMode : public DispatchMessageType<SystemSetStandbyMode> {
     }
 
     static std::string getMessageName() {
-        return "SYSTEM_SET_STANDBY_MODE";
+        return "SET_STANDBY_MODE";
     }
 
     virtual moba::JsonItemPtr getData() const override {
@@ -72,7 +72,7 @@ struct SystemSetStandbyMode : public DispatchMessageType<SystemSetStandbyMode> {
 
 struct SystemGetHardwareState : public DispatchMessageType<SystemGetHardwareState> {
     static std::string getMessageName() {
-        return "SYSTEM_GET_HARDWARE_STATE";
+        return "GET_HARDWARE_STATE";
     }
 };
 
@@ -101,7 +101,7 @@ struct SystemHardwareStateChanged : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "SYSTEM_HARDWARE_STATE_CHANGED";
+        return "HARDWARE_STATE_CHANGED";
     }
 
     HardwareState hardwareState;
@@ -109,12 +109,12 @@ struct SystemHardwareStateChanged : public RecieveMessage {
 
 struct SystemHardwareShutdown : public DispatchMessageType<SystemHardwareShutdown> {
     static std::string getMessageName() {
-        return "SYSTEM_HARDWARE_SHUTDOWN";
+        return "HARDWARE_SHUTDOWN";
     }
 };
 
 struct SystemHardwareReset : public DispatchMessageType<SystemHardwareReset> {
     static std::string getMessageName() {
-        return "SYSTEM_HARDWARE_RESET";
+        return "HARDWARE_RESET";
     }
 };

@@ -49,7 +49,7 @@ struct GuiSystemNotice : public RecieveMessage {
     }
 
     static std::string getMessageName() {
-        return "GUI_SYSTEM_NOTICE";
+        return "SYSTEM_NOTICE";
     }
 
     NoticeType  noticeType;
