@@ -9,3 +9,6 @@ libmsghandling_a_SOURCES = \
 LDFLAGS += -L/usr/local/lib
 
 CLEANFILES = *~
+
+AM_CPPFLAGS = \
+    -g3 -g -ggdb -O3 -Wall
