@@ -21,6 +21,8 @@
 #pragma once
 
 #include <type_traits>
+#include "rapidjson/document.h"
+#include "basemessage.h"
 
 enum class Groups {
     ALL         = 0x0000,
@@ -31,9 +33,15 @@ enum class Groups {
     INTERFACE   = 0x0010,
     SYSTEM      = 0x0020,
     LAYOUT      = 0x0040,
-    CONTROL     = 0x0080,
-    GUI         = 0x0100,
+    GUI         = 0x0080,
 };
+
+inline Groups operator |=(Groups lhs, Groups rhs) {
+    return static_cast<Groups> (
+        static_cast<std::underlying_type<Groups>::type>(lhs) |
+        static_cast<std::underlying_type<Groups>::type>(rhs)
+    );
+}
 
 inline Groups operator |(Groups lhs, Groups rhs) {
     return static_cast<Groups> (
@@ -47,4 +55,72 @@ inline Groups operator &(Groups lhs, Groups rhs) {
         static_cast<std::underlying_type<Groups>::type>(lhs) &
         static_cast<std::underlying_type<Groups>::type>(rhs)
     );
+}
+
+inline rapidjson::Value convertIntoGroupArray(Groups groups) {
+    rapidjson::Value g(rapidjson::kArrayType);
+    rapidjson::Document document;
+    rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+    if(groups == Groups::ALL) {
+        return g;
+    }
+    if((groups & Groups::CLIENT) == Groups::CLIENT) {
+        g.PushBack(Message::CLIENT, allocator);
+    }
+    if((groups & Groups::SERVER) == Groups::SERVER) {
+        g.PushBack(Message::SERVER, allocator);
+    }
+    if((groups & Groups::TIMER) == Groups::TIMER) {
+        g.PushBack(Message::TIMER, allocator);
+    }
+    if((groups & Groups::ENVIRONMENT) == Groups::ENVIRONMENT) {
+        g.PushBack(Message::ENVIRONMENT, allocator);
+    }
+    if((groups & Groups::INTERFACE) == Groups::INTERFACE) {
+        g.PushBack(Message::INTERFACE, allocator);
+    }
+    if((groups & Groups::SYSTEM) == Groups::SYSTEM) {
+        g.PushBack(Message::SYSTEM, allocator);
+    }
+    if((groups & Groups::LAYOUT) == Groups::LAYOUT) {
+        g.PushBack(Message::LAYOUT, allocator);
+    }
+    if((groups & Groups::GUI) == Groups::GUI) {
+        g.PushBack(Message::GUI, allocator);
+    }
+    return g;
+}
+
+inline Groups convertFromGroupArray(const rapidjson::Value &v) {
+    Groups group;
+    for(auto &i : v["msgGroups"].GetArray()) {
+        switch(i.GetInt()) {
+            case Message::CLIENT:
+                group |= Groups::CLIENT;
+                break;
+            case Message::SERVER:
+                group |= Groups::SERVER;
+                break;
+            case Message::TIMER:
+                group |= Groups::TIMER;
+                break;
+            case Message::ENVIRONMENT:
+                group |= Groups::ENVIRONMENT;
+                break;
+            case Message::INTERFACE:
+                group |= Groups::INTERFACE;
+                break;
+            case Message::SYSTEM:
+                group |= Groups::SYSTEM;
+                break;
+            case Message::LAYOUT:
+                group |= Groups::LAYOUT;
+                break;
+            case Message::GUI:
+                group |= Groups::GUI;
+                break;
+        }
+    }
+    return group;
 }

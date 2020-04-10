@@ -26,70 +26,49 @@
 #include <memory>
 
 #include "basemessage.h"
-#include <moba/jsonabstractitem.h>
-
-#include <iostream>
+#include "rapidjson/document.h"
 
 class Registry {
     public:
-        using HandlerFnWrapper = std::function<void(const std::string&, moba::JsonItemPtr)>;
+       /*
+        using HandlerFnWrapper = std::function<void(int, const rapidjson::Document &data)
+        using HandlerDefFnWrapper = std::function<void(int, int, const rapidjson::Document &data);
 
         Registry() {
         }
 
         Registry(const Registry& orig) = delete;
+
         virtual ~Registry() noexcept {
         }
 
-        template<typename T>
-        void registerHandler(std::function<void(const T&)> fn) {
-            handlers[T::getMessageName()] = [fn](moba::JsonItemPtr data) {
-                T m{data};
-                fn(m);
-            };
+        void registerHandler(int groupId, HandlerFnWrapper fn) {
+            handlers[groupId] = fn;
         }
 
-        void registerDefaultHandler(HandlerFnWrapper fn) {
+        void registerDefaultHandler(HandlerDefFnWrapper fn) {
             defHandler = fn;
         }
 
-        void registerAuxiliaryHandler(HandlerFnWrapper fn) {
-            auxHandler = fn;
-        }
-
-        auto handleMsg(moba::JsonItemPtr data) -> bool {
-            auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-            if(!o) {
-                return false;
-            }
-            return handleMsg(o);
-        }
-
-        auto handleMsg(moba::JsonObjectPtr data) -> bool {
-            auto msgKey = moba::castToString(data->at(BaseMessage::MSG_HEADER_NAME));
-            auto msgData = data->at(BaseMessage::MSG_HEADER_DATA);
-
-            if(auxHandler) {
-                auxHandler(msgKey, msgData);
-            }
-
-            auto iter = handlers.find(msgKey);
+        auto handleMsg(int grpId, int msgId, const rapidjson::Document &msgData) -> bool {
+            auto iter = handlers.find(grpId);
             if(iter != handlers.end()) {
-                iter->second(msgData);
+                iter->second(msgId, msgData);
                 return true;
             }
 
             if(defHandler) {
-                defHandler(msgKey, msgData);
+                defHandler(grpId, msgId, msgData);
             }
             return false;
         }
 
     protected:
-        using HandlerMap = std::unordered_map<std::string, std::function<void(moba::JsonItemPtr)>>;
+        using HandlerMap = std::unordered_map<int, HandlerFnWrapper>>;
 
         HandlerMap       handlers;
         HandlerFnWrapper defHandler;
         HandlerFnWrapper auxHandler;
+        */
 };
 

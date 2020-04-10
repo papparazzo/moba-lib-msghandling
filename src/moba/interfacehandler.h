@@ -23,7 +23,6 @@
 #include <string>
 #include "basemessage.h"
 #include "shared.h"
-#include <moba/jsonabstractitem.h>
 
 struct InterfaceConnectivityStateChanged : public DispatchMessageType<InterfaceConnectivityStateChanged> {
     enum class Connectivity {

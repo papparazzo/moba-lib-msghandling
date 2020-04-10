@@ -20,33 +20,68 @@
 
 #pragma once
 
-#include <moba/version.h>
-#include <memory>
-#include <string>
-
+#include <moba-common/version.h>
 #include "basemessage.h"
 #include "shared.h"
 
-struct ClientVoid : public RecieveMessage, public DispatchMessageType<ClientVoid> {
-    static std::string getMessageName() {
-        return "VOID";
+struct ClientMessage : public Message {
+    enum MessageName {
+        CLIENT_VOID         = 1,
+        CLIENT_ECHO_REQ     = 2,
+        CLIENT_ECHO_RES     = 3,
+        CLIENT_ERROR        = 4,
+        CLIENT_START        = 5,
+        CLIENT_CONNECTED    = 6,
+        CLIENT_CLOSE        = 7,
+        CLIENT_SHUTDOWN     = 8,
+        CLIENT_RESET        = 9,
+        CLIENT_SELF_TESTING = 10
+    };
+
+    ClientMessage(unsigned int msgId) : Message{CLIENT, msgId} {
     }
 };
 
-struct ClientEchoReq : public DispatchMessageType<ClientEchoReq> {
-    ClientEchoReq(const std::string &payload) : payload{payload} {
+struct ClientVoid : public ClientMessage {
+    ClientVoid() : ClientMessage{CLIENT_VOID} {
     }
-
-    static std::string getMessageName() {
-        return "ECHO_REQ";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        return moba::toJsonStringPtr(payload);
-    }
-
-    std::string payload;
 };
+
+struct ClientEchoReq : public ClientMessage {
+    ClientEchoReq(long payload) : ClientMessage{CLIENT_ECHO_REQ} {
+        data.SetInt(payload);
+    }
+};
+
+struct ClientStart : public ClientMessage {
+    ClientStart(const AppData &appData) : ClientMessage{CLIENT_START}, appData{appData} {
+        std::string version = appData.version.getString();
+
+        data.SetObject();
+        data.AddMember("appName", rapidjson::Value(appData.appName.c_str(), appData.appName.length(), data.GetAllocator()), data.GetAllocator());
+        data.AddMember("version", rapidjson::Value(version.c_str(), version.length(), data.GetAllocator()), data.GetAllocator());
+        data.AddMember("msgGroups", convertIntoGroupArray(appData.groups), data.GetAllocator());
+    }
+
+    AppData appData;
+};
+
+struct ClientClose : public ClientMessage {
+    ClientClose() : ClientMessage{CLIENT_CLOSE} {
+    }
+};
+
+
+
+
+
+
+
+
+
+/*
+
+
 
 struct ClientEchoRes : public RecieveMessage {
     ClientEchoRes(moba::JsonItemPtr data) {
@@ -75,43 +110,6 @@ struct ClientError : public RecieveMessage {
     std::string additionalMsg;
 };
 
-struct ClientStart : public DispatchMessageType<ClientStart> {
-    ClientStart(const AppData &appData) : appData{appData} {
-    }
-
-    static std::string getMessageName() {
-        return "START";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["appName"  ] = moba::toJsonStringPtr(appData.appName);
-        (*obj)["version"  ] = appData.version.toJsonPtr();
-        (*obj)["msgGroups"] = appData.groups;
-        return obj;
-    }
-
-    AppData appData;
-};
-
-struct ClientConnected : public RecieveMessage {
-    ClientConnected(moba::JsonItemPtr data) {
-        appId = moba::castToInt(data);
-    }
-
-    static std::string getMessageName() {
-        return "CONNECTED";
-    }
-
-    long appId;
-};
-
-struct ClientClose : public DispatchMessageType<ClientClose> {
-    static std::string getMessageName() {
-        return "CLOSE";
-    }
-};
-
 struct ClientShutdown : public RecieveMessage {
     static std::string getMessageName() {
         return "SHUTDOWN";
@@ -129,3 +127,4 @@ struct ClientSelfTesting : public RecieveMessage {
         return "SELF_TESTING";
     }
 };
+*/

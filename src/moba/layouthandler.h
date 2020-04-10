@@ -25,7 +25,6 @@
 #include <memory>
 
 #include "basemessage.h"
-#include <moba/jsonabstractitem.h>
 #include "shared.h"
 
 struct LayoutGetLayoutsReq : public DispatchMessageType<LayoutGetLayoutsReq> {

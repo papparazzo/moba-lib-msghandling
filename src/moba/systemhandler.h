@@ -20,40 +20,39 @@
 
 #pragma once
 
-#include <moba/jsonabstractitem.h>
 #include "basemessage.h"
 
-struct SystemSetAutomaticMode : public DispatchMessageType<SystemSetAutomaticMode> {
+struct SystemMessage : public Message {
+    enum MessageName {
+        SET_AUTOMATIC_MODE      = 1,
+        SET_EMERGENCY_STOP      = 2,
+        SET_STANDBY_MODE        = 3,
+        GET_HARDWARE_STATE      = 4,
+        HARDWARE_STATE_CHANGED  = 5,
+        HARDWARE_SHUTDOWN       = 6,
+        HARDWARE_RESET          = 7
+    };
 
-    SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
+    SystemMessage(unsigned char msgId) : Message{SYSTEM, msgId} {
     }
-
-    static std::string getMessageName() {
-        return "SET_AUTOMATIC_MODE";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        return moba::toJsonBoolPtr(automaticActive);
-    }
-
-    bool automaticActive;
 };
 
-struct SystemSetEmergencyStop : public DispatchMessageType<SystemSetEmergencyStop> {
-
-    SystemSetEmergencyStop(bool emergencyStopActive) : emergencyStopActive{emergencyStopActive} {
+struct SystemSetAutomaticMode : public SystemMessage {
+    SystemSetAutomaticMode(bool automaticActive) : SystemMessage{SET_AUTOMATIC_MODE} {
+        data.SetBool(automaticActive);
     }
-
-    static std::string getMessageName() {
-        return "SET_EMERGENCY_STOP";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        return moba::toJsonBoolPtr(emergencyStopActive);
-    }
-
-    bool emergencyStopActive;
 };
+
+struct SystemSetEmergencyStop : public SystemMessage {
+    SystemSetEmergencyStop(bool emergencyStopActive) : SystemMessage{SET_EMERGENCY_STOP} {
+        data.SetBool(emergencyStopActive);
+    }
+};
+
+
+
+/*
+
 
 struct SystemSetStandbyMode : public DispatchMessageType<SystemSetStandbyMode> {
     SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
@@ -69,13 +68,12 @@ struct SystemSetStandbyMode : public DispatchMessageType<SystemSetStandbyMode> {
 
     bool standbyActive;
 };
-
-struct SystemGetHardwareState : public DispatchMessageType<SystemGetHardwareState> {
-    static std::string getMessageName() {
-        return "GET_HARDWARE_STATE";
+*/
+struct SystemGetHardwareState : public SystemMessage {
+    SystemGetHardwareState() : SystemMessage{GET_HARDWARE_STATE} {
     }
 };
-
+/*
 struct SystemHardwareStateChanged : public RecieveMessage {
     enum class HardwareState {
         ERROR,
@@ -118,3 +116,4 @@ struct SystemHardwareReset : public DispatchMessageType<SystemHardwareReset> {
         return "HARDWARE_RESET";
     }
 };
+*/

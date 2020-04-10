@@ -20,9 +20,7 @@
 
 #pragma once
 
-#include <moba/version.h>
-#include <moba/jsonabstractitem.h>
-#include <moba/jsonstreamreadersocket.h>
+#include <moba-common/version.h>
 #include <memory>
 #include <mutex>
 
@@ -30,43 +28,41 @@
 #include "socket.h"
 #include "groups.h"
 
+#include "rapidjson/document.h"
+
 class Endpoint {
-    public:
-        Endpoint(SocketPtr socket, const std::string &appName, moba::Version version, Groups groups);
+public:
+    Endpoint(SocketPtr socket, const std::string &appName, moba::common::Version version, Groups groups);
 
-        Endpoint(SocketPtr socket, const std::string &appName, moba::Version version);
+    Endpoint(SocketPtr socket, const std::string &appName, moba::common::Version version);
 
-        virtual ~Endpoint() noexcept;
+    virtual ~Endpoint() noexcept;
 
-        long connect();
+    long connect();
 
-        long getAppId() {return appId;}
+    long getAppId() {return appId;}
 
-        auto recieveMsg(time_t timeoutSec = 0) -> moba::JsonItemPtr;
+    auto recieveMsg(time_t timeoutSec = 0) -> Message;
 
-        auto waitForNewMsg() -> moba::JsonItemPtr;
+    auto waitForNewMsg() -> Message;
 
-        void sendMsg(const DispatchMessage &msg);
+    void sendMsg(const Message &msg);
 
-    protected:
-        SocketPtr socket;
+protected:
+    SocketPtr socket;
 
-        std::mutex m;
+    std::mutex m;
 
-        long appId;
+    long appId;
 
-        std::string appName;
-        moba::Version version;
-        Groups groups;
+    std::string appName;
+    moba::common::Version version;
+    Groups groups;
 
-        static const int MSG_HANDLER_TIME_OUT_SEC = 2;
-        static const int MSG_HANDLER_TIME_OUT_USEC = 0;
+    static const int MSG_HANDLER_TIME_OUT_SEC = 2;
+    static const int MSG_HANDLER_TIME_OUT_USEC = 0;
 
-        long registerApp();
-
-        moba::JsonStreamReaderSocketPtr reader;
-
-        moba::JsonArrayPtr convertIntoGroupArray(Groups groups);
+    long registerApp();
 };
 
 using EndpointPtr = std::shared_ptr<Endpoint>;

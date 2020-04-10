@@ -23,21 +23,28 @@
 
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <arpa/inet.h>
 
-#include <moba/jsondecoder.h>
-#include <moba/jsonstreamreadersocket.h>
+#include <cstdint>
 
-#include "registry.h"
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+
+#include "rapidjson/socketwritestream.h"
+#include "rapidjson/socketreadstream.h"
+
 #include "clienthandler.h"
 #include "endpoint.h"
+#include "basemessage.h"
+#include "shared.h"
 
 Endpoint::Endpoint(
-    SocketPtr socket, const std::string &appName, moba::Version version, Groups groups
+    SocketPtr socket, const std::string &appName, moba::common::Version version, Groups groups
 ) : socket{socket}, appName{appName}, version{version}, groups{groups} {
 }
 
 Endpoint::Endpoint(
-    SocketPtr socket, const std::string &appName, moba::Version version
+    SocketPtr socket, const std::string &appName, moba::common::Version version
 ) : socket{socket}, appName{appName}, version{version}, groups{Groups::ALL} {
 }
 
@@ -52,30 +59,26 @@ Endpoint::~Endpoint() {
 
 long Endpoint::connect() {
     socket->init();
-    reader.reset(new moba::JsonStreamReaderSocket{socket->getSocket()});
     return registerApp();
 }
 
 long Endpoint::registerApp() {
-    moba::JsonObjectPtr obj{new moba::JsonObject{}};
+    sendMsg(ClientStart{AppData{appName, version, groups}});
 
-    ClientStart msg{AppData{appName, version, convertIntoGroupArray(groups)}};
+    auto msg = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
 
-    sendMsg(msg);
-    auto data = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
-    auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-    auto msgKey = moba::castToString(o->at(BaseMessage::MSG_HEADER_NAME));
-    auto msgData = o->at(BaseMessage::MSG_HEADER_DATA);
+    if(!msg.data.IsInt()) {
+        throw SocketException{"msg data is not an int"};
+    }
 
-    ClientConnected mptr{msgData};
-
-    if(msgKey != mptr.getMessageName()) {
+    if(msg.getGroupId() != Message::CLIENT || msg.getMessageId() != ClientMessage::CLIENT_CONNECTED) {
         throw SocketException{"did not recieve CLIENT_CONNECTED"};
     }
-    return appId = mptr.appId;
+
+    return appId = msg.data.GetInt();
 }
 
-moba::JsonItemPtr Endpoint::recieveMsg(time_t timeoutSec) {
+Message Endpoint::recieveMsg(time_t timeoutSec) {
     struct timeval timeout;
     fd_set         read_sock;
 
@@ -92,58 +95,38 @@ moba::JsonItemPtr Endpoint::recieveMsg(time_t timeoutSec) {
     }
 
     if(!FD_ISSET(sd, &read_sock)) {
-        return moba::toJsonNULLPtr();
+        return Message{};
     }
     return waitForNewMsg();
 }
 
-moba::JsonItemPtr Endpoint::waitForNewMsg() {
-    moba::JsonDecoder decoder(reader);
-    return decoder.decode();
+Message Endpoint::waitForNewMsg() {
+    std::uint32_t d[3];
+
+    if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) == -1) {
+        throw SocketException{"recv header failed"};
+    }
+
+    rapidjson::SocketReadStream srs{socket->getSocket(), ::ntohl(d[2])};
+    return Message{::ntohl(d[0]), ::ntohl(d[1]), srs};
 }
 
-void Endpoint::sendMsg(const DispatchMessage &msg) {
+void Endpoint::sendMsg(const Message &msg) {
     std::lock_guard<std::mutex> l{m};
 
-    std::string s = msg.getRawMessage();
-    ssize_t c = ::send(socket->getSocket(), s.c_str(), s.length(), 0);
-    if(c == -1 || c != s.length()) {
-        throw SocketException{"sending <" + s + "> failed"};
-    }
-}
+    std::uint32_t d[] = {
+        ::htonl(msg.getGroupId()),
+        ::htonl(msg.getMessageId()),
+        ::htonl(75)
+    };
 
-moba::JsonArrayPtr Endpoint::convertIntoGroupArray(Groups groups) {
-    auto groupsArray = std::make_shared<moba::JsonArray>();
+    if(::send(socket->getSocket(), d, sizeof(d), 0) == -1) {
+        throw SocketException{"sending failed"};
+    }
 
-    if(groups == Groups::ALL) {
-        return groupsArray;
-    }
-    if((groups & Groups::CLIENT) == Groups::CLIENT) {
-        groupsArray->push_back(moba::toJsonStringPtr("CLIENT"));
-    }
-    if((groups & Groups::SERVER) == Groups::SERVER) {
-        groupsArray->push_back(moba::toJsonStringPtr("SERVER"));
-    }
-    if((groups & Groups::TIMER) == Groups::TIMER) {
-        groupsArray->push_back(moba::toJsonStringPtr("TIMER"));
-    }
-    if((groups & Groups::ENVIRONMENT) == Groups::ENVIRONMENT) {
-        groupsArray->push_back(moba::toJsonStringPtr("ENVIRONMENT"));
-    }
-    if((groups & Groups::INTERFACE) == Groups::INTERFACE) {
-        groupsArray->push_back(moba::toJsonStringPtr("INTERFACE"));
-    }
-    if((groups & Groups::SYSTEM) == Groups::SYSTEM) {
-        groupsArray->push_back(moba::toJsonStringPtr("SYSTEM"));
-    }
-    if((groups & Groups::LAYOUT) == Groups::LAYOUT) {
-        groupsArray->push_back(moba::toJsonStringPtr("LAYOUT"));
-    }
-    if((groups & Groups::CONTROL) == Groups::CONTROL) {
-        groupsArray->push_back(moba::toJsonStringPtr("CONTROL"));
-    }
-    if((groups & Groups::GUI) == Groups::GUI) {
-        groupsArray->push_back(moba::toJsonStringPtr("GUI"));
-    }
-    return groupsArray;
+    auto c = ::ntohl(d[3]);
+    std::unique_ptr<uint8_t[]> buffer(new uint8_t[c]);
+
+    rapidjson::SocketWriteStream s{socket->getSocket(), buffer.get(), c};
+    msg.Accept(s);
 }

@@ -21,62 +21,54 @@
 #pragma once
 
 #include <string>
-#include <moba/jsonabstractitem.h>
+#include <cstddef>
+#include <cstdint>
 
-class BaseMessage {
-    public:
-        static const std::string MSG_HEADER_NAME;
-        static const std::string MSG_HEADER_DATA;
+#include "rapidjson/document.h"
+#include "rapidjson/writer.h"
 
-        virtual ~BaseMessage() noexcept {
-        }
+#include <iostream>
 
-    protected:
-        BaseMessage() {
-        }
-};
+struct Message {
+    enum MessageGroup {
+        BASE        = 1,
+        CLIENT      = 2,
+        SERVER      = 3,
+        TIMER       = 4,
+        ENVIRONMENT = 5,
+        INTERFACE   = 6,
+        SYSTEM      = 7,
+        LAYOUT      = 8,
+        GUI         = 9,
+    };
 
-class RecieveMessage : public BaseMessage {
-};
+    template<typename InputStream>
+    Message(std::uint32_t grpId, std::uint32_t msgId, InputStream &s) : groupId{grpId}, messageId{msgId} {
+        data.ParseStream(s);
+    }
 
-class DispatchMessage : public BaseMessage {
-    public:
-        virtual std::string getRawMessage() const = 0;
-};
+    Message(std::uint32_t grpId = 0, std::uint32_t msgId = 0) : groupId{grpId}, messageId{msgId} {
+    }
 
-class DispatchGenericMessage : public DispatchMessage {
-    public:
-        DispatchGenericMessage(const std::string msgName, moba::JsonItemPtr data) : msgName{msgName}, data{data} {
-        }
+    virtual ~Message() noexcept {
+    }
 
-        DispatchGenericMessage(const std::string msgName) : msgName{msgName}, data{moba::toJsonNULLPtr()} {
-        }
+    virtual std::uint32_t getGroupId() const {
+        return groupId;
+    }
+    virtual std::uint32_t getMessageId() const {
+        return messageId;
+    }
 
-        virtual std::string getRawMessage() const {
-            moba::JsonObject obj;
+    template<typename OutputStream>
+    void Accept(OutputStream &s) const {
+        rapidjson::Writer<OutputStream> w{s};
+        data.Accept(w);
+    }
 
-            obj[BaseMessage::MSG_HEADER_NAME] = moba::toJsonStringPtr(msgName);
-            obj[BaseMessage::MSG_HEADER_DATA] = data;
-            return obj.getJsonString();
-        };
+    rapidjson::Document data;
 
-    protected:
-        std::string msgName;
-        moba::JsonItemPtr data;
-};
-
-template<typename T = int>
-class DispatchMessageType : public DispatchMessage {
-    public:
-        virtual std::string getRawMessage() const {
-            moba::JsonObject obj;
-
-            obj[BaseMessage::MSG_HEADER_NAME] = moba::toJsonStringPtr(T::getMessageName());
-            obj[BaseMessage::MSG_HEADER_DATA] = getData();
-            return obj.getJsonString();
-        }
-
-        virtual moba::JsonItemPtr getData() const {
-            return moba::toJsonNULLPtr();
-        }
+protected:
+    std::uint32_t groupId;
+    std::uint32_t messageId;
 };

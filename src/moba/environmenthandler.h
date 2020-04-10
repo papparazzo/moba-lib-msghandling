@@ -23,7 +23,6 @@
 #include <string>
 #include <memory>
 #include "basemessage.h"
-#include <moba/jsonabstractitem.h>
 
 struct EnvGetEnvironment : public DispatchMessageType<EnvGetEnvironment> {
     static std::string getMessageName() {

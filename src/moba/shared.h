@@ -20,29 +20,31 @@
 
 #pragma once
 
-#include <moba/jsonabstractitem.h>
 #include <memory>
+#include <moba-common/version.h>
+#include "groups.h"
 
 struct AppData {
     AppData() {
     }
 
     AppData(
-        const std::string &appName, const moba::Version &version, moba::JsonArrayPtr groups
+        const std::string &appName, const moba::common::Version &version, Groups groups
     ) : appName{appName}, version{version}, groups{groups} {
     }
 
-    AppData(moba::JsonObjectPtr appData) {
-        appName = moba::castToString(appData->at("appName"));
-        version = moba::castToString(appData->at("version"));
-        groups = std::dynamic_pointer_cast<moba::JsonArray>(appData->at("msgGroups"));
+    AppData(const rapidjson::Document &d) {
+        appName = d["appName"].GetString();
+        version = d["version"].GetString();
     }
 
     std::string appName;
-    moba::Version version;
-    moba::JsonArrayPtr groups;
+    moba::common::Version version;
+    Groups groups;
 };
 
+
+/*
 struct EndpointData {
     EndpointData(
         const AppData &appInfo, long appId, const std::string &startTime, const std::string &addr, long port
@@ -162,4 +164,163 @@ struct BrakeVectorContact {
 
     Contact contact;
     int locId;
+};
+*/
+
+
+struct JsonSwitch {
+    enum class Switch {
+        ON,
+        AUTO,
+        UNSET,
+        TRIGGER,
+        OFF
+    };
+
+    JsonSwitch(const std::string &s) {
+        if(s == "ON") {
+            v = Switch::ON;
+        } else if(s == "AUTO") {
+            v = Switch::AUTO;
+        } else if(s == "UNSET") {
+            v = Switch::UNSET;
+        } else if(s == "TRIGGER") {
+            v = Switch::TRIGGER;
+        } else if(s == "OFF") {
+            v = Switch::OFF;
+        } else {
+          //  throw UnsupportedOperationException("IPC::Command is invalid");
+        }
+    }
+
+    JsonSwitch(JsonSwitch::Switch v) : v{v} {
+    }
+
+    std::string getJsonString() const {
+        switch(this->v) {
+            case Switch::ON:
+                return "ON";
+
+            case Switch::OFF:
+                return "OFF";
+
+            case Switch::AUTO:
+                return "AUTO";
+
+            case Switch::UNSET:
+                return "UNSET";
+
+            case Switch::TRIGGER:
+                return "TRIGGER";
+
+            //default:
+              //  throw UnsupportedOperationException("IPC::Command is invalid");
+        }
+    }
+
+    Switch getVal() {
+        return this->v;
+    }
+
+protected:
+    Switch v;
+};
+
+struct JsonToggleState {
+    enum class ToggleState {
+        ON,
+        OFF,
+        UNSET
+    };
+
+    JsonToggleState(const std::string &s) {
+        if(s == "ON") {
+            v = ToggleState::ON;
+        } else if(s == "UNSET") {
+            v = ToggleState::UNSET;
+        } else if(s == "OFF") {
+            v = ToggleState::OFF;
+        } else {
+            //throw UnsupportedOperationException("IPC::Command is invalid");
+        }
+    }
+
+    JsonToggleState(JsonToggleState::ToggleState v) : v{v} {
+    }
+
+    std::string getJsonString() const {
+        switch(this->v) {
+            case ToggleState::ON:
+                return "ON";
+
+            case ToggleState::OFF:
+                return "OFF";
+
+            case ToggleState::UNSET:
+                return "UNSET";
+
+           // default:
+           //     throw UnsupportedOperationException("IPC::Command is invalid");
+        }
+    }
+
+    ToggleState getVal() {
+        return this->v;
+    }
+
+protected:
+    ToggleState v;
+};
+
+
+struct JsonThreeState {
+    enum class ThreeState {
+        ON,
+        OFF,
+        AUTO,
+        UNSET
+    };
+
+    JsonThreeState(const std::string &s) {
+        if(s == "ON") {
+            v = ThreeState::ON;
+        } else if(s == "OFF") {
+            v = ThreeState::OFF;
+        } else if(s == "AUTO") {
+            v = ThreeState::AUTO;
+        } else if(s == "UNSET") {
+            v = ThreeState::UNSET;
+        } else {
+           // throw UnsupportedOperationException("IPC::Command is invalid");
+        }
+    }
+
+    JsonThreeState(JsonThreeState::ThreeState v) : v(v) {
+    }
+
+    std::string getJsonString() const {
+        switch(this->v) {
+            case ThreeState::ON:
+                return "ON";
+
+            case ThreeState::OFF:
+                return "OFF";
+
+            case ThreeState::AUTO:
+                return "AUTO";
+
+            case ThreeState::UNSET:
+                return "UNSET";
+
+           // default:
+           //     throw UnsupportedOperationException("IPC::Command is invalid");
+        }
+    }
+
+    ThreeState getVal() {
+        return this->v;
+    }
+
+protected:
+    ThreeState v;
 };

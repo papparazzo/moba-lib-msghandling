@@ -28,11 +28,10 @@
 #include "basemessage.h"
 #include "shared.h"
 
-struct TimerGlobalTimerEvent  : public RecieveMessage {
-    TimerGlobalTimerEvent(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        curModelTime = moba::castToString(o->at("curModelTime"));
-        multiplicator = moba::castToInt(o->at("multiplicator"));
+struct TimerGlobalTimerEvent : public RecieveMessage {
+    TimerGlobalTimerEvent(moba::json::JsonValue data) {
+        curModelTime = moba::castToString(data.at("curModelTime"));
+        multiplicator = moba::castToInt(data.at("multiplicator"));
     }
 
     static std::string getMessageName() {
@@ -98,10 +97,10 @@ struct TimerSetColorTheme : public RecieveMessage, public DispatchMessageType<Ti
     }
 
     virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["dimTime"   ] = moba::toJsonStringPtr(dimTime);
-        (*obj)["brightTime"] = moba::toJsonStringPtr(brightTime);
-        (*obj)["condition" ] = moba::toJsonThreeStatePtr(condition);
+        moba::json::JsonObject obj{};
+        obj["dimTime"   ] = dimTime;
+        obj["brightTime"] = brightTime;
+        obj["condition" ] = moba::toJsonThreeStatePtr(condition);
         return obj;
     }
 
