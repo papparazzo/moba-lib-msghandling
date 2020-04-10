@@ -12,7 +12,7 @@ AM_INIT_AUTOMAKE([foreign])
 # Checks for programs.
 AC_PROG_CXX
 
-AX_CXX_COMPILE_STDCXX_11()
+AX_CXX_COMPILE_STDCXX_17()
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lMoBaCommon':
@@ -27,8 +27,8 @@ AC_TYPE_UINT8_T
 # Checks for library functions.
 
 AC_CONFIG_FILES([
-  Makefile
-  src/moba/Makefile
+    Makefile
+    src/moba/Makefile
 ])
 
 AC_OUTPUT
