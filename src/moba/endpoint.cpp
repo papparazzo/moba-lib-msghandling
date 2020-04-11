@@ -27,6 +27,8 @@
 
 #include <cstdint>
 
+#include <moba-common/log.h>
+
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 
@@ -107,8 +109,12 @@ Message Endpoint::waitForNewMsg() {
         throw SocketException{"recv header failed"};
     }
 
-    rapidjson::SocketReadStream srs{socket->getSocket(), ::ntohl(d[2])};
-    return Message{::ntohl(d[0]), ::ntohl(d[1]), srs};
+    for(int i = 0; i < 3; ++i) {
+        d[i] = ::ntohl(d[i]);
+    }
+    LOG(moba::common::LogLevel::DEBUG) << "recieve message <" << d[0] << ":" << d[1] << "> - {" << d[2] << "} bytes" << std::endl;
+    rapidjson::SocketReadStream srs{socket->getSocket(), d[2]};
+    return Message{d[0], d[1], srs};
 }
 
 void Endpoint::sendMsg(const Message &msg) {
@@ -119,6 +125,7 @@ void Endpoint::sendMsg(const Message &msg) {
         ::htonl(msg.getMessageId()),
         ::htonl(75)
     };
+    LOG(moba::common::LogLevel::DEBUG) << "try to send message <" << msg.getGroupId() << ":" << msg.getMessageId() << ">" << std::endl;
 
     if(::send(socket->getSocket(), d, sizeof(d), 0) == -1) {
         throw SocketException{"sending failed"};
