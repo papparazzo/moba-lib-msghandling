@@ -60,6 +60,13 @@ struct Message {
         return messageId;
     }
 
+    bool operator!() const {
+        if(groupId && messageId) {
+            return false;
+        }
+        return true;
+    }
+
     template<typename OutputStream>
     void Accept(OutputStream &s) const {
         rapidjson::Writer<OutputStream> w{s};
