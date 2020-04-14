@@ -35,7 +35,7 @@
 #include "rapidjson/socketwritestream.h"
 #include "rapidjson/socketreadstream.h"
 
-#include "clienthandler.h"
+#include "clientmessage.h"
 #include "endpoint.h"
 #include "basemessage.h"
 #include "shared.h"
@@ -48,15 +48,6 @@ Endpoint::Endpoint(
 Endpoint::Endpoint(
     SocketPtr socket, const std::string &appName, moba::common::Version version
 ) : socket{socket}, appName{appName}, version{version}, groups{Groups::ALL} {
-}
-
-Endpoint::~Endpoint() {
-    try {
-        ClientClose msg;
-        sendMsg(msg);
-    } catch(...) {
-        // noop
-    }
 }
 
 long Endpoint::connect() {
@@ -105,7 +96,7 @@ Message Endpoint::recieveMsg(time_t timeoutSec) {
 Message Endpoint::waitForNewMsg() {
     std::uint32_t d[3];
 
-    if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) == -1) {
+    if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
         throw SocketException{"recv header failed"};
     }
 

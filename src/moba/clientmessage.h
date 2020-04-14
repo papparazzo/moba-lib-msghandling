@@ -52,7 +52,14 @@ struct ClientEchoReq : public ClientMessage {
         data.SetInt(payload);
     }
 };
+/*
+struct ClientEchoRes : public ClientMessage {
+    ClientEchoRes(const rapidjson::Document &d) : SystemMessage{CLIENT_ECHO_RES} {
+    }
 
+    std::string payload;
+};
+*/
 struct ClientStart : public ClientMessage {
     ClientStart(const AppData &appData) : ClientMessage{CLIENT_START}, appData{appData} {
         std::string version = appData.version.getString();
@@ -78,22 +85,10 @@ struct ClientClose : public ClientMessage {
 
 
 
-
 /*
 
 
 
-struct ClientEchoRes : public RecieveMessage {
-    ClientEchoRes(moba::JsonItemPtr data) {
-        payload = moba::castToString(data);
-    }
-
-    static std::string getMessageName() {
-        return "ECHO_RES";
-    }
-
-    std::string payload;
-};
 
 struct ClientError : public RecieveMessage {
     ClientError(moba::JsonItemPtr data) {

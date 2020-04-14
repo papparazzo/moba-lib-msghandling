@@ -30,9 +30,10 @@
 
 class Registry {
     public:
-       /*
-        using HandlerFnWrapper = std::function<void(int, const rapidjson::Document &data)
-        using HandlerDefFnWrapper = std::function<void(int, int, const rapidjson::Document &data);
+
+        using HandlerMsgFnWrapper = std::function<void(const rapidjson::Document &data)>;
+        using HandlerGrpFnWrapper = std::function<void(int, const rapidjson::Document &data)>;
+        using HandlerDefFnWrapper = std::function<void(int, int, const rapidjson::Document &data)>;
 
         Registry() {
         }
@@ -42,7 +43,19 @@ class Registry {
         virtual ~Registry() noexcept {
         }
 
-        void registerHandler(int groupId, HandlerFnWrapper fn) {
+        /*
+        template<typename T>
+        void registerHandler(std::function<void(const T&)> fn) {
+            handlers[T::getMessageName()] = [fn](moba::JsonItemPtr data) {
+                T m{data};
+                fn(m);
+            };
+        }
+        */
+
+
+
+        void registerHandler(int groupId, HandlerGrpFnWrapper fn) {
             handlers[groupId] = fn;
         }
 
@@ -50,25 +63,34 @@ class Registry {
             defHandler = fn;
         }
 
-        auto handleMsg(int grpId, int msgId, const rapidjson::Document &msgData) -> bool {
-            auto iter = handlers.find(grpId);
+        void registerAuxiliaryHandler(HandlerDefFnWrapper fn) {
+            auxHandler = fn;
+        }
+
+        auto handleMsg(const Message &msg) -> bool {
+            auto iter = handlers.find(msg.getGroupId());
+
+            if(auxHandler) {
+                auxHandler(msg.getGroupId(), msg.getMessageId(), msg.data);
+            }
+
             if(iter != handlers.end()) {
-                iter->second(msgId, msgData);
+                iter->second(msg.getMessageId(), msg.data);
                 return true;
             }
 
             if(defHandler) {
-                defHandler(grpId, msgId, msgData);
+                defHandler(msg.getGroupId(), msg.getMessageId(), msg.data);
             }
             return false;
         }
 
     protected:
-        using HandlerMap = std::unordered_map<int, HandlerFnWrapper>>;
+        using HandlerMap = std::unordered_map<int, HandlerGrpFnWrapper>;
 
-        HandlerMap       handlers;
-        HandlerFnWrapper defHandler;
-        HandlerFnWrapper auxHandler;
-        */
+        HandlerMap          handlers;
+        HandlerDefFnWrapper defHandler;
+        HandlerDefFnWrapper auxHandler;
+
 };
 

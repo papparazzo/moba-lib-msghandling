@@ -36,7 +36,7 @@ public:
 
     Endpoint(SocketPtr socket, const std::string &appName, moba::common::Version version);
 
-    virtual ~Endpoint() noexcept;
+    virtual ~Endpoint() noexcept {}
 
     long connect();
 

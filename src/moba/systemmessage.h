@@ -49,32 +49,18 @@ struct SystemSetEmergencyStop : public SystemMessage {
     }
 };
 
-
-
-/*
-
-
-struct SystemSetStandbyMode : public DispatchMessageType<SystemSetStandbyMode> {
-    SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
+struct SystemSetStandbyMode : public SystemMessage {
+    SystemSetStandbyMode(bool standbyActive) : SystemMessage{SET_STANDBY_MODE} {
+        data.SetBool(standbyActive);
     }
-
-    static std::string getMessageName() {
-        return "SET_STANDBY_MODE";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        return moba::toJsonBoolPtr(standbyActive);
-    }
-
-    bool standbyActive;
 };
-*/
+
 struct SystemGetHardwareState : public SystemMessage {
     SystemGetHardwareState() : SystemMessage{GET_HARDWARE_STATE} {
     }
 };
-/*
-struct SystemHardwareStateChanged : public RecieveMessage {
+
+struct SystemHardwareStateChanged : public SystemMessage {
     enum class HardwareState {
         ERROR,
         STANDBY,
@@ -83,8 +69,8 @@ struct SystemHardwareStateChanged : public RecieveMessage {
         AUTOMATIC
     };
 
-    SystemHardwareStateChanged(moba::JsonItemPtr data) {
-        std::string status = moba::castToString(data);
+    SystemHardwareStateChanged(const rapidjson::Document &d) : SystemMessage{HARDWARE_STATE_CHANGED} {
+        std::string status = d.GetString();
         if(status == "ERROR") {
             hardwareState = HardwareState::ERROR;
         } else if(status == "EMERGENCY_STOP") {
@@ -98,13 +84,10 @@ struct SystemHardwareStateChanged : public RecieveMessage {
         }
     }
 
-    static std::string getMessageName() {
-        return "HARDWARE_STATE_CHANGED";
-    }
-
     HardwareState hardwareState;
 };
 
+/*
 struct SystemHardwareShutdown : public DispatchMessageType<SystemHardwareShutdown> {
     static std::string getMessageName() {
         return "HARDWARE_SHUTDOWN";
