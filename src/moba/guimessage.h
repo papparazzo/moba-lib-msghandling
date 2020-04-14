@@ -25,13 +25,26 @@
 
 #include "basemessage.h"
 
-struct GuiSystemNotice : public RecieveMessage {
+struct GuiMessage : public Message {
+    enum MessageName {
+        GUI_SYSTEM_NOTICE = 1,
+    };
+
+    GuiMessage(unsigned char msgId) : Message{GUI, msgId} {
+    }
+};
+
+struct GuiSystemNotice : public GuiMessage {
     enum class NoticeType {
         INFO,
         WARNING,
         ERROR
     };
 
+    GuiSystemNotice() : GuiMessage{GUI_SYSTEM_NOTICE} {
+    }
+
+/*
     GuiSystemNotice(moba::JsonItemPtr data) {
         moba::JsonObjectPtr o = std::dynamic_pointer_cast<moba::JsonObject>(data);
         std::string type = moba::castToString(o->at("type"));
@@ -46,14 +59,11 @@ struct GuiSystemNotice : public RecieveMessage {
             noticeType = NoticeType::ERROR;
         }
     }
-
-    static std::string getMessageName() {
-        return "SYSTEM_NOTICE";
-    }
-
+* */
     NoticeType  noticeType;
     std::string caption;
     std::string text;
+
 };
 
 

@@ -52,14 +52,30 @@ struct ClientEchoReq : public ClientMessage {
         data.SetInt(payload);
     }
 };
-/*
+
 struct ClientEchoRes : public ClientMessage {
-    ClientEchoRes(const rapidjson::Document &d) : SystemMessage{CLIENT_ECHO_RES} {
+    ClientEchoRes(const rapidjson::Document &d) : ClientMessage{CLIENT_ECHO_RES} {
     }
 
     std::string payload;
 };
-*/
+
+struct ClientError : public ClientMessage {
+
+    ClientError() : ClientMessage{CLIENT_ERROR} {
+    }
+    /*
+    ClientError(moba::JsonItemPtr data) {
+        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
+        errorId = moba::castToString(o->at("errorId"));
+        additionalMsg = moba::castToString(o->at("additonalMsg"));
+    }
+    */
+
+    std::string errorId;
+    std::string additionalMsg;
+};
+
 struct ClientStart : public ClientMessage {
     ClientStart(const AppData &appData) : ClientMessage{CLIENT_START}, appData{appData} {
         std::string version = appData.version.getString();
@@ -90,20 +106,6 @@ struct ClientClose : public ClientMessage {
 
 
 
-struct ClientError : public RecieveMessage {
-    ClientError(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        errorId = moba::castToString(o->at("errorId"));
-        additionalMsg = moba::castToString(o->at("additonalMsg"));
-    }
-
-    static std::string getMessageName() {
-        return "ERROR";
-    }
-
-    std::string errorId;
-    std::string additionalMsg;
-};
 
 struct ClientShutdown : public RecieveMessage {
     static std::string getMessageName() {

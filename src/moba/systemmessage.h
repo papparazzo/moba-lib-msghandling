@@ -24,13 +24,13 @@
 
 struct SystemMessage : public Message {
     enum MessageName {
-        SET_AUTOMATIC_MODE      = 1,
-        SET_EMERGENCY_STOP      = 2,
-        SET_STANDBY_MODE        = 3,
-        GET_HARDWARE_STATE      = 4,
-        HARDWARE_STATE_CHANGED  = 5,
-        HARDWARE_SHUTDOWN       = 6,
-        HARDWARE_RESET          = 7
+        SYSTEM_SET_AUTOMATIC_MODE      = 1,
+        SYSTEM_SET_EMERGENCY_STOP      = 2,
+        SYSTEM_SET_STANDBY_MODE        = 3,
+        SYSTEM_GET_HARDWARE_STATE      = 4,
+        SYSTEM_HARDWARE_STATE_CHANGED  = 5,
+        SYSTEM_HARDWARE_SHUTDOWN       = 6,
+        SYSTEM_HARDWARE_RESET          = 7
     };
 
     SystemMessage(unsigned char msgId) : Message{SYSTEM, msgId} {
@@ -38,25 +38,25 @@ struct SystemMessage : public Message {
 };
 
 struct SystemSetAutomaticMode : public SystemMessage {
-    SystemSetAutomaticMode(bool automaticActive) : SystemMessage{SET_AUTOMATIC_MODE} {
+    SystemSetAutomaticMode(bool automaticActive) : SystemMessage{SYSTEM_SET_AUTOMATIC_MODE} {
         data.SetBool(automaticActive);
     }
 };
 
 struct SystemSetEmergencyStop : public SystemMessage {
-    SystemSetEmergencyStop(bool emergencyStopActive) : SystemMessage{SET_EMERGENCY_STOP} {
+    SystemSetEmergencyStop(bool emergencyStopActive) : SystemMessage{SYSTEM_SET_EMERGENCY_STOP} {
         data.SetBool(emergencyStopActive);
     }
 };
 
 struct SystemSetStandbyMode : public SystemMessage {
-    SystemSetStandbyMode(bool standbyActive) : SystemMessage{SET_STANDBY_MODE} {
+    SystemSetStandbyMode(bool standbyActive) : SystemMessage{SYSTEM_SET_STANDBY_MODE} {
         data.SetBool(standbyActive);
     }
 };
 
 struct SystemGetHardwareState : public SystemMessage {
-    SystemGetHardwareState() : SystemMessage{GET_HARDWARE_STATE} {
+    SystemGetHardwareState() : SystemMessage{SYSTEM_GET_HARDWARE_STATE} {
     }
 };
 
@@ -69,7 +69,7 @@ struct SystemHardwareStateChanged : public SystemMessage {
         AUTOMATIC
     };
 
-    SystemHardwareStateChanged(const rapidjson::Document &d) : SystemMessage{HARDWARE_STATE_CHANGED} {
+    SystemHardwareStateChanged(const rapidjson::Document &d) : SystemMessage{SYSTEM_HARDWARE_STATE_CHANGED} {
         std::string status = d.GetString();
         if(status == "ERROR") {
             hardwareState = HardwareState::ERROR;
@@ -87,16 +87,12 @@ struct SystemHardwareStateChanged : public SystemMessage {
     HardwareState hardwareState;
 };
 
-/*
-struct SystemHardwareShutdown : public DispatchMessageType<SystemHardwareShutdown> {
-    static std::string getMessageName() {
-        return "HARDWARE_SHUTDOWN";
+struct SystemHardwareShutdown : public SystemMessage {
+    SystemHardwareShutdown() : SystemMessage{SYSTEM_HARDWARE_SHUTDOWN} {
     }
 };
 
-struct SystemHardwareReset : public DispatchMessageType<SystemHardwareReset> {
-    static std::string getMessageName() {
-        return "HARDWARE_RESET";
+struct SystemHardwareReset : public SystemMessage {
+    SystemHardwareReset() : SystemMessage{SYSTEM_HARDWARE_RESET} {
     }
 };
-*/
