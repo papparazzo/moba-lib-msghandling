@@ -21,7 +21,9 @@
 #pragma once
 
 #include <string>
-#include "basemessage.h"
+#include <vector>
+
+#include "message.h"
 #include "shared.h"
 
 struct InterfaceMessage : public Message {
@@ -64,8 +66,8 @@ struct InterfaceConnectivityStateChanged : public InterfaceMessage {
 
     Connectivity connectivity;
 };
-/*
-struct InterfaceContactTriggered :public InterfaceMessage {
+
+struct InterfaceContactTriggered : public InterfaceMessage {
     const static std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
     InterfaceContactTriggered(const ContactTrigger &contactTrigger) : contactTrigger{contactTrigger} {
@@ -74,32 +76,28 @@ struct InterfaceContactTriggered :public InterfaceMessage {
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetObject();
+        d.AddMember("modulAddr", contactTrigger.contact.modulAddr, d.GetAllocator());
+        d.AddMember("contactNb", contactTrigger.contact.contactNb, d.GetAllocator());
 
-        d["modulAddr"] = moba::toJsonNumberPtr(contactTrigger.contact.modulAddr);
-        d["contactNb"] = moba::toJsonNumberPtr(contactTrigger.contact.contactNb);
-        moba::JsonObjectPtr o(new moba::JsonObject());
-
-        (*o)["contact"] = c;
-        (*o)["state"  ] = moba::toJsonBoolPtr(contactTrigger.state);
-        (*o)["time"   ] = moba::toJsonNumberPtr(contactTrigger.time);
-        return o;
+        rapidjson::Value v;
+        v.SetObject();
+        v.AddMember("state", contactTrigger.state, d.GetAllocator());
+        v.AddMember("time", contactTrigger.time, d.GetAllocator());
+        d.AddMember("contact", v, d.GetAllocator());
+        return d;
     }
 
     ContactTrigger contactTrigger;
 };
 
-struct InterfaceSetBrakeVector : public RecieveMessage {
-    InterfaceSetBrakeVector(moba::JsonItemPtr data) {
-        auto a = std::dynamic_pointer_cast<moba::JsonArray>(data);
-        for(auto iter : *a) {
-            items.push_back(BrakeVectorContact{std::dynamic_pointer_cast<moba::JsonObject>(iter)});
-        }
-    }
+struct InterfaceSetBrakeVector : public InterfaceMessage {
+    const static std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
 
-    static std::string getMessageName() {
-        return "SET_BRAKE_VECTOR";
+    InterfaceSetBrakeVector(const rapidjson::Document &d) {
+        for(auto &iter : d.GetArray()) {
+            items.push_back(BrakeVectorContact{iter});
+        }
     }
 
     std::vector<BrakeVectorContact> items;
 };
-*/

@@ -128,14 +128,15 @@ struct SpecificLayoutData {
     int id;
     std::vector<TrackLayoutSymbolData> symbols;
 };
-
+*/
 struct Contact {
     Contact(int modulAddr = 0, int contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
     }
 
-    Contact(moba::JsonObjectPtr data) {
-        modulAddr = moba::castToInt(data->at("modulAddr"));
-        contactNb = moba::castToInt(data->at("contactNb"));
+    template <typename T>
+    Contact(const T &d) {
+        modulAddr = d["modulAddr"].GetInt();
+        contactNb = d["contactNb"].GetInt();
     }
 
     int modulAddr;
@@ -155,16 +156,15 @@ struct ContactTrigger {
 };
 
 struct BrakeVectorContact {
-    BrakeVectorContact(moba::JsonObjectPtr data) {
-        auto oi = std::dynamic_pointer_cast<moba::JsonObject>(data->at("contact"));
-        contact = Contact{oi};
-        locId = moba::castToInt(data->at("locId"));
+    template <typename T>
+    BrakeVectorContact(const T &d) {
+        contact = Contact{d["contact"]};
+        locId = d["locId"].GetInt();
     }
 
     Contact contact;
     int locId;
 };
-*/
 
 namespace moba {
 
