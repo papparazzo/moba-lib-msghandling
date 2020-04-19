@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "basemessage.h"
+#include "message.h"
 
 struct SystemMessage : public Message {
     enum MessageName {
@@ -33,34 +33,62 @@ struct SystemMessage : public Message {
         SYSTEM_HARDWARE_RESET          = 7
     };
 
-    SystemMessage(unsigned char msgId) : Message{SYSTEM, msgId} {
-    }
+    const static std::uint32_t GROUP_ID = SYSTEM;
 };
 
 struct SystemSetAutomaticMode : public SystemMessage {
-    SystemSetAutomaticMode(bool automaticActive) : SystemMessage{SYSTEM_SET_AUTOMATIC_MODE} {
-        data.SetBool(automaticActive);
+    const static std::uint32_t MESSAGE_ID = SYSTEM_SET_AUTOMATIC_MODE;
+
+    SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
     }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetBool(automaticActive);
+        return d;
+    }
+
+    bool automaticActive;
 };
 
 struct SystemSetEmergencyStop : public SystemMessage {
-    SystemSetEmergencyStop(bool emergencyStopActive) : SystemMessage{SYSTEM_SET_EMERGENCY_STOP} {
-        data.SetBool(emergencyStopActive);
+    const static std::uint32_t MESSAGE_ID = SYSTEM_SET_EMERGENCY_STOP;
+
+    SystemSetEmergencyStop(bool emergencyStopActive) : emergencyStopActive{emergencyStopActive} {
     }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetBool(emergencyStopActive);
+        return d;
+    }
+    bool emergencyStopActive;
 };
 
 struct SystemSetStandbyMode : public SystemMessage {
-    SystemSetStandbyMode(bool standbyActive) : SystemMessage{SYSTEM_SET_STANDBY_MODE} {
-        data.SetBool(standbyActive);
+    const static std::uint32_t MESSAGE_ID = SYSTEM_SET_STANDBY_MODE;
+
+    SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
     }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetBool(standbyActive);
+        return d;
+    }
+    bool standbyActive;
 };
 
 struct SystemGetHardwareState : public SystemMessage {
-    SystemGetHardwareState() : SystemMessage{SYSTEM_GET_HARDWARE_STATE} {
+    const static std::uint32_t MESSAGE_ID = SYSTEM_GET_HARDWARE_STATE;
+
+    SystemGetHardwareState() {
     }
 };
 
 struct SystemHardwareStateChanged : public SystemMessage {
+    const static std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_STATE_CHANGED;
+
     enum class HardwareState {
         ERROR,
         STANDBY,
@@ -69,7 +97,7 @@ struct SystemHardwareStateChanged : public SystemMessage {
         AUTOMATIC
     };
 
-    SystemHardwareStateChanged(const rapidjson::Document &d) : SystemMessage{SYSTEM_HARDWARE_STATE_CHANGED} {
+    SystemHardwareStateChanged(const rapidjson::Document &d) {
         std::string status = d.GetString();
         if(status == "ERROR") {
             hardwareState = HardwareState::ERROR;
@@ -88,11 +116,9 @@ struct SystemHardwareStateChanged : public SystemMessage {
 };
 
 struct SystemHardwareShutdown : public SystemMessage {
-    SystemHardwareShutdown() : SystemMessage{SYSTEM_HARDWARE_SHUTDOWN} {
-    }
+    const static std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_SHUTDOWN;
 };
 
 struct SystemHardwareReset : public SystemMessage {
-    SystemHardwareReset() : SystemMessage{SYSTEM_HARDWARE_RESET} {
-    }
+    const static std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_RESET;
 };

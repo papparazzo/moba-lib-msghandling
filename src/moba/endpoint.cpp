@@ -37,7 +37,6 @@
 
 #include "clientmessage.h"
 #include "endpoint.h"
-#include "basemessage.h"
 #include "shared.h"
 
 Endpoint::Endpoint(
@@ -64,14 +63,14 @@ long Endpoint::registerApp() {
         throw SocketException{"msg data is not an int"};
     }
 
-    if(msg.getGroupId() != Message::CLIENT || msg.getMessageId() != ClientMessage::CLIENT_CONNECTED) {
+    if(msg.groupId != Message::CLIENT || msg.messageId != ClientMessage::CLIENT_CONNECTED) {
         throw SocketException{"did not recieve CLIENT_CONNECTED"};
     }
 
     return appId = msg.data.GetInt();
 }
 
-Message Endpoint::recieveMsg(time_t timeoutSec) {
+RawMessage Endpoint::recieveMsg(time_t timeoutSec) {
     struct timeval timeout;
     fd_set         read_sock;
 
@@ -88,12 +87,12 @@ Message Endpoint::recieveMsg(time_t timeoutSec) {
     }
 
     if(!FD_ISSET(sd, &read_sock)) {
-        return Message{};
+        return RawMessage{};
     }
     return waitForNewMsg();
 }
 
-Message Endpoint::waitForNewMsg() {
+RawMessage Endpoint::waitForNewMsg() {
     std::uint32_t d[3];
 
     if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
@@ -105,26 +104,30 @@ Message Endpoint::waitForNewMsg() {
     }
     LOG(moba::common::LogLevel::DEBUG) << "recieve message <" << d[0] << ":" << d[1] << "> - {" << d[2] << "} bytes" << std::endl;
     rapidjson::SocketReadStream srs{socket->getSocket(), d[2]};
-    return Message{d[0], d[1], srs};
+    return RawMessage{d[0], d[1], srs};
 }
 
-void Endpoint::sendMsg(const Message &msg) {
+void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson::Document &data) {
     std::lock_guard<std::mutex> l{m};
 
-    std::uint32_t d[] = {
-        ::htonl(msg.getGroupId()),
-        ::htonl(msg.getMessageId()),
-        ::htonl(75)
-    };
-    LOG(moba::common::LogLevel::DEBUG) << "try to send message <" << msg.getGroupId() << ":" << msg.getMessageId() << ">" << std::endl;
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer writer{buffer};
+    data.Accept(writer);
 
-    if(::send(socket->getSocket(), d, sizeof(d), 0) == -1) {
-        throw SocketException{"sending failed"};
+    size_t bufferSize = buffer.GetSize();
+
+    std::uint32_t d[] = {
+        ::htonl(grpId),
+        ::htonl(msgId),
+        ::htonl(bufferSize)
+    };
+    LOG(moba::common::LogLevel::DEBUG) << "try to send message <" << grpId << ":" << msgId << "- {" << bufferSize << "} bytes" << std::endl;
+
+    if(::send(socket->getSocket(), d, sizeof(d), 0) < static_cast<ssize_t>(sizeof(d))) {
+        throw SocketException{"sending header failed"};
     }
 
-    auto c = ::ntohl(d[3]);
-    std::unique_ptr<uint8_t[]> buffer(new uint8_t[c]);
-
-    rapidjson::SocketWriteStream s{socket->getSocket(), buffer.get(), c};
-    msg.Accept(s);
+    if(::send(socket->getSocket(), buffer.GetString(), bufferSize, 0) < static_cast<ssize_t>(bufferSize)) {
+        throw SocketException{"sending body failed"};
+    }
 }

@@ -23,33 +23,29 @@
 #include <string>
 #include <memory>
 
-#include "basemessage.h"
+#include "message.h"
 
 struct GuiMessage : public Message {
     enum MessageName {
         GUI_SYSTEM_NOTICE = 1,
     };
 
-    GuiMessage(unsigned char msgId) : Message{GUI, msgId} {
-    }
+    const static std::uint32_t GROUP_ID = GUI;
 };
 
 struct GuiSystemNotice : public GuiMessage {
+    const static std::uint32_t MESSAGE_ID = GUI_SYSTEM_NOTICE;
+
     enum class NoticeType {
         INFO,
         WARNING,
         ERROR
     };
 
-    GuiSystemNotice() : GuiMessage{GUI_SYSTEM_NOTICE} {
-    }
-
-/*
-    GuiSystemNotice(moba::JsonItemPtr data) {
-        moba::JsonObjectPtr o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        std::string type = moba::castToString(o->at("type"));
-        caption = moba::castToString(o->at("caption"));
-        text = moba::castToString(o->at("text"));
+    GuiSystemNotice(const rapidjson::Document &d) {
+        std::string type = d["type"].GetString();
+        caption = d["caption"].GetString();
+        text = d["text"].GetString();
 
         if(type == "INFO") {
             noticeType = NoticeType::INFO;
@@ -59,7 +55,7 @@ struct GuiSystemNotice : public GuiMessage {
             noticeType = NoticeType::ERROR;
         }
     }
-* */
+
     NoticeType  noticeType;
     std::string caption;
     std::string text;

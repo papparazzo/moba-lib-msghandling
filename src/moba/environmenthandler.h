@@ -22,15 +22,28 @@
 
 #include <string>
 #include <memory>
-#include "basemessage.h"
+#include "message.h"
 
-struct EnvGetEnvironment : public DispatchMessageType<EnvGetEnvironment> {
-    static std::string getMessageName() {
-        return "GET_ENVIRONMENT";
-    }
+struct EnvironmentMessage : public Message {
+    enum MessageName {
+        ENVIRONMENT_GET_ENVIRONMENT     = 1,
+        ENVIRONMENT_SET_ENVIRONMENT     = 2,
+        ENVIRONMENT_GET_AMBIENCE        = 3,
+        ENVIRONMENT_SET_AMBIENCE        = 4,
+        ENVIRONMENT_GET_AMBIENT_LIGHT   = 5,
+        ENVIRONMENT_SET_AMBIENT_LIGHT   = 6
+    };
+
+    const static std::uint32_t GROUP_ID = ENVIRONMENT;
 };
 
-struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<EnvSetEnvironment> {
+struct EnvGetEnvironment : public EnvironmentMessage {
+    const static std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_ENVIRONMENT;
+};
+
+struct EnvSetEnvironment : public EnvironmentMessage {
+    const static std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_ENVIRONMENT;
+
     EnvSetEnvironment(
         moba::JsonSwitch::Switch thunder,
         moba::JsonSwitch::Switch wind,
@@ -41,6 +54,9 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<Env
         moba::JsonSwitch::Switch aux3
     ) : thunder{thunder}, wind{wind}, rain{rain}, environmentSound{environmentSound}, aux1{aux1}, aux2{aux2}, aux3{aux3} {
     }
+
+
+/*
 
     EnvSetEnvironment(moba::JsonItemPtr data) {
         auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
@@ -68,7 +84,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<Env
         (*obj)["aux03"             ] = moba::toJsonSwitchPtr(aux3);
         return obj;
     }
-
+*/
     moba::JsonSwitch::Switch thunder;
     moba::JsonSwitch::Switch wind;
     moba::JsonSwitch::Switch rain;
@@ -77,7 +93,7 @@ struct EnvSetEnvironment : public RecieveMessage, public DispatchMessageType<Env
     moba::JsonSwitch::Switch aux2;
     moba::JsonSwitch::Switch aux3;
 };
-
+/*
 struct EnvGetAmbience : public DispatchMessageType<EnvGetAmbience> {
     static std::string getMessageName() {
         return "GET_AMBIENCE";
@@ -151,3 +167,4 @@ struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessageType<En
     int green;
     int white;
 };
+*/

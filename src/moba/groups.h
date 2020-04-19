@@ -22,7 +22,7 @@
 
 #include <type_traits>
 #include "rapidjson/document.h"
-#include "basemessage.h"
+#include "message.h"
 
 enum class Groups {
     ALL         = 0x0000,

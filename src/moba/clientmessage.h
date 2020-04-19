@@ -21,7 +21,7 @@
 #pragma once
 
 #include <moba-common/version.h>
-#include "basemessage.h"
+#include "message.h"
 #include "shared.h"
 
 struct ClientMessage : public Message {
@@ -38,90 +38,92 @@ struct ClientMessage : public Message {
         CLIENT_SELF_TESTING = 10
     };
 
-    ClientMessage(unsigned int msgId) : Message{CLIENT, msgId} {
-    }
+    const static std::uint32_t GROUP_ID = CLIENT;
 };
 
 struct ClientVoid : public ClientMessage {
-    ClientVoid() : ClientMessage{CLIENT_VOID} {
-    }
+    const static std::uint32_t MESSAGE_ID = CLIENT_VOID;
 };
 
 struct ClientEchoReq : public ClientMessage {
-    ClientEchoReq(long payload) : ClientMessage{CLIENT_ECHO_REQ} {
-        data.SetInt(payload);
+    const static std::uint32_t MESSAGE_ID = CLIENT_ECHO_REQ;
+
+    ClientEchoReq(const std::string &payload) : payload{payload} {
     }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetString(payload.c_str(), payload.length(), d.GetAllocator());
+        return d;
+    }
+
+    std::string payload;
 };
 
 struct ClientEchoRes : public ClientMessage {
-    ClientEchoRes(const rapidjson::Document &d) : ClientMessage{CLIENT_ECHO_RES} {
+    const static std::uint32_t MESSAGE_ID = CLIENT_ECHO_RES;
+
+    ClientEchoRes(const rapidjson::Document &d) {
+        payload = d.GetString();
     }
 
     std::string payload;
 };
 
 struct ClientError : public ClientMessage {
+    const static std::uint32_t MESSAGE_ID = CLIENT_ERROR;
 
-    ClientError() : ClientMessage{CLIENT_ERROR} {
+    ClientError(const rapidjson::Document &d) {
+        errorId = d["errorId"].GetString();
+        additionalMsg = d["additonalMsg"].GetString();
     }
-    /*
-    ClientError(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        errorId = moba::castToString(o->at("errorId"));
-        additionalMsg = moba::castToString(o->at("additonalMsg"));
-    }
-    */
 
     std::string errorId;
     std::string additionalMsg;
 };
 
 struct ClientStart : public ClientMessage {
-    ClientStart(const AppData &appData) : ClientMessage{CLIENT_START}, appData{appData} {
-        std::string version = appData.version.getString();
+    const static std::uint32_t MESSAGE_ID = CLIENT_START;
 
-        data.SetObject();
-        data.AddMember("appName", rapidjson::Value(appData.appName.c_str(), appData.appName.length(), data.GetAllocator()), data.GetAllocator());
-        data.AddMember("version", rapidjson::Value(version.c_str(), version.length(), data.GetAllocator()), data.GetAllocator());
-        data.AddMember("msgGroups", convertIntoGroupArray(appData.groups), data.GetAllocator());
+    ClientStart(const AppData &appData) : appData{appData} {
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        std::string version = appData.version.getString();
+        d.SetObject();
+        d.AddMember("appName", rapidjson::Value(appData.appName.c_str(), appData.appName.length(), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("version", rapidjson::Value(version.c_str(), version.length(), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("msgGroups", convertIntoGroupArray(appData.groups), d.GetAllocator());
+        return d;
     }
 
     AppData appData;
 };
 
+struct ClientConnected : public ClientMessage {
+    const static std::uint32_t MESSAGE_ID = CLIENT_CONNECTED;
+
+    ClientConnected(const rapidjson::Document &d) {
+        appId = d.GetInt();
+    }
+
+    long appId;
+};
+
 struct ClientClose : public ClientMessage {
-    ClientClose() : ClientMessage{CLIENT_CLOSE} {
-    }
+    const static std::uint32_t MESSAGE_ID = CLIENT_CLOSE;
 };
 
-
-
-
-
-
-
-
-/*
-
-
-
-
-
-struct ClientShutdown : public RecieveMessage {
-    static std::string getMessageName() {
-        return "SHUTDOWN";
-    }
+struct ClientShutdown : public ClientMessage {
+    const static std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };
 
-struct ClientReset : public RecieveMessage {
-    static std::string getMessageName() {
-        return "RESET";
-    }
+struct ClientReset : public ClientMessage {
+    const static std::uint32_t MESSAGE_ID = CLIENT_RESET;
 };
 
-struct ClientSelfTesting : public RecieveMessage {
-    static std::string getMessageName() {
-        return "SELF_TESTING";
-    }
+struct ClientSelfTesting : public ClientMessage {
+    const static std::uint32_t MESSAGE_ID = CLIENT_SELF_TESTING;
 };
-*/
+

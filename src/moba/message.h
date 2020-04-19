@@ -42,40 +42,12 @@ struct Message {
         GUI         = 9,
     };
 
-    template<typename InputStream>
-    Message(std::uint32_t grpId, std::uint32_t msgId, InputStream &s) : groupId{grpId}, messageId{msgId} {
-        data.ParseStream(s);
-    }
-
-    Message(std::uint32_t grpId = 0, std::uint32_t msgId = 0) : groupId{grpId}, messageId{msgId} {
-    }
-
     virtual ~Message() noexcept {
     }
 
-    virtual std::uint32_t getGroupId() const {
-        return groupId;
+    virtual rapidjson::Document getJsonDocument() const {
+        rapidjson::Document d;
+        d.SetNull();
+        return d;
     }
-    virtual std::uint32_t getMessageId() const {
-        return messageId;
-    }
-
-    bool operator!() const {
-        if(groupId && messageId) {
-            return false;
-        }
-        return true;
-    }
-
-    template<typename OutputStream>
-    void Accept(OutputStream &s) const {
-        rapidjson::Writer<OutputStream> w{s};
-        data.Accept(w);
-    }
-
-    rapidjson::Document data;
-
-protected:
-    std::uint32_t groupId;
-    std::uint32_t messageId;
 };

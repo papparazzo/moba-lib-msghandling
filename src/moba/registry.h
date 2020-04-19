@@ -25,15 +25,17 @@
 #include <functional>
 #include <memory>
 
-#include "basemessage.h"
+#include "rawmessage.h"
 #include "rapidjson/document.h"
+#include "systemmessage.h"
+#include "servermessage.h"
 
 class Registry {
     public:
 
         using HandlerMsgFnWrapper = std::function<void(const rapidjson::Document &data)>;
-        using HandlerGrpFnWrapper = std::function<void(int, const rapidjson::Document &data)>;
-        using HandlerDefFnWrapper = std::function<void(int, int, const rapidjson::Document &data)>;
+        //using HandlerGrpFnWrapper = std::function<void(std::uint32_t, const rapidjson::Document &data)>;
+        using HandlerDefFnWrapper = std::function<void(std::uint32_t, std::uint32_t, const rapidjson::Document &data)>;
 
         Registry() {
         }
@@ -43,21 +45,17 @@ class Registry {
         virtual ~Registry() noexcept {
         }
 
-        /*
         template<typename T>
         void registerHandler(std::function<void(const T&)> fn) {
-            handlers[T::getMessageName()] = [fn](moba::JsonItemPtr data) {
+            handlers[static_cast<std::uint32_t>(T::GROUP_ID)][static_cast<std::uint32_t>(T::MESSAGE_ID)] = [fn](const rapidjson::Document &data) {
                 T m{data};
                 fn(m);
             };
         }
-        */
 
-
-
-        void registerHandler(int groupId, HandlerGrpFnWrapper fn) {
-            handlers[groupId] = fn;
-        }
+        //void registerHandler(std::uint32_t groupId, HandlerGrpFnWrapper fn) {
+        //    handlers[groupId] = fn;
+        //}
 
         void registerDefaultHandler(HandlerDefFnWrapper fn) {
             defHandler = fn;
@@ -67,28 +65,32 @@ class Registry {
             auxHandler = fn;
         }
 
-        auto handleMsg(const Message &msg) -> bool {
-            auto iter = handlers.find(msg.getGroupId());
-
+        auto handleMsg(const RawMessage &msg) -> bool {
             if(auxHandler) {
-                auxHandler(msg.getGroupId(), msg.getMessageId(), msg.data);
+                auxHandler(msg.groupId, msg.messageId, msg.data);
             }
 
+            auto iter = handlers.find(msg.groupId);
+
             if(iter != handlers.end()) {
-                iter->second(msg.getMessageId(), msg.data);
+                auto iter2 = iter->second.find(msg.messageId);
+                if(iter2 != iter->second.end()) {
+                    iter2->second(msg.data);
+                }
                 return true;
             }
 
             if(defHandler) {
-                defHandler(msg.getGroupId(), msg.getMessageId(), msg.data);
+                defHandler(msg.groupId, msg.messageId, msg.data);
             }
             return false;
         }
 
     protected:
-        using HandlerMap = std::unordered_map<int, HandlerGrpFnWrapper>;
+        using HandlerMapG = std::unordered_map<std::uint32_t, HandlerMsgFnWrapper>;
+        using HandlerMapF = std::unordered_map<std::uint32_t, HandlerMapG>;
 
-        HandlerMap          handlers;
+        HandlerMapF         handlers;
         HandlerDefFnWrapper defHandler;
         HandlerDefFnWrapper auxHandler;
 

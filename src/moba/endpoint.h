@@ -24,7 +24,7 @@
 #include <memory>
 #include <mutex>
 
-#include "basemessage.h"
+#include "rawmessage.h"
 #include "socket.h"
 #include "groups.h"
 
@@ -42,11 +42,14 @@ public:
 
     long getAppId() {return appId;}
 
-    auto recieveMsg(time_t timeoutSec = 0) -> Message;
+    auto recieveMsg(time_t timeoutSec = 0) -> RawMessage;
 
-    auto waitForNewMsg() -> Message;
+    auto waitForNewMsg() -> RawMessage;
 
-    void sendMsg(const Message &msg);
+    template<typename T>
+    void sendMsg(const T &msg) {
+        sendMsg(T::GROUP_ID, T::MESSAGE_ID, msg.getJsonDocument());
+    }
 
 protected:
     SocketPtr socket;
@@ -62,7 +65,8 @@ protected:
     static const int MSG_HANDLER_TIME_OUT_SEC = 2;
     static const int MSG_HANDLER_TIME_OUT_USEC = 0;
 
-    long registerApp();
+    auto registerApp() -> long;
+    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson::Document &data);
 };
 
 using EndpointPtr = std::shared_ptr<Endpoint>;

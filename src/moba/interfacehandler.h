@@ -24,7 +24,20 @@
 #include "basemessage.h"
 #include "shared.h"
 
-struct InterfaceConnectivityStateChanged : public DispatchMessageType<InterfaceConnectivityStateChanged> {
+struct InterfaceMessage : public Message {
+    enum MessageName {
+        CONNECTIVITY_STATE_CHANGED = 1,
+        CONTACT_TRIGGERED          = 2,
+        SET_BRAKE_VECTOR           = 3,
+        SET_LOC_SPEED              = 4
+    };
+
+    const static std::uint32_t GROUP_ID = INTERFACE;
+};
+
+struct InterfaceConnectivityStateChanged : public InterfaceMessage {
+    const static std::uint32_t MESSAGE_ID = CONNECTIVITY_STATE_CHANGED;
+
     enum class Connectivity {
         CONNECTED,
         ERROR
@@ -33,36 +46,37 @@ struct InterfaceConnectivityStateChanged : public DispatchMessageType<InterfaceC
     InterfaceConnectivityStateChanged(Connectivity connectivity) : connectivity{connectivity} {
     }
 
-    static std::string getMessageName() {
-        return "CONNECTIVITY_STATE_CHANGED";
-    }
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
 
-    virtual moba::JsonItemPtr getData() const override {
         switch(connectivity) {
             case Connectivity::CONNECTED:
-                return moba::toJsonStringPtr("CONNECTED");
+                d.SetString("CONNECTED");
+                break;
 
             case Connectivity::ERROR:
             default:
-                return moba::toJsonStringPtr("ERROR");
+                d.SetString("ERROR");
+                break;
         }
+        return d;
     }
 
     Connectivity connectivity;
 };
+/*
+struct InterfaceContactTriggered :public InterfaceMessage {
+    const static std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
-struct InterfaceContactTriggered : public DispatchMessageType<InterfaceContactTriggered> {
     InterfaceContactTriggered(const ContactTrigger &contactTrigger) : contactTrigger{contactTrigger} {
     }
 
-    static std::string getMessageName() {
-        return "CONTACT_TRIGGERED";
-    }
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetObject();
 
-    virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr c(new moba::JsonObject());
-        (*c)["modulAddr"] = moba::toJsonNumberPtr(contactTrigger.contact.modulAddr);
-        (*c)["contactNb"] = moba::toJsonNumberPtr(contactTrigger.contact.contactNb);
+        d["modulAddr"] = moba::toJsonNumberPtr(contactTrigger.contact.modulAddr);
+        d["contactNb"] = moba::toJsonNumberPtr(contactTrigger.contact.contactNb);
         moba::JsonObjectPtr o(new moba::JsonObject());
 
         (*o)["contact"] = c;
@@ -88,3 +102,4 @@ struct InterfaceSetBrakeVector : public RecieveMessage {
 
     std::vector<BrakeVectorContact> items;
 };
+*/

@@ -23,7 +23,7 @@
 #include <string>
 #include <memory>
 
-#include "basemessage.h"
+#include "message.h"
 #include "shared.h"
 
 struct ServerMessage : public Message {
@@ -38,69 +38,65 @@ struct ServerMessage : public Message {
         SERVER_SELF_TESTING_CLIENT = 8
     };
 
-    ServerMessage(unsigned char msgId) : Message{SERVER, msgId} {
-    }
+    const static std::uint32_t GROUP_ID = SERVER;
 };
 
 struct ServerNewClientStarted : public ServerMessage {
-    ServerNewClientStarted() : ServerMessage{SERVER_NEW_CLIENT_STARTED} {
+    const static std::uint32_t MESSAGE_ID = SERVER_NEW_CLIENT_STARTED;
+
+    ServerNewClientStarted(const rapidjson::Document &d) : endpoint{d} {
     }
-
-
-//    ServerNewClientStarted(moba::JsonItemPtr data) : endpoint{std::dynamic_pointer_cast<moba::JsonObject>(data)} {
-//    }
-//
-//    EndpointData endpoint;
-
+    EndpointData endpoint;
 };
 
 struct ServerClientClosed : public ServerMessage {
-    ServerClientClosed() : ServerMessage{SERVER_CLIENT_CLOSED} {
+    const static std::uint32_t MESSAGE_ID = SERVER_CLIENT_CLOSED;
+
+    ServerClientClosed(const rapidjson::Document &d) {
+        clientId = d.GetInt64();
     }
 
-//    ServerClientClosed(moba::JsonItemPtr data) {
-//        clientId = moba::castToInt(data);
-//    }
-
-    int clientId;
+    long clientId;
 };
 
 struct ServerResetClient : public ServerMessage {
-    ServerResetClient(long appId) : ServerMessage{SERVER_RESET_CLIENT} {
-        data.SetInt(appId);
+    const static std::uint32_t MESSAGE_ID = SERVER_RESET_CLIENT;
+
+    ServerResetClient(long appId) : appId{appId} {
     }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetInt64(appId);
+        return d;
+    }
+
+    long appId;
 };
 
 struct ServerInfoReq : public ServerMessage {
-    ServerInfoReq() : ServerMessage{SERVER_INFO_REQ} {
+    const static std::uint32_t MESSAGE_ID = SERVER_INFO_REQ;
+    ServerInfoReq() {
     }
 };
 
-struct ServerInfoRes : public ServerMessage {
 
-//    ServerInfoRes(moba::JsonItemPtr data) {
-//        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-//        appName = moba::castToString(o->at("appName"));
-//        version = moba::Version{moba::castToString(o->at("version"))};
-//        buildDate = moba::castToString(o->at("buildDate"));
-//        startTime = moba::castToString(o->at("startTime"));
-//        maxClients = moba::castToInt(o->at("maxClients"));
-//        connectedClients = moba::castToInt(o->at("connectedClients"));
-//        auto a = std::dynamic_pointer_cast<moba::JsonArray>(o->at("supportedMessages"));
-//        for(auto iter : *a) {
-//            supportedMessages.push_back(moba::castToString(iter));
-//        }
-//        osArch = moba::castToString(o->at("osArch"));
-//        osName = moba::castToString(o->at("osName"));
-//        osVersion = moba::castToString(o->at("osVersion"));
-//        fwType = moba::castToString(o->at("fwType"));
-//        fwVersion = moba::castToString(o->at("fwVersion"));
-//    }
-//
-//    static std::string getMessageName() {
-//        return "INFO_RES";
-//    }
-//
+struct ServerInfoRes : public ServerMessage {
+    const static std::uint32_t MESSAGE_ID = SERVER_INFO_RES;
+    ServerInfoRes(const rapidjson::Document &d) {
+        appName = d["appName"].GetString();
+        version = d["version"].GetString();
+        buildDate = d["buildDate"].GetString();
+        startTime = d["startTime"].GetString();
+        maxClients = d["maxClients"].GetInt();
+        connectedClients = d["connectedClients"].GetInt();
+        osArch = d["osArch"].GetString();
+        osName = d["osName"].GetString();
+        osVersion = d["osVersion"].GetString();
+        fwType = d["fwType"].GetString();
+        fwVersion = d["fwVersion"].GetString();
+    }
+
     std::string appName;
     moba::common::Version version;
     std::string buildDate;
@@ -117,23 +113,32 @@ struct ServerInfoRes : public ServerMessage {
 };
 
 struct ServerConClientsReq : public ServerMessage {
+    const static std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_REQ;
+    ServerConClientsReq() {
+    }
 };
 
 struct ServerConClientsRes : public ServerMessage {
-//
-//    ServerConClientsRes(moba::JsonItemPtr data) {
-//        auto a = std::dynamic_pointer_cast<moba::JsonArray>(data);
-//        for(auto iter : *a) {
-//            endpoints.push_back(EndpointData{std::dynamic_pointer_cast<moba::JsonObject>(iter)});
-//        }
-//    }
-//
-//    std::vector<EndpointData> endpoints;
-//
+    const static std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_RES;
+    ServerConClientsRes(const rapidjson::Document &d) {
+        for(auto &iter : d.GetArray()) {
+            endpoints.push_back(EndpointData{iter});
+        }
+    }
+    std::vector<EndpointData> endpoints;
 };
 
 struct ServerSelfTestingClient : public ServerMessage {
-    ServerSelfTestingClient(long appId) : ServerMessage{SERVER_SELF_TESTING_CLIENT} {
-        data.SetInt(appId);
+    const static std::uint32_t MESSAGE_ID = SERVER_SELF_TESTING_CLIENT;
+
+    ServerSelfTestingClient(long appId) : appId{appId} {
     }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetInt(appId);
+        return d;
+    }
+
+    long appId;
 };
