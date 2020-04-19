@@ -66,6 +66,10 @@ class Registry {
         }
 
         auto handleMsg(const RawMessage &msg) -> bool {
+            if(!msg) {
+                return true;
+            }
+
             if(auxHandler) {
                 auxHandler(msg.groupId, msg.messageId, msg.data);
             }
