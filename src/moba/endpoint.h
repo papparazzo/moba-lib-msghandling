@@ -51,6 +51,8 @@ public:
         sendMsg(T::GROUP_ID, T::MESSAGE_ID, msg.getJsonDocument());
     }
 
+    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson::Document &data);
+
 protected:
     SocketPtr socket;
 
@@ -66,7 +68,6 @@ protected:
     static const int MSG_HANDLER_TIME_OUT_USEC = 0;
 
     auto registerApp() -> long;
-    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson::Document &data);
 };
 
 using EndpointPtr = std::shared_ptr<Endpoint>;
