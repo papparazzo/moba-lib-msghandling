@@ -33,11 +33,11 @@ struct SystemMessage : public Message {
         SYSTEM_HARDWARE_RESET          = 7
     };
 
-    const static std::uint32_t GROUP_ID = SYSTEM;
+    static constexpr std::uint32_t GROUP_ID = SYSTEM;
 };
 
 struct SystemSetAutomaticMode : public SystemMessage {
-    const static std::uint32_t MESSAGE_ID = SYSTEM_SET_AUTOMATIC_MODE;
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_AUTOMATIC_MODE;
 
     SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
     }
@@ -52,7 +52,7 @@ struct SystemSetAutomaticMode : public SystemMessage {
 };
 
 struct SystemSetEmergencyStop : public SystemMessage {
-    const static std::uint32_t MESSAGE_ID = SYSTEM_SET_EMERGENCY_STOP;
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_EMERGENCY_STOP;
 
     SystemSetEmergencyStop(bool emergencyStopActive) : emergencyStopActive{emergencyStopActive} {
     }
@@ -66,7 +66,7 @@ struct SystemSetEmergencyStop : public SystemMessage {
 };
 
 struct SystemSetStandbyMode : public SystemMessage {
-    const static std::uint32_t MESSAGE_ID = SYSTEM_SET_STANDBY_MODE;
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_STANDBY_MODE;
 
     SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
     }
@@ -80,14 +80,14 @@ struct SystemSetStandbyMode : public SystemMessage {
 };
 
 struct SystemGetHardwareState : public SystemMessage {
-    const static std::uint32_t MESSAGE_ID = SYSTEM_GET_HARDWARE_STATE;
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_GET_HARDWARE_STATE;
 
     SystemGetHardwareState() {
     }
 };
 
 struct SystemHardwareStateChanged : public SystemMessage {
-    const static std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_STATE_CHANGED;
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_STATE_CHANGED;
 
     enum class HardwareState {
         ERROR,
@@ -116,9 +116,9 @@ struct SystemHardwareStateChanged : public SystemMessage {
 };
 
 struct SystemHardwareShutdown : public SystemMessage {
-    const static std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_SHUTDOWN;
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_SHUTDOWN;
 };
 
 struct SystemHardwareReset : public SystemMessage {
-    const static std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_RESET;
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_RESET;
 };

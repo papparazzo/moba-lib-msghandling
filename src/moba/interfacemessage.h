@@ -34,11 +34,11 @@ struct InterfaceMessage : public Message {
         SET_LOC_SPEED              = 4
     };
 
-    const static std::uint32_t GROUP_ID = INTERFACE;
+    static constexpr std::uint32_t GROUP_ID = INTERFACE;
 };
 
 struct InterfaceConnectivityStateChanged : public InterfaceMessage {
-    const static std::uint32_t MESSAGE_ID = CONNECTIVITY_STATE_CHANGED;
+    static constexpr std::uint32_t MESSAGE_ID = CONNECTIVITY_STATE_CHANGED;
 
     enum class Connectivity {
         CONNECTED,
@@ -68,7 +68,7 @@ struct InterfaceConnectivityStateChanged : public InterfaceMessage {
 };
 
 struct InterfaceContactTriggered : public InterfaceMessage {
-    const static std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
+    static constexpr std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
     InterfaceContactTriggered(const ContactTrigger &contactTrigger) : contactTrigger{contactTrigger} {
     }
@@ -91,7 +91,7 @@ struct InterfaceContactTriggered : public InterfaceMessage {
 };
 
 struct InterfaceSetBrakeVector : public InterfaceMessage {
-    const static std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
+    static constexpr std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
 
     InterfaceSetBrakeVector(const rapidjson::Document &d) {
         for(auto &iter : d.GetArray()) {

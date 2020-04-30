@@ -47,7 +47,7 @@ class Registry {
 
         template<typename T>
         void registerHandler(std::function<void(const T&)> fn) {
-            handlers[static_cast<std::uint32_t>(T::GROUP_ID)][static_cast<std::uint32_t>(T::MESSAGE_ID)] = [fn](const rapidjson::Document &data) {
+            handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
                 T m{data};
                 fn(m);
             };

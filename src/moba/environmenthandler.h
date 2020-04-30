@@ -34,15 +34,15 @@ struct EnvironmentMessage : public Message {
         ENVIRONMENT_SET_AMBIENT_LIGHT   = 6
     };
 
-    const static std::uint32_t GROUP_ID = ENVIRONMENT;
+    static constexpr std::uint32_t GROUP_ID = ENVIRONMENT;
 };
 
 struct EnvGetEnvironment : public EnvironmentMessage {
-    const static std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_ENVIRONMENT;
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_ENVIRONMENT;
 };
 
 struct EnvSetEnvironment : public EnvironmentMessage {
-    const static std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_ENVIRONMENT;
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_ENVIRONMENT;
 
     EnvSetEnvironment(
         moba::JsonSwitch::Switch thunder,

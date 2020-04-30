@@ -38,11 +38,11 @@ struct ServerMessage : public Message {
         SERVER_SELF_TESTING_CLIENT = 8
     };
 
-    const static std::uint32_t GROUP_ID = SERVER;
+    static constexpr std::uint32_t GROUP_ID = SERVER;
 };
 
 struct ServerNewClientStarted : public ServerMessage {
-    const static std::uint32_t MESSAGE_ID = SERVER_NEW_CLIENT_STARTED;
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_NEW_CLIENT_STARTED;
 
     ServerNewClientStarted(const rapidjson::Document &d) : endpoint{d} {
     }
@@ -50,7 +50,7 @@ struct ServerNewClientStarted : public ServerMessage {
 };
 
 struct ServerClientClosed : public ServerMessage {
-    const static std::uint32_t MESSAGE_ID = SERVER_CLIENT_CLOSED;
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_CLIENT_CLOSED;
 
     ServerClientClosed(const rapidjson::Document &d) {
         clientId = d.GetInt64();
@@ -60,7 +60,7 @@ struct ServerClientClosed : public ServerMessage {
 };
 
 struct ServerResetClient : public ServerMessage {
-    const static std::uint32_t MESSAGE_ID = SERVER_RESET_CLIENT;
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_RESET_CLIENT;
 
     ServerResetClient(long appId) : appId{appId} {
     }
@@ -75,14 +75,14 @@ struct ServerResetClient : public ServerMessage {
 };
 
 struct ServerInfoReq : public ServerMessage {
-    const static std::uint32_t MESSAGE_ID = SERVER_INFO_REQ;
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_INFO_REQ;
     ServerInfoReq() {
     }
 };
 
 
 struct ServerInfoRes : public ServerMessage {
-    const static std::uint32_t MESSAGE_ID = SERVER_INFO_RES;
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_INFO_RES;
     ServerInfoRes(const rapidjson::Document &d) {
         appName = d["appName"].GetString();
         version = d["version"].GetString();
@@ -113,13 +113,13 @@ struct ServerInfoRes : public ServerMessage {
 };
 
 struct ServerConClientsReq : public ServerMessage {
-    const static std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_REQ;
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_REQ;
     ServerConClientsReq() {
     }
 };
 
 struct ServerConClientsRes : public ServerMessage {
-    const static std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_RES;
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_RES;
     ServerConClientsRes(const rapidjson::Document &d) {
         for(auto &iter : d.GetArray()) {
             endpoints.push_back(EndpointData{iter});
@@ -129,7 +129,7 @@ struct ServerConClientsRes : public ServerMessage {
 };
 
 struct ServerSelfTestingClient : public ServerMessage {
-    const static std::uint32_t MESSAGE_ID = SERVER_SELF_TESTING_CLIENT;
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_SELF_TESTING_CLIENT;
 
     ServerSelfTestingClient(long appId) : appId{appId} {
     }

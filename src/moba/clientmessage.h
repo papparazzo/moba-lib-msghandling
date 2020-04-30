@@ -38,15 +38,15 @@ struct ClientMessage : public Message {
         CLIENT_SELF_TESTING = 10
     };
 
-    const static std::uint32_t GROUP_ID = CLIENT;
+    static constexpr std::uint32_t GROUP_ID = CLIENT;
 };
 
 struct ClientVoid : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_VOID;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_VOID;
 };
 
 struct ClientEchoReq : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_ECHO_REQ;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_REQ;
 
     ClientEchoReq(const std::string &payload) : payload{payload} {
     }
@@ -61,7 +61,7 @@ struct ClientEchoReq : public ClientMessage {
 };
 
 struct ClientEchoRes : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_ECHO_RES;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_RES;
 
     ClientEchoRes(const rapidjson::Document &d) {
         payload = d.GetString();
@@ -71,7 +71,7 @@ struct ClientEchoRes : public ClientMessage {
 };
 
 struct ClientError : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_ERROR;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_ERROR;
 
     ClientError(const rapidjson::Document &d) {
         errorId = d["errorId"].GetString();
@@ -83,7 +83,7 @@ struct ClientError : public ClientMessage {
 };
 
 struct ClientStart : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_START;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_START;
 
     ClientStart(const AppData &appData) : appData{appData} {
     }
@@ -102,7 +102,7 @@ struct ClientStart : public ClientMessage {
 };
 
 struct ClientConnected : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_CONNECTED;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_CONNECTED;
 
     ClientConnected(const rapidjson::Document &d) {
         appId = d.GetInt();
@@ -112,18 +112,18 @@ struct ClientConnected : public ClientMessage {
 };
 
 struct ClientClose : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_CLOSE;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_CLOSE;
 };
 
 struct ClientShutdown : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };
 
 struct ClientReset : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_RESET;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_RESET;
 };
 
 struct ClientSelfTesting : public ClientMessage {
-    const static std::uint32_t MESSAGE_ID = CLIENT_SELF_TESTING;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_SELF_TESTING;
 };
 

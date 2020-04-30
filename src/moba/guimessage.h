@@ -30,11 +30,11 @@ struct GuiMessage : public Message {
         GUI_SYSTEM_NOTICE = 1,
     };
 
-    const static std::uint32_t GROUP_ID = GUI;
+    static constexpr std::uint32_t GROUP_ID = GUI;
 };
 
 struct GuiSystemNotice : public GuiMessage {
-    const static std::uint32_t MESSAGE_ID = GUI_SYSTEM_NOTICE;
+    static constexpr std::uint32_t MESSAGE_ID = GUI_SYSTEM_NOTICE;
 
     enum class NoticeType {
         INFO,

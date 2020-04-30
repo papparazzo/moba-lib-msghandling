@@ -64,8 +64,8 @@ protected:
     moba::common::Version version;
     Groups groups;
 
-    static const int MSG_HANDLER_TIME_OUT_SEC = 2;
-    static const int MSG_HANDLER_TIME_OUT_USEC = 0;
+    static constexpr int MSG_HANDLER_TIME_OUT_SEC = 2;
+    static constexpr int MSG_HANDLER_TIME_OUT_USEC = 0;
 
     auto registerApp() -> long;
 };
