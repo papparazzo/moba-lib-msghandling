@@ -21,15 +21,20 @@
 #pragma once
 
 #include <memory>
+#include <set>
+
 #include <moba-common/version.h>
-#include "groups.h"
+#include "message.h"
+
+using MessageGroups = std::set<Message::MessageGroup>;
 
 struct AppData {
+
     AppData() {
     }
 
     AppData(
-        const std::string &appName, const moba::common::Version &version, Groups groups
+        const std::string &appName, const moba::common::Version &version, const MessageGroups &groups
     ) : appName{appName}, version{version}, groups{groups} {
     }
 
@@ -37,11 +42,14 @@ struct AppData {
     AppData(const T &d) {
         appName = d["appName"].GetString();
         version = d["version"].GetString();
+        for(auto &v : d["msgGroups"].GetArray()) {
+            groups.insert(static_cast<Message::MessageGroup>(v.GetInt()));
+        }
     }
 
     std::string appName;
     moba::common::Version version;
-    Groups groups;
+    MessageGroups groups;
 };
 
 
