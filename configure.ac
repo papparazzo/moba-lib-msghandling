@@ -16,7 +16,7 @@ AX_CXX_COMPILE_STDCXX_17()
 
 # Checks for libraries.
 # FIXME: Replace `main' with a function in `-lMoBaCommon':
-AC_CHECK_LIB([MoBaCommon], [main])
+AC_CHECK_LIB([mobacommon], [main])
 
 # Checks for header files.
 
