@@ -24,99 +24,113 @@
 #include <vector>
 #include <memory>
 
-#include "basemessage.h"
+#include "message.h"
 #include "shared.h"
 
-struct LayoutGetLayoutsReq : public DispatchMessageType<LayoutGetLayoutsReq> {
-    static std::string getMessageName() {
-        return "GET_LAYOUTS_REQ";
-    }
+struct LayoutMessage : public Message {
+    enum MessageName {
+        LAYOUT_GET_LAYOUTS_REQ          = 1,
+        LAYOUT_GET_LAYOUTS_RES          = 2,
+        LAYOUT_DELETE_LAYOUT            = 3,
+        LAYOUT_LAYOUT_DELETED           = 4,
+        LAYOUT_CREATE_LAYOUT            = 5,
+        LAYOUT_LAYOUT_CREATED           = 6,
+        LAYOUT_UPDATE_LAYOUT            = 7,
+        LAYOUT_LAYOUT_UPDATED           = 8,
+        LAYOUT_UNLOCK_LAYOUT            = 9,
+        LAYOUT_LAYOUT_UNLOCKED          = 10,
+        LAYOUT_LOCK_LAYOUT              = 11,
+        LAYOUT_LAYOUT_LOCKED            = 12,
+        LAYOUT_GET_LAYOUT_REQ           = 13,
+        LAYOUT_GET_LAYOUT_READ_ONLY_REQ = 14,
+        LAYOUT_GET_LAYOUT_RES           = 15,
+        LAYOUT_SAVE_LAYOUT              = 16,
+        LAYOUT_LAYOUT_CHANGED           = 17,
+    };
+
+    const static std::uint32_t GROUP_ID = LAYOUT;
 };
 
-struct LayoutGetLayoutsRes : public RecieveMessage {
-    LayoutGetLayoutsRes(moba::JsonItemPtr data) {
-        auto a = std::dynamic_pointer_cast<moba::JsonArray>(data);
-        for(auto iter : *a) {
-            layouts.push_back(TrackLayoutData{std::dynamic_pointer_cast<moba::JsonObject>(iter)});
-        }
-    }
+struct LayoutGetLayoutsReq : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUTS_REQ;
+};
 
-    static std::string getMessageName() {
-        return "GET_LAYOUTS_RES";
+struct LayoutGetLayoutsRes : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUTS_RES;
+
+    LayoutGetLayoutsRes(const rapidjson::Document &d) {
+        for(auto &iter : d.GetArray()) {
+            layouts.push_back(iter);
+        }
     }
 
     std::vector<TrackLayoutData> layouts;
 };
 
-struct LayoutDeleteLayout : public DispatchMessageType<LayoutDeleteLayout> {
+struct LayoutDeleteLayout : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_DELETE_LAYOUT;
+
     LayoutDeleteLayout(int layoutId) : layoutId{layoutId} {
     }
 
-    static std::string getMessageName() {
-        return "DELETE_LAYOUT";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        return moba::toJsonNumberPtr(layoutId);
-    }
-
-    int layoutId;
-};
-
-struct LayoutLayoutDeleted : public RecieveMessage {
-    LayoutLayoutDeleted(moba::JsonItemPtr data) {
-        layoutId = moba::castToInt(data);
-    }
-
-    static std::string getMessageName() {
-        return "LAYOUT_DELETED";
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetInt(layoutId);
+        return d;
     }
 
     int layoutId;
 };
 
-struct LayoutCreateLayout : public DispatchMessageType<LayoutCreateLayout> {
+struct LayoutLayoutDeleted : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_DELETED;
+
+    LayoutLayoutDeleted(const rapidjson::Document &d) {
+        layoutId = d.GetInt();
+    }
+
+    int layoutId;
+};
+
+struct LayoutCreateLayout : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_CREATE_LAYOUT;
+
     LayoutCreateLayout(const TrackLayoutData &tracklayout) : tracklayout{tracklayout} {
     }
 
     LayoutCreateLayout(const std::string &name, const std::string &description, bool active) : tracklayout{name, description, active} {
     }
 
-    static std::string getMessageName() {
-        return "CREATE_LAYOUT";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["name"       ] = moba::toJsonStringPtr(tracklayout.name);
-        (*obj)["description"] = moba::toJsonStringPtr(tracklayout.description);
-        (*obj)["active"     ] = moba::toJsonBoolPtr(tracklayout.active);
-        return obj;
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.AddMember("name", rapidjson::Value(tracklayout.name.c_str(), tracklayout.name.length(), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("description", rapidjson::Value(tracklayout.description.c_str(), tracklayout.description.length(), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("active", tracklayout.active, d.GetAllocator());
+        return d;
     }
 
     TrackLayoutData tracklayout;
 };
 
-struct LayoutLayoutCreated : public RecieveMessage {
-    LayoutLayoutCreated(moba::JsonItemPtr data) : tracklayout{std::dynamic_pointer_cast<moba::JsonObject>(data)} {
-    }
+struct LayoutLayoutCreated : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_CREATED;
 
-    static std::string getMessageName() {
-        return "LAYOUT_CREATED";
+    LayoutLayoutCreated(const rapidjson::Document &d) : tracklayout{d} {
     }
 
     TrackLayoutData tracklayout;
 };
+/*
+struct LayoutUpdateLayout : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_UPDATE_LAYOUT;
 
-struct LayoutUpdateLayout : public DispatchMessageType<LayoutUpdateLayout> {
     LayoutUpdateLayout(const TrackLayoutData &tracklayout) : tracklayout{tracklayout} {
     }
 
-    static std::string getMessageName() {
-        return "UPDATE_LAYOUT";
-    }
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.AddMember();
 
-    virtual moba::JsonItemPtr getData() const override {
         moba::JsonObjectPtr obj(new moba::JsonObject());
         (*obj)["id"         ] = moba::toJsonNumberPtr(tracklayout.id);
         (*obj)["name"       ] = moba::toJsonStringPtr(tracklayout.name);
@@ -191,37 +205,39 @@ struct LayoutLayoutLocked : public RecieveMessage {
 
     int layoutId;
 };
+*/
+struct LayoutGetLayoutReq : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_REQ;
 
-struct LayoutGetLayoutReq : public DispatchMessageType<LayoutGetLayoutReq> {
     LayoutGetLayoutReq(int layoutId) : layoutId{layoutId} {
     }
 
-    static std::string getMessageName() {
-        return "GET_LAYOUT_REQ";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        return moba::toJsonNumberPtr(layoutId);
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetInt(layoutId);
+        return d;
     }
 
     int layoutId;
 };
 
-struct LayoutGetLayoutReadOnlyReq : public DispatchMessageType<LayoutGetLayoutReadOnlyReq> {
+struct LayoutGetLayoutReadOnlyReq : public LayoutMessage {
+    const static std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_READ_ONLY_REQ;
+
     LayoutGetLayoutReadOnlyReq(int layoutId) : layoutId{layoutId} {
     }
 
-    static std::string getMessageName() {
-        return "GET_LAYOUT_READ_ONLY_REQ";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        return moba::toJsonNumberPtr(layoutId);
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetInt(layoutId);
+        return d;
     }
 
     int layoutId;
 };
 
+
+/*
 struct LayoutGetLayoutRes : public RecieveMessage {
     LayoutGetLayoutRes(moba::JsonItemPtr data) : data{data} {
     }
@@ -246,3 +262,4 @@ struct LayoutSaveLayout : public DispatchMessageType<LayoutSaveLayout> {
     }
     moba::JsonItemPtr data;
 };
+*/

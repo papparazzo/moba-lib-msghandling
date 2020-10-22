@@ -22,9 +22,10 @@
 
 #include <memory>
 #include <set>
-
 #include <moba-common/version.h>
 #include "message.h"
+
+#include "rapidjson/document.h"
 
 using MessageGroups = std::set<Message::MessageGroup>;
 
@@ -74,7 +75,7 @@ struct EndpointData {
     std::string addr;
     long        port;
 };
-/*
+
 struct TrackLayoutData {
     TrackLayoutData(
         int id, const std::string &name, const std::string &description, const std::string &created, const std::string &modified, bool active, int locked
@@ -88,14 +89,15 @@ struct TrackLayoutData {
 
     }
 
-    TrackLayoutData(moba::JsonObjectPtr appData) {
-        id = moba::castToInt(appData->at("id"));
-        name = moba::castToString(appData->at("name"));
-        description = moba::castToString(appData->at("description"));
-        created = moba::castToString(appData->at("created"));
-        modified = moba::castToString(appData->at("modified"));
-        active = moba::castToBool(appData->at("active"));
-        locked = moba::castToInt(appData->at("locked"));
+    template <typename T>
+    TrackLayoutData(const T &d) {
+        id = d["id"].GetInt();
+        name = d["name"].GetString();
+        description = d["description"].GetString();
+        created = d["created"].GetString();
+        modified = d["modified"].GetString();
+        active = d["active"].GetBool();
+        locked = d["locked"].GetInt();
     }
 
 	int id;
@@ -108,11 +110,13 @@ struct TrackLayoutData {
 };
 
 struct TrackLayoutSymbolData {
-    TrackLayoutSymbolData(moba::JsonObjectPtr s) {
-        id = moba::castToInt(s->at("id"));
-        xPos = moba::castToInt(s->at("xPos"));
-        yPos = moba::castToInt(s->at("yPos"));
-        symbol = moba::castToInt(s->at("symbol"));
+
+    template <typename T>
+    TrackLayoutSymbolData(const T &d) {
+        id = d["id"].GetInt();
+        xPos = d["xPos"].GetInt();
+        yPos = d["yPos"].GetInt();
+        symbol = d["symbol"].GetInt();
     }
 	int id;
     int xPos;
@@ -121,22 +125,17 @@ struct TrackLayoutSymbolData {
 };
 
 struct SpecificLayoutData {
-    SpecificLayoutData(moba::JsonObjectPtr appData) {
-        id = moba::castToInt(appData->at("id"));
-        auto v = std::dynamic_pointer_cast<moba::JsonArray>(appData->at("symbols"));
-        for(auto iter = v->begin(); iter != v->end(); ++iter) {
-            symbols.push_back(std::dynamic_pointer_cast<moba::JsonObject>(*iter));
+    SpecificLayoutData(const rapidjson::Document &d) {
+        id = d["id"].GetInt();
+        for(auto &iter : d["symbols"].GetArray()) {
+            symbols.push_back(iter);
         }
-
-
-        //groups = appData->at("msgGroups"));
-
     }
 
     int id;
     std::vector<TrackLayoutSymbolData> symbols;
 };
-*/
+
 struct Contact {
     Contact(int modulAddr = 0, int contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
     }
