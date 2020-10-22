@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <set>
+#include <vector>
 #include <moba-common/version.h>
 #include "message.h"
 
