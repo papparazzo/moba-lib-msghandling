@@ -26,7 +26,6 @@
 
 #include "rawmessage.h"
 #include "socket.h"
-#include "groups.h"
 #include "shared.h"
 
 #include "rapidjson/document.h"
