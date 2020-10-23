@@ -23,109 +23,111 @@
 #include <string>
 #include <memory>
 
-#include <moba/jsonabstractitem.h>
+#include <moba-common/exception.h>
 
-#include "basemessage.h"
+#include "message.h"
 #include "shared.h"
 
-struct TimerGlobalTimerEvent : public RecieveMessage {
-    TimerGlobalTimerEvent(moba::json::JsonValue data) {
-        curModelTime = moba::castToString(data.at("curModelTime"));
-        multiplicator = moba::castToInt(data.at("multiplicator"));
-    }
+struct TimerMessage : public Message {
+    enum MessageName {
+        TIMER_GLOBAL_TIMER_EVENT = 1,
+        TIMER_GET_GLOBAL_TIMER   = 2,
+        TIMER_SET_GLOBAL_TIMER   = 3,
+        TIMER_GET_COLOR_THEME    = 4,
+        TIMER_SET_COLOR_THEME    = 5,
+        TIMER_COLOR_THEME_EVENT  = 6
+    };
 
-    static std::string getMessageName() {
-        return "GLOBAL_TIMER_EVENT";
+    static constexpr std::uint32_t GROUP_ID = TIMER;
+};
+
+struct TimerGlobalTimerEvent : public TimerMessage {
+    static constexpr std::uint32_t MESSAGE_ID = TIMER_GLOBAL_TIMER_EVENT;
+
+    TimerGlobalTimerEvent(const rapidjson::Document &d) {
+        curModelTime = d["curModelTime"].GetString();
+        multiplicator = d["multiplicator"].GetInt();
     }
 
     std::string curModelTime;
     unsigned int multiplicator;
 };
 
-struct TimerGetGlobalTimer : public DispatchMessageType<TimerGetGlobalTimer> {
-    static std::string getMessageName() {
-        return "GET_GLOBAL_TIMER";
-    }
+struct TimerGetGlobalTimer : public TimerMessage {
+    static constexpr std::uint32_t MESSAGE_ID = TIMER_GET_GLOBAL_TIMER;
 };
 
-struct TimerSetGlobalTimer : public RecieveMessage, public DispatchMessageType<TimerSetGlobalTimer> {
+struct TimerSetGlobalTimer : public TimerMessage {
+    static constexpr std::uint32_t MESSAGE_ID = TIMER_SET_GLOBAL_TIMER;
+
     TimerSetGlobalTimer(const std::string &curModelTime, unsigned int multiplicator) :
     curModelTime{curModelTime}, multiplicator{multiplicator} {
     }
 
-    TimerSetGlobalTimer(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        curModelTime = moba::castToString(o->at("curModelTime"));
-        multiplicator = moba::castToInt(o->at("multiplicator"));
+    TimerSetGlobalTimer(const rapidjson::Document &d) {
+        curModelTime = d["curModelTime"].GetString();
+        multiplicator = d["multiplicator"].GetInt();
     }
 
-    static std::string getMessageName() {
-        return "SET_GLOBAL_TIMER";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["curModelTime" ] = moba::toJsonStringPtr(curModelTime);
-        (*obj)["multiplicator"] = moba::toJsonNumberPtr(multiplicator);
-        return obj;
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.AddMember("curModelTime", rapidjson::Value(curModelTime.c_str(), curModelTime.length(), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("multiplicator", multiplicator, d.GetAllocator());
+        return d;
     }
 
     std::string curModelTime;
     unsigned int multiplicator;
 };
 
-struct TimerGetColorTheme : public DispatchMessageType<TimerGetColorTheme> {
-    static std::string getMessageName() {
-        return "GET_COLOR_THEME";
-    }
+struct TimerGetColorTheme : public TimerMessage {
+    static constexpr std::uint32_t MESSAGE_ID = TIMER_GET_COLOR_THEME;
 };
 
-struct TimerSetColorTheme : public RecieveMessage, public DispatchMessageType<TimerSetColorTheme> {
-    TimerSetColorTheme(const std::string &dimTime, const std::string &brightTime, moba::JsonThreeState::ThreeState condition) :
+struct TimerSetColorTheme : public TimerMessage {
+    static constexpr std::uint32_t MESSAGE_ID = TIMER_SET_COLOR_THEME;
+
+    TimerSetColorTheme(const std::string &dimTime, const std::string &brightTime, ThreeState condition) :
     dimTime{dimTime}, brightTime{brightTime}, condition{condition} {
     }
 
-    TimerSetColorTheme(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        dimTime = moba::castToString(o->at("dimTime"));
-        brightTime = moba::castToString(o->at("brightTime"));
-        condition = moba::castToThreeState(o->at("condition"));
+    TimerSetColorTheme(const rapidjson::Document &d) {
+        dimTime = d["dimTime"].GetString();
+        brightTime = d["brightTime"].GetInt();
+        condition = stringToThreeStateEnum(d["condition"].GetString());
     }
 
-    static std::string getMessageName() {
-        return "SET_COLOR_THEME";
-    }
-
-    virtual moba::JsonItemPtr getData() const override {
-        moba::json::JsonObject obj{};
-        obj["dimTime"   ] = dimTime;
-        obj["brightTime"] = brightTime;
-        obj["condition" ] = moba::toJsonThreeStatePtr(condition);
-        return obj;
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        auto conditionStr = threeStateEnumToString(condition);
+        d.AddMember("dimTime", rapidjson::Value(dimTime.c_str(), dimTime.length(), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("brightTime", rapidjson::Value(brightTime.c_str(), brightTime.length(), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("condition", rapidjson::Value(conditionStr.c_str(), conditionStr.length(), d.GetAllocator()), d.GetAllocator());
+        return d;
     }
 
     std::string dimTime;
     std::string brightTime;
-    moba::JsonThreeState::ThreeState condition;
+    ThreeState condition;
 };
 
-struct TimerColorThemeEvent  : public RecieveMessage {
+struct TimerColorThemeEvent : public TimerMessage {
+    static constexpr std::uint32_t MESSAGE_ID = TIMER_COLOR_THEME_EVENT;
+
     enum class ColorTheme {
 		BRIGHT,
 		DIM
     };
 
-    TimerColorThemeEvent(moba::JsonItemPtr data) {
-        std::string status = moba::castToString(data);
+    TimerColorThemeEvent(const rapidjson::Document &d) {
+        std::string status = d["dimTime"].GetString();
         if(status == "BRIGHT") {
             colorTheme = ColorTheme::BRIGHT;
         } else if(status == "DIM") {
             colorTheme = ColorTheme::DIM;
+        } else {
+            throw moba::common::UnsupportedOperationException{"invalid value given"};
         }
-    }
-
-    static std::string getMessageName() {
-        return "COLOR_THEME_EVENT";
     }
 
     ColorTheme colorTheme;

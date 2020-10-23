@@ -23,6 +23,7 @@
 #include <memory>
 #include <set>
 #include <vector>
+#include <moba-common/exception.h>
 #include <moba-common/version.h>
 #include "message.h"
 
@@ -174,167 +175,125 @@ struct BrakeVectorContact {
     int locId;
 };
 
-namespace moba {
+enum class Switch {
+    ON,
+    AUTO,
+    UNSET,
+    TRIGGER,
+    OFF
+};
 
+inline Switch stringToSwitchEnum(const std::string &s) {
+    if(s == "ON") {
+        return Switch::ON;
+    } else if(s == "AUTO") {
+        return Switch::AUTO;
+    } else if(s == "UNSET") {
+        return Switch::UNSET;
+    } else if(s == "TRIGGER") {
+        return Switch::TRIGGER;
+    } else if(s == "OFF") {
+        return Switch::OFF;
+    } else {
+        throw moba::common::UnsupportedOperationException{"invalid value given"};
+    }
 }
 
-struct JsonSwitch {
-    enum class Switch {
-        ON,
-        AUTO,
-        UNSET,
-        TRIGGER,
-        OFF
-    };
+inline std::string switchEnumToString(Switch s) {
+    switch(s) {
+        case Switch::ON:
+            return "ON";
 
-    JsonSwitch(const std::string &s) {
-        if(s == "ON") {
-            v = Switch::ON;
-        } else if(s == "AUTO") {
-            v = Switch::AUTO;
-        } else if(s == "UNSET") {
-            v = Switch::UNSET;
-        } else if(s == "TRIGGER") {
-            v = Switch::TRIGGER;
-        } else if(s == "OFF") {
-            v = Switch::OFF;
-        } else {
-          //  throw UnsupportedOperationException("IPC::Command is invalid");
-        }
+        case Switch::OFF:
+            return "OFF";
+
+        case Switch::AUTO:
+            return "AUTO";
+
+        case Switch::UNSET:
+            return "UNSET";
+
+        case Switch::TRIGGER:
+            return "TRIGGER";
+
+        default:
+            throw moba::common::UnsupportedOperationException{"invalid value given"};
     }
+}
 
-    JsonSwitch(JsonSwitch::Switch v) : v{v} {
-    }
-
-    std::string getJsonString() const {
-        switch(this->v) {
-            case Switch::ON:
-                return "ON";
-
-            case Switch::OFF:
-                return "OFF";
-
-            case Switch::AUTO:
-                return "AUTO";
-
-            case Switch::UNSET:
-                return "UNSET";
-
-            case Switch::TRIGGER:
-                return "TRIGGER";
-
-            //default:
-              //  throw UnsupportedOperationException("IPC::Command is invalid");
-        }
-    }
-
-    Switch getVal() {
-        return this->v;
-    }
-
-protected:
-    Switch v;
+enum class ToggleState {
+    ON,
+    OFF,
+    UNSET
 };
 
-struct JsonToggleState {
-    enum class ToggleState {
-        ON,
-        OFF,
-        UNSET
-    };
-
-    JsonToggleState(const std::string &s) {
-        if(s == "ON") {
-            v = ToggleState::ON;
-        } else if(s == "UNSET") {
-            v = ToggleState::UNSET;
-        } else if(s == "OFF") {
-            v = ToggleState::OFF;
-        } else {
-            //throw UnsupportedOperationException("IPC::Command is invalid");
-        }
+inline ToggleState stringToToggleStateEnum(const std::string &s) {
+    if(s == "ON") {
+        return ToggleState::ON;
+    } else if(s == "UNSET") {
+        return ToggleState::UNSET;
+    } else if(s == "OFF") {
+        return ToggleState::OFF;
+    } else {
+        throw moba::common::UnsupportedOperationException{"invalid value given"};
     }
+}
 
-    JsonToggleState(JsonToggleState::ToggleState v) : v{v} {
+inline std::string toggleStateEnumToString(ToggleState t) {
+    switch(t) {
+        case ToggleState::ON:
+            return "ON";
+
+        case ToggleState::OFF:
+            return "OFF";
+
+        case ToggleState::UNSET:
+            return "UNSET";
+
+        default:
+            throw moba::common::UnsupportedOperationException{"invalid value given"};
     }
+}
 
-    std::string getJsonString() const {
-        switch(this->v) {
-            case ToggleState::ON:
-                return "ON";
-
-            case ToggleState::OFF:
-                return "OFF";
-
-            case ToggleState::UNSET:
-                return "UNSET";
-
-           // default:
-           //     throw UnsupportedOperationException("IPC::Command is invalid");
-        }
-    }
-
-    ToggleState getVal() {
-        return this->v;
-    }
-
-protected:
-    ToggleState v;
+enum class ThreeState {
+    ON,
+    OFF,
+    AUTO,
+    UNSET
 };
 
-
-struct JsonThreeState {
-    enum class ThreeState {
-        ON,
-        OFF,
-        AUTO,
-        UNSET
-    };
-
-    JsonThreeState(const std::string &s) {
-        if(s == "ON") {
-            v = ThreeState::ON;
-        } else if(s == "OFF") {
-            v = ThreeState::OFF;
-        } else if(s == "AUTO") {
-            v = ThreeState::AUTO;
-        } else if(s == "UNSET") {
-            v = ThreeState::UNSET;
-        } else {
-           // throw UnsupportedOperationException("IPC::Command is invalid");
-        }
+inline ThreeState stringToThreeStateEnum(const std::string &s) {
+    if(s == "ON") {
+        return ThreeState::ON;
+    } else if(s == "OFF") {
+        return ThreeState::OFF;
+    } else if(s == "AUTO") {
+        return ThreeState::AUTO;
+    } else if(s == "UNSET") {
+        return ThreeState::UNSET;
+    } else {
+        throw moba::common::UnsupportedOperationException{"invalid value given"};
     }
+}
 
-    JsonThreeState(JsonThreeState::ThreeState v) : v(v) {
+inline std::string threeStateEnumToString(ThreeState t) {
+    switch(t) {
+        case ThreeState::ON:
+            return "ON";
+
+        case ThreeState::OFF:
+            return "OFF";
+
+        case ThreeState::AUTO:
+            return "AUTO";
+
+        case ThreeState::UNSET:
+            return "UNSET";
+
+        default:
+            throw moba::common::UnsupportedOperationException{"invalid value given"};
     }
-
-    std::string getJsonString() const {
-        switch(this->v) {
-            case ThreeState::ON:
-                return "ON";
-
-            case ThreeState::OFF:
-                return "OFF";
-
-            case ThreeState::AUTO:
-                return "AUTO";
-
-            case ThreeState::UNSET:
-                return "UNSET";
-
-           // default:
-           //     throw UnsupportedOperationException("IPC::Command is invalid");
-        }
-    }
-
-    ThreeState getVal() {
-        return this->v;
-    }
-
-protected:
-    ThreeState v;
-};
-
+}
 
 /*
      enum class ErrorId {
