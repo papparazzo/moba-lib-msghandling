@@ -23,6 +23,7 @@
 #include <string>
 #include <memory>
 #include "message.h"
+#include "shared.h"
 
 struct EnvironmentMessage : public Message {
     enum MessageName {
@@ -45,121 +46,119 @@ struct EnvSetEnvironment : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_ENVIRONMENT;
 
     EnvSetEnvironment(
-        moba::JsonSwitch::Switch thunder,
-        moba::JsonSwitch::Switch wind,
-        moba::JsonSwitch::Switch rain,
-        moba::JsonSwitch::Switch environmentSound,
-        moba::JsonSwitch::Switch aux1,
-        moba::JsonSwitch::Switch aux2,
-        moba::JsonSwitch::Switch aux3
+        Switch thunder,
+        Switch wind,
+        Switch rain,
+        Switch environmentSound,
+        Switch aux1,
+        Switch aux2,
+        Switch aux3
     ) : thunder{thunder}, wind{wind}, rain{rain}, environmentSound{environmentSound}, aux1{aux1}, aux2{aux2}, aux3{aux3} {
     }
 
-
-/*
-
-    EnvSetEnvironment(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        thunder = moba::castToSwitch(o->at("thunderStorm"));
-        wind = moba::castToSwitch(o->at("wind"));
-        rain = moba::castToSwitch(o->at("rain"));
-        environmentSound = moba::castToSwitch(o->at("environmentSound"));
-        aux01 = moba::castToSwitch(o->at("aux1"));
-        aux02 = moba::castToSwitch(o->at("aux2"));
-        aux03 = moba::castToSwitch(o->at("aux3"));
+    EnvSetEnvironment(const rapidjson::Document &d) {
+        thunder = stringToSwitchEnum(d["thunderStorm"].GetString());
+        wind = stringToSwitchEnum(d["wind"].GetString());
+        rain = stringToSwitchEnum(d["rain"].GetString());
+        environmentSound = stringToSwitchEnum(d["environmentSound"].GetString());
+        aux1 = stringToSwitchEnum(d["aux1"].GetString());
+        aux2 = stringToSwitchEnum(d["aux2"].GetString());
+        aux3 = stringToSwitchEnum(d["aux3"].GetString());
     }
 
-    static std::string getMessageName() {
-        return "SET_ENVIRONMENT";
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+
+        d.AddMember("thunderStorm", getJsonValue(d, thunder), d.GetAllocator());
+        d.AddMember("wind", getJsonValue(d, wind), d.GetAllocator());
+        d.AddMember("rain", getJsonValue(d, rain), d.GetAllocator());
+        d.AddMember("environmentSound", getJsonValue(d, environmentSound), d.GetAllocator());
+        d.AddMember("aux01", getJsonValue(d, aux1), d.GetAllocator());
+        d.AddMember("aux02", getJsonValue(d, aux2), d.GetAllocator());
+        d.AddMember("aux03", getJsonValue(d, aux3), d.GetAllocator());
+
+        return d;
     }
 
-    virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["thunderStorm"      ] = moba::toJsonSwitchPtr(thunder);
-        (*obj)["wind"              ] = moba::toJsonSwitchPtr(wind);
-        (*obj)["rain"              ] = moba::toJsonSwitchPtr(rain);
-        (*obj)["environmentSound"  ] = moba::toJsonSwitchPtr(environmentSound);
-        (*obj)["aux01"             ] = moba::toJsonSwitchPtr(aux1);
-        (*obj)["aux02"             ] = moba::toJsonSwitchPtr(aux2);
-        (*obj)["aux03"             ] = moba::toJsonSwitchPtr(aux3);
-        return obj;
-    }
-*/
-    moba::JsonSwitch::Switch thunder;
-    moba::JsonSwitch::Switch wind;
-    moba::JsonSwitch::Switch rain;
-    moba::JsonSwitch::Switch environmentSound;
-    moba::JsonSwitch::Switch aux1;
-    moba::JsonSwitch::Switch aux2;
-    moba::JsonSwitch::Switch aux3;
-};
-/*
-struct EnvGetAmbience : public DispatchMessageType<EnvGetAmbience> {
-    static std::string getMessageName() {
-        return "GET_AMBIENCE";
+    Switch thunder;
+    Switch wind;
+    Switch rain;
+    Switch environmentSound;
+    Switch aux1;
+    Switch aux2;
+    Switch aux3;
+
+protected:
+    rapidjson::Value getJsonValue(rapidjson::Document &d, Switch c) const {
+        auto v = switchEnumToString(c);
+        return rapidjson::Value(v.c_str(), v.length(), d.GetAllocator());
     }
 };
 
-struct EnvSetAmbience : public RecieveMessage, public DispatchMessageType<EnvSetAmbience> {
+struct EnvGetAmbience : public EnvironmentMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_AMBIENCE;
+};
+
+
+struct EnvSetAmbience : public EnvironmentMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENCE;
+
     EnvSetAmbience(
-        moba::JsonToggleState::ToggleState curtainUp,
-        moba::JsonToggleState::ToggleState mainLightOn
+        ToggleState curtainUp, ToggleState mainLightOn
     ) : curtainUp{curtainUp}, mainLightOn{mainLightOn} {
     }
 
-    EnvSetAmbience(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        curtainUp = moba::castToJsonToggleState(o->at("curtainUp"));
-        mainLightOn = moba::castToJsonToggleState(o->at("mainLightOn"));
+    EnvSetAmbience(const rapidjson::Document &d) {
+        curtainUp = stringToToggleStateEnum(d["curtainUp"].GetString());
+        mainLightOn = stringToToggleStateEnum(d["mainLightOn"].GetString());
     }
 
-    static std::string getMessageName() {
-        return "SET_AMBIENCE";
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+
+        d.AddMember("curtainUp", getJsonValue(d, curtainUp), d.GetAllocator());
+        d.AddMember("mainLightOn", getJsonValue(d, mainLightOn), d.GetAllocator());
+        return d;
     }
 
-    virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["curtainUp"  ] = moba::toJsonToggleStatePtr(curtainUp);
-        (*obj)["mainLightOn"] = moba::toJsonToggleStatePtr(mainLightOn);
-        return obj;
-    }
+    ToggleState curtainUp;
+    ToggleState mainLightOn;
 
-    moba::JsonToggleState::ToggleState curtainUp,
-    moba::JsonToggleState::ToggleState mainLightOn
-};
-
-struct EnvGetAmbientLight : public DispatchMessageType<EnvGetAmbientLight> {
-    static std::string getMessageName() {
-        return "GET_AMBIENT_LIGHT";
+protected:
+    rapidjson::Value getJsonValue(rapidjson::Document &d, ToggleState c) const {
+        auto v = toggleStateEnumToString(c);
+        return rapidjson::Value(v.c_str(), v.length(), d.GetAllocator());
     }
 };
 
-struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessageType<EnvSetAmbientLight> {
+struct EnvGetAmbientLight : public EnvironmentMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_AMBIENT_LIGHT;
+};
+
+struct EnvSetAmbientLight : public EnvironmentMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENT_LIGHT;
 
     EnvSetAmbientLight(
         int red, int blue, int green, int white
     ) : red{red}, blue{blue}, green{green}, white{white} {
     }
 
-    EnvSetAmbience(moba::JsonItemPtr data) {
-        auto o = std::dynamic_pointer_cast<moba::JsonObject>(data);
-        red = moba::castToInt(o->at("red"));
-        blue = moba::castToInt(o->at("blue"));
-        green = moba::castToInt(o->at("green"));
-        white = moba::castToInt(o->at("white"));
+    EnvSetAmbientLight(const rapidjson::Document &d) {
+        red = d["red"].GetInt();
+        blue = d["blue"].GetInt();
+        green = d["green"].GetInt();
+        white = d["white"].GetInt();
     }
 
-    static std::string getMessageName() {
-        return "SET_AMBIENT_LIGHT";
-    }
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.AddMember("red", red, d.GetAllocator());
+        d.AddMember("blue", blue, d.GetAllocator());
+        d.AddMember("green", green, d.GetAllocator());
+        d.AddMember("white", white, d.GetAllocator());
 
-    virtual moba::JsonItemPtr getData() const override {
-        moba::JsonObjectPtr obj(new moba::JsonObject());
-        (*obj)["red"  ] = moba::toJsonNumberPtr(red);
-        (*obj)["blue" ] = moba::toJsonNumberPtr(blue);
-        (*obj)["green"] = moba::toJsonNumberPtr(green);
-        (*obj)["white"] = moba::toJsonNumberPtr(white);
-        return obj;
+        return d;
     }
 
     int red;
@@ -167,4 +166,3 @@ struct EnvSetAmbientLight : public RecieveMessage, public DispatchMessageType<En
     int green;
     int white;
 };
-*/
