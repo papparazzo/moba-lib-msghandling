@@ -34,7 +34,6 @@ class Registry {
     public:
 
         using HandlerMsgFnWrapper = std::function<void(const rapidjson::Document &data)>;
-        //using HandlerGrpFnWrapper = std::function<void(std::uint32_t, const rapidjson::Document &data)>;
         using HandlerDefFnWrapper = std::function<void(std::uint32_t, std::uint32_t, const rapidjson::Document &data)>;
 
         Registry() {
@@ -52,10 +51,6 @@ class Registry {
                 fn(m);
             };
         }
-
-        //void registerHandler(std::uint32_t groupId, HandlerGrpFnWrapper fn) {
-        //    handlers[groupId] = fn;
-        //}
 
         void registerDefaultHandler(HandlerDefFnWrapper fn) {
             defHandler = fn;
@@ -80,8 +75,8 @@ class Registry {
                 auto iter2 = iter->second.find(msg.messageId);
                 if(iter2 != iter->second.end()) {
                     iter2->second(msg.data);
+                    return true;
                 }
-                return true;
             }
 
             if(defHandler) {
@@ -97,6 +92,5 @@ class Registry {
         HandlerMapF         handlers;
         HandlerDefFnWrapper defHandler;
         HandlerDefFnWrapper auxHandler;
-
 };
 
