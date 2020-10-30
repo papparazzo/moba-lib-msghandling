@@ -96,11 +96,9 @@ struct ClientStart : public ClientMessage {
         d.AddMember("version", rapidjson::Value(version.c_str(), version.length(), d.GetAllocator()), d.GetAllocator());
 
         rapidjson::Value g(rapidjson::kArrayType);
-        rapidjson::Document document;
-        rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
 
         for(auto &v : appData.groups) {
-            g.PushBack(v, allocator);
+            g.PushBack(v, d.GetAllocator());
         }
         d.AddMember("msgGroups", g, d.GetAllocator());
         return d;
