@@ -45,6 +45,7 @@ public:
     auto recieveMsg(time_t timeoutSec = 0) -> RawMessage;
 
     auto waitForNewMsg() -> RawMessage;
+    std::string waitForNewMsgAsString();
 
     template<typename T>
     void sendMsg(const T &msg) {
@@ -52,6 +53,12 @@ public:
     }
 
     void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson::Document &data);
+
+    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const std::string &data) {
+        sendMsg(grpId, msgId, data.c_str(), data.length());
+    }
+
+    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const char *buffer, std::size_t bufferSize);
 
 protected:
     SocketPtr socket;

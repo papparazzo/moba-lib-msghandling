@@ -19,6 +19,7 @@
  */
 
 #include <string>
+#include <sstream>
 #include <memory>
 
 #include <sys/types.h>
@@ -107,6 +108,33 @@ RawMessage Endpoint::waitForNewMsg() {
     return RawMessage{d[0], d[1], srs};
 }
 
+std::string Endpoint::waitForNewMsgAsString() {
+    std::uint32_t d[3];
+
+    if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
+        throw SocketException{"recv header failed"};
+    }
+
+    for(int i = 0; i < 3; ++i) {
+        d[i] = ::ntohl(d[i]);
+    }
+    LOG(moba::common::LogLevel::DEBUG) << "recieve message <" << d[0] << ":" << d[1] << "> {" << d[2] << "} bytes" << std::endl;
+
+    std::string output;
+    output.resize(d[2]);
+
+    int bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
+    if (bytes_received < 0) {
+        std::cerr << "Failed to read data from socket.\n";
+        return "";
+    }
+
+    std::stringstream ss;
+    ss << "{\"groupId\":" << d[0] << ", \"messageId\":" << d[1] << ", \"data\":" << output << "}";
+
+    return ss.str();
+}
+
 void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson::Document &data) {
     std::lock_guard<std::mutex> l{m};
 
@@ -115,7 +143,10 @@ void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson
     data.Accept(writer);
 
     size_t bufferSize = buffer.GetSize();
+    sendMsg(grpId, msgId, buffer.GetString(), bufferSize);
+}
 
+void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const char *buffer, std::size_t bufferSize) {
     std::uint32_t d[] = {
         ::htonl(grpId),
         ::htonl(msgId),
@@ -127,7 +158,7 @@ void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson
         throw SocketException{"sending header failed"};
     }
 
-    if(::send(socket->getSocket(), buffer.GetString(), bufferSize, 0) < static_cast<ssize_t>(bufferSize)) {
+    if(::send(socket->getSocket(), buffer, bufferSize, 0) < static_cast<ssize_t>(bufferSize)) {
         throw SocketException{"sending body failed"};
     }
 }
