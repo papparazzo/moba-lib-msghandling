@@ -154,11 +154,11 @@ void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const char *buf
     };
     LOG(moba::common::LogLevel::DEBUG) << "try to send message <" << grpId << ":" << msgId << "> {" << bufferSize << "} bytes" << std::endl;
 
-    if(::send(socket->getSocket(), d, sizeof(d), 0) < static_cast<ssize_t>(sizeof(d))) {
+    if(::send(socket->getSocket(), d, sizeof(d), MSG_NOSIGNAL) < static_cast<ssize_t>(sizeof(d))) {
         throw SocketException{"sending header failed"};
     }
 
-    if(::send(socket->getSocket(), buffer, bufferSize, 0) < static_cast<ssize_t>(bufferSize)) {
+    if(::send(socket->getSocket(), buffer, bufferSize, MSG_NOSIGNAL) < static_cast<ssize_t>(bufferSize)) {
         throw SocketException{"sending body failed"};
     }
 }
