@@ -122,6 +122,9 @@ struct ClientClose : public ClientMessage {
 };
 
 struct ClientShutdown : public ClientMessage {
+
+    ClientShutdown(const rapidjson::Document &d) {
+    }
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };
 
