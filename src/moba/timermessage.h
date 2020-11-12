@@ -71,6 +71,8 @@ struct TimerSetGlobalTimer : public TimerMessage {
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
+        d.SetObject();
+
         d.AddMember("curModelTime", rapidjson::Value(curModelTime.c_str(), curModelTime.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("multiplicator", multiplicator, d.GetAllocator());
         return d;
@@ -99,6 +101,8 @@ struct TimerSetColorTheme : public TimerMessage {
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
+        d.SetObject();
+
         auto conditionStr = threeStateEnumToString(condition);
         d.AddMember("dimTime", rapidjson::Value(dimTime.c_str(), dimTime.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("brightTime", rapidjson::Value(brightTime.c_str(), brightTime.length(), d.GetAllocator()), d.GetAllocator());

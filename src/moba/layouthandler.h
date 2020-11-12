@@ -103,6 +103,8 @@ struct LayoutCreateLayout : public LayoutMessage {
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
+        d.SetObject();
+
         d.AddMember("name", rapidjson::Value(tracklayout.name.c_str(), tracklayout.name.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("description", rapidjson::Value(tracklayout.description.c_str(), tracklayout.description.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("active", tracklayout.active, d.GetAllocator());
@@ -129,6 +131,8 @@ struct LayoutUpdateLayout : public LayoutMessage {
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
+        d.SetObject();
+
         d.AddMember();
 
         moba::JsonObjectPtr obj(new moba::JsonObject());

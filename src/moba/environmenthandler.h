@@ -69,6 +69,7 @@ struct EnvSetEnvironment : public EnvironmentMessage {
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
+        d.SetObject();
 
         d.AddMember("thunderStorm", getJsonValue(d, thunder), d.GetAllocator());
         d.AddMember("wind", getJsonValue(d, wind), d.GetAllocator());
@@ -116,6 +117,7 @@ struct EnvSetAmbience : public EnvironmentMessage {
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
+        d.SetObject();
 
         d.AddMember("curtainUp", getJsonValue(d, curtainUp), d.GetAllocator());
         d.AddMember("mainLightOn", getJsonValue(d, mainLightOn), d.GetAllocator());
@@ -153,6 +155,8 @@ struct EnvSetAmbientLight : public EnvironmentMessage {
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
+        d.SetObject();
+
         d.AddMember("red", red, d.GetAllocator());
         d.AddMember("blue", blue, d.GetAllocator());
         d.AddMember("green", green, d.GetAllocator());
