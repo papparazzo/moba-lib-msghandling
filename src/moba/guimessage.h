@@ -59,8 +59,4 @@ struct GuiSystemNotice : public GuiMessage {
     NoticeType  noticeType;
     std::string caption;
     std::string text;
-
 };
-
-
-
