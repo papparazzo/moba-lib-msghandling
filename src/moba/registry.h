@@ -52,6 +52,13 @@ class Registry {
             };
         }
 
+        template<typename T>
+        void registerHandler(std::function<void()> fn) {
+            handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
+                fn();
+            };
+        }
+
         void registerDefaultHandler(HandlerDefFnWrapper fn) {
             defHandler = fn;
         }

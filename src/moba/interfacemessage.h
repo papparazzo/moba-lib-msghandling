@@ -31,7 +31,8 @@ struct InterfaceMessage : public Message {
         CONNECTIVITY_STATE_CHANGED = 1,
         CONTACT_TRIGGERED          = 2,
         SET_BRAKE_VECTOR           = 3,
-        SET_LOC_SPEED              = 4
+        SET_LOCO_SPEED             = 4,
+        SET_LOCO_DIRECTION         = 5
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
@@ -100,4 +101,69 @@ struct InterfaceSetBrakeVector : public InterfaceMessage {
     }
 
     std::vector<BrakeVectorContact> items;
+};
+
+struct InterfaceSetLocoSpeed : public InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_SPEED;
+
+    InterfaceSetLocoSpeed(std::uint32_t localId, std::uint16_t speed) : localId{localId}, speed{speed} {
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetObject();
+
+        d.AddMember("localId", localId, d.GetAllocator());
+        d.AddMember("speed", speed, d.GetAllocator());
+        return d;
+    }
+
+    std::uint32_t localId;
+    std::uint16_t speed;
+};
+
+struct InterfaceSetLocoDirection : public InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_DIRECTION;
+
+    enum class DrivingDirection	{
+        RETAIN   = 0,
+		FORWARD  = 1,
+		BACKWARD = 2,
+		TOGGLE   = 3,
+    };
+
+    InterfaceSetLocoDirection(std::uint32_t localId, DrivingDirection direction) : localId{localId}, direction{direction} {
+    }
+    InterfaceSetLocoDirection(std::uint32_t localId, std::uint8_t drivingDirection) : localId{localId} {
+         direction = static_cast<DrivingDirection>(drivingDirection);
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetObject();
+
+        d.AddMember("localId", localId, d.GetAllocator());
+        switch(direction) {
+            case DrivingDirection::FORWARD:
+                d.AddMember("direction", rapidjson::Value("FORWARD", d.GetAllocator()), d.GetAllocator());
+                break;
+
+            case DrivingDirection::BACKWARD:
+                d.AddMember("direction", rapidjson::Value("BACKWARD", d.GetAllocator()), d.GetAllocator());
+                break;
+
+            case DrivingDirection::TOGGLE:
+                d.AddMember("direction", rapidjson::Value("TOGGLE", d.GetAllocator()), d.GetAllocator());
+                break;
+
+            case DrivingDirection::RETAIN:
+            default:
+                d.AddMember("direction", rapidjson::Value("RETAIN", d.GetAllocator()), d.GetAllocator());
+                break;
+        }
+        return d;
+    }
+
+    std::uint32_t localId;
+    DrivingDirection direction;
 };

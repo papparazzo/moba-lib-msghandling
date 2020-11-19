@@ -23,6 +23,8 @@
 #include <memory>
 #include <set>
 #include <vector>
+#include <unordered_map>
+#include <utility>
 #include <moba-common/exception.h>
 #include <moba-common/version.h>
 #include "message.h"
@@ -111,31 +113,52 @@ struct TrackLayoutData {
     int locked;
 };
 
-struct TrackLayoutSymbolData {
-
-    template <typename T>
-    TrackLayoutSymbolData(const T &d) {
-        id = d["id"].GetInt();
-        xPos = d["xPos"].GetInt();
-        yPos = d["yPos"].GetInt();
-        symbol = d["symbol"].GetInt();
+struct TrackLayoutSymbol {
+    TrackLayoutSymbol() {
+    }
+    TrackLayoutSymbol(int symbol): id{0}, symbol{symbol} {
+    }
+    TrackLayoutSymbol(int id, int symbol): id{id}, symbol{symbol} {
     }
 	int id;
-    int xPos;
-    int yPos;
 	int symbol;
 };
 
+// Thanks to https://stackoverflow.com/a/45395204
+using IntPair = std::pair<int, int>;
+
+struct IntPairHash {
+   static_assert(sizeof(int) * 2 == sizeof(std::size_t));
+   std::size_t operator()(const IntPair &p) const noexcept {
+       return std::size_t(p.first) << 32 | p.second;
+   }
+};
+
+using Symbols    = std::unordered_map<IntPair, TrackLayoutSymbol, IntPairHash>;
+using SymbolsPtr = std::shared_ptr<std::unordered_map<IntPair, TrackLayoutSymbol, IntPairHash>>;
+
 struct SpecificLayoutData {
+    SpecificLayoutData() {
+        symbols = std::make_shared<Symbols>();
+    }
+
     SpecificLayoutData(const rapidjson::Document &d) {
+        symbols = std::make_shared<Symbols>();
         id = d["id"].GetInt();
+
         for(auto &iter : d["symbols"].GetArray()) {
-            symbols.push_back(iter);
+            (*symbols)[{
+                iter["xPos"].GetInt(),
+                iter["yPos"].GetInt()
+            }] = TrackLayoutSymbol(
+                iter["id"].GetInt(),
+                iter["symbol"].GetInt()
+            );
         }
     }
 
     int id;
-    std::vector<TrackLayoutSymbolData> symbols;
+    SymbolsPtr symbols;
 };
 
 struct Contact {
