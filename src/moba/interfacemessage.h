@@ -71,7 +71,10 @@ struct InterfaceConnectivityStateChanged : public InterfaceMessage {
 struct InterfaceContactTriggered : public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
-    InterfaceContactTriggered(const ContactTrigger &contactTrigger) : contactTrigger{contactTrigger} {
+    InterfaceContactTriggered(const rapidjson::Document &d): contactTrigger{d} {
+    }
+
+    InterfaceContactTriggered(const ContactTriggerData &contactTrigger) : contactTrigger{contactTrigger} {
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -88,7 +91,7 @@ struct InterfaceContactTriggered : public InterfaceMessage {
         return d;
     }
 
-    ContactTrigger contactTrigger;
+    ContactTriggerData contactTrigger;
 };
 
 struct InterfaceSetBrakeVector : public InterfaceMessage {

@@ -135,7 +135,7 @@ struct IntPairHash {
 };
 
 using Symbols    = std::unordered_map<IntPair, TrackLayoutSymbol, IntPairHash>;
-using SymbolsPtr = std::shared_ptr<std::unordered_map<IntPair, TrackLayoutSymbol, IntPairHash>>;
+using SymbolsPtr = std::shared_ptr<Symbols>;
 
 struct SpecificLayoutData {
     SpecificLayoutData() {
@@ -161,12 +161,12 @@ struct SpecificLayoutData {
     SymbolsPtr symbols;
 };
 
-struct Contact {
-    Contact(int modulAddr = 0, int contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
+struct ContactData {
+    ContactData(int modulAddr = 0, int contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
     }
 
     template <typename T>
-    Contact(const T &d) {
+    ContactData(const T &d) {
         modulAddr = d["modulAddr"].GetInt();
         contactNb = d["contactNb"].GetInt();
     }
@@ -175,26 +175,34 @@ struct Contact {
     int contactNb;
 };
 
-struct ContactTrigger {
-    ContactTrigger(
+struct ContactTriggerData {
+    ContactTriggerData(
         int modulAddr, int contactNb, bool state, int time
     ) : contact{modulAddr, contactNb}, state{state}, time{time} {
 
     }
 
-    Contact contact;
+    template <typename T>
+    ContactTriggerData(const T &d): contact{d["contact"]} {
+        state = d["state"].GetInt();
+        time = d["time"].GetInt();
+    }
+
+    ContactData contact;
 	bool state;
 	int time;
 };
 
 struct BrakeVectorContact {
+    //BrakeVectorContact(ContactData contact, int locId)
+
     template <typename T>
     BrakeVectorContact(const T &d) {
-        contact = Contact{d["contact"]};
+        contact = ContactData{d["contact"]};
         locId = d["locId"].GetInt();
     }
 
-    Contact contact;
+    ContactData contact;
     int locId;
 };
 

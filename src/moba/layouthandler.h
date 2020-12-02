@@ -23,6 +23,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <optional>
 
 #include "message.h"
 #include "shared.h"
@@ -204,31 +205,40 @@ struct LayoutLayoutLocked : public LayoutMessage {
 struct LayoutGetLayoutReq : public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_REQ;
 
+    LayoutGetLayoutReq(): layoutId{} {
+    }
+
     LayoutGetLayoutReq(int layoutId): layoutId{layoutId} {
     }
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
-        d.SetInt(layoutId);
+        if(layoutId) {
+            d.SetInt(*layoutId);
+        }
         return d;
     }
 
-    int layoutId;
+    std::optional<int> layoutId;
 };
 
 struct LayoutGetLayoutReadOnlyReq : public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_READ_ONLY_REQ;
 
+    LayoutGetLayoutReadOnlyReq(): layoutId{} {
+    }
     LayoutGetLayoutReadOnlyReq(int layoutId): layoutId{layoutId} {
     }
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
-        d.SetInt(layoutId);
+        if(layoutId) {
+            d.SetInt(*layoutId);
+        }
         return d;
     }
 
-    int layoutId;
+    std::optional<int> layoutId;
 };
 
 struct LayoutGetLayoutRes : public LayoutMessage {
