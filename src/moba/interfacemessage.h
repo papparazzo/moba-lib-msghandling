@@ -112,6 +112,11 @@ struct InterfaceSetLocoSpeed : public InterfaceMessage {
     InterfaceSetLocoSpeed(std::uint32_t localId, std::uint16_t speed) : localId{localId}, speed{speed} {
     }
 
+    InterfaceSetLocoSpeed(const rapidjson::Document &d) {
+        localId = d["localId"].GetInt();
+        speed = d["speed"].GetInt();
+    }
+
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetObject();
@@ -137,8 +142,15 @@ struct InterfaceSetLocoDirection : public InterfaceMessage {
 
     InterfaceSetLocoDirection(std::uint32_t localId, DrivingDirection direction) : localId{localId}, direction{direction} {
     }
+
     InterfaceSetLocoDirection(std::uint32_t localId, std::uint8_t drivingDirection) : localId{localId} {
          direction = static_cast<DrivingDirection>(drivingDirection);
+    }
+
+    InterfaceSetLocoDirection(const rapidjson::Document &d) {
+        localId = d["localId"].GetInt();
+        auto s = d["direction"].GetString();
+        direction = getDirectionFromString(s);
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -169,4 +181,19 @@ struct InterfaceSetLocoDirection : public InterfaceMessage {
 
     std::uint32_t localId;
     DrivingDirection direction;
+
+protected:
+    DrivingDirection getDirectionFromString(const std::string s) {
+         if(s == "RETAIN") {
+            return DrivingDirection::RETAIN;
+        } else if(s == "FORWARD") {
+            return DrivingDirection::FORWARD;
+        } else if(s == "BACKWARD") {
+            return DrivingDirection::BACKWARD;
+        } else if(s == "TOGGLE") {
+            return DrivingDirection::TOGGLE;
+        } else {
+            throw moba::common::UnsupportedOperationException{"invalid value given"};
+        }
+    }
 };
