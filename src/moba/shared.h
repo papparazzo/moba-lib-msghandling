@@ -57,7 +57,6 @@ struct AppData {
     MessageGroups groups;
 };
 
-
 struct EndpointData {
     EndpointData(
         const AppData &appInfo, long appId, const std::string &startTime, const std::string &addr, long port
@@ -162,7 +161,7 @@ struct SpecificLayoutData {
 };
 
 struct ContactData {
-    ContactData(int modulAddr = 0, int contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
+    ContactData(std::uint16_t modulAddr = 0, std::uint16_t contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
     }
 
     template <typename T>
@@ -171,30 +170,41 @@ struct ContactData {
         contactNb = d["contactNb"].GetInt();
     }
 
-    int modulAddr;
-    int contactNb;
+    friend bool operator<(const ContactData &l, const ContactData &r) {
+        if(l.modulAddr < r.modulAddr) {
+            return true;
+        }
+        if(l.modulAddr == r.modulAddr && l.contactNb < r.contactNb) {
+            return true;
+        }
+        return false;
+    }
+
+    std::uint16_t modulAddr;
+    std::uint16_t contactNb;
 };
 
 struct ContactTriggerData {
     ContactTriggerData(
-        int modulAddr, int contactNb, bool state, int time
-    ) : contact{modulAddr, contactNb}, state{state}, time{time} {
+        std::uint16_t modulAddr, std::uint16_t contactNb, bool state, int time
+    ) : contactData{modulAddr, contactNb}, state{state}, time{time} {
 
     }
 
     template <typename T>
-    ContactTriggerData(const T &d): contact{d["contact"]} {
+    ContactTriggerData(const T &d): contactData{d["contact"]} {
         state = d["state"].GetInt();
         time = d["time"].GetInt();
     }
 
-    ContactData contact;
-	bool state;
-	int time;
+    ContactData contactData;
+	bool        state;
+	int         time;
 };
 
 struct BrakeVectorContact {
-    //BrakeVectorContact(ContactData contact, int locId)
+    BrakeVectorContact(ContactData contact, int locId = 0) : contact{contact}, locId{locId} {
+    }
 
     template <typename T>
     BrakeVectorContact(const T &d) {
