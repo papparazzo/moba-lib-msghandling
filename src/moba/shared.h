@@ -203,7 +203,7 @@ struct ContactTriggerData {
 };
 
 struct BrakeVectorContact {
-    BrakeVectorContact(ContactData contact, int locId = 0) : contact{contact}, locId{locId} {
+    BrakeVectorContact(ContactData contact, int locId = 0) : contact{contact}, localId{localId} {
     }
 
     template <typename T>
