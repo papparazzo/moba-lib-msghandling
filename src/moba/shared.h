@@ -209,11 +209,11 @@ struct BrakeVectorContact {
     template <typename T>
     BrakeVectorContact(const T &d) {
         contact = ContactData{d["contact"]};
-        locId = d["locId"].GetInt();
+        localId = d["localId"].GetInt();
     }
 
     ContactData contact;
-    int locId;
+    int localId;
 };
 
 enum class Switch {
