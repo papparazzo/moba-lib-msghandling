@@ -27,8 +27,8 @@
 
 #include "rawmessage.h"
 #include "rapidjson/document.h"
-#include "systemmessage.h"
-#include "servermessage.h"
+#include "systemmessages.h"
+#include "servermessages.h"
 
 class Registry {
     public:
