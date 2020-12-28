@@ -36,7 +36,7 @@
 #include "rapidjson/socketwritestream.h"
 #include "rapidjson/socketreadstream.h"
 
-#include "clientmessage.h"
+#include "clientmessages.h"
 #include "endpoint.h"
 #include "shared.h"
 

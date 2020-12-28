@@ -80,13 +80,14 @@ struct InterfaceContactTriggered : public InterfaceMessage {
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetObject();
-        d.AddMember("modulAddr", contactTrigger.contactData.modulAddr, d.GetAllocator());
-        d.AddMember("contactNb", contactTrigger.contactData.contactNb, d.GetAllocator());
+        d.AddMember("state", contactTrigger.state, d.GetAllocator());
+        d.AddMember("time", contactTrigger.time, d.GetAllocator());
 
         rapidjson::Value v;
         v.SetObject();
-        v.AddMember("state", contactTrigger.state, d.GetAllocator());
-        v.AddMember("time", contactTrigger.time, d.GetAllocator());
+        v.AddMember("modulAddr", contactTrigger.contact.modulAddr, d.GetAllocator());
+        v.AddMember("contactNb", contactTrigger.contact.contactNb, d.GetAllocator());
+
         d.AddMember("contact", v, d.GetAllocator());
         return d;
     }
