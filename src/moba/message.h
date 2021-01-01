@@ -40,6 +40,7 @@ struct Message {
         SYSTEM      = 7,
         LAYOUT      = 8,
         GUI         = 9,
+        CONTROL     = 10,
     };
 
     virtual ~Message() noexcept {
