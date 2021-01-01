@@ -85,8 +85,8 @@ struct InterfaceContactTriggered : public InterfaceMessage {
 
         rapidjson::Value v;
         v.SetObject();
-        v.AddMember("modulAddr", contactTrigger.contact.modulAddr, d.GetAllocator());
-        v.AddMember("contactNb", contactTrigger.contact.contactNb, d.GetAllocator());
+        v.AddMember("modulAddr", contactTrigger.contactData.modulAddr, d.GetAllocator());
+        v.AddMember("contactNb", contactTrigger.contactData.contactNb, d.GetAllocator());
 
         d.AddMember("contact", v, d.GetAllocator());
         return d;
