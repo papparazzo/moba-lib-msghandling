@@ -199,11 +199,13 @@ struct BlockContactData {
     template <typename T>
     BlockContactData(const T &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
         localId = d["localId"].GetInt();
+        id = d["id"].GetInt();
     }
 
     ContactData brakeTriggerContact;
     ContactData blockContact;
     int localId;
+    int id;
 };
 
 struct BrakeVectorContact {
