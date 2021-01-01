@@ -23,7 +23,7 @@
 #include <memory>
 #include <set>
 #include <vector>
-#include <unordered_map>
+#include <map>
 #include <utility>
 #include <moba-common/exception.h>
 #include <moba-common/version.h>
@@ -126,14 +126,7 @@ struct TrackLayoutSymbol {
 // Thanks to https://stackoverflow.com/a/45395204
 using IntPair = std::pair<int, int>;
 
-struct IntPairHash {
-   static_assert(sizeof(int) * 2 == sizeof(std::size_t));
-   std::size_t operator()(const IntPair &p) const noexcept {
-       return std::size_t(p.first) << 32 | p.second;
-   }
-};
-
-using Symbols    = std::unordered_map<IntPair, TrackLayoutSymbol, IntPairHash>;
+using Symbols    = std::map<IntPair, TrackLayoutSymbol>;
 using SymbolsPtr = std::shared_ptr<Symbols>;
 
 struct SpecificLayoutData {
@@ -200,6 +193,17 @@ struct ContactTriggerData {
     ContactData contactData;
 	bool        state;
 	int         time;
+};
+
+struct BlockContactData {
+    template <typename T>
+    BlockContactData(const T &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
+        localId = d["localId"].GetInt();
+    }
+
+    ContactData brakeTriggerContact;
+    ContactData blockContact;
+    int localId;
 };
 
 struct BrakeVectorContact {
