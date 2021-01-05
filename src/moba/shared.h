@@ -28,6 +28,7 @@
 #include <moba-common/exception.h>
 #include <moba-common/version.h>
 #include "message.h"
+#include "driving_direction.h"
 
 #include "rapidjson/document.h"
 
@@ -198,13 +199,13 @@ struct ContactTriggerData {
 struct BlockContactData {
     template <typename T>
     BlockContactData(const T &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
-        localId = d["localId"].GetInt();
+        trainId = d["trainId"].GetInt();
         id = d["id"].GetInt();
     }
 
     ContactData brakeTriggerContact;
     ContactData blockContact;
-    int localId;
+    int trainId;
     int id;
 };
 
