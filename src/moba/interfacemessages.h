@@ -185,7 +185,7 @@ struct InterfaceSetLocoDirection : public InterfaceMessage {
 
 protected:
     DrivingDirection getDirectionFromString(const std::string s) {
-         if(s == "RETAIN") {
+        if(s == "RETAIN") {
             return DrivingDirection::RETAIN;
         } else if(s == "FORWARD") {
             return DrivingDirection::FORWARD;
