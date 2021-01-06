@@ -22,11 +22,17 @@
 
 #include "message.h"
 #include "shared.h"
+#include "train.h"
+#include <map>
 
 struct ControlMessage : public Message {
     enum MessageName {
-        CONTROL_GET_CONTACT_LIST_REQ = 1,
-        CONTROL_GET_CONTACT_LIST_RES = 2,
+        CONTROL_GET_CONTACT_LIST_REQ      = 1,
+        CONTROL_GET_CONTACT_LIST_RES      = 2,
+        CONTROL_GET_SWITCH_STATE_LIST_REQ = 3,
+        CONTROL_GET_SWITCH_STATE_LIST_RES = 4,
+        CONTROL_GET_TRAIN_LIST_REQ        = 5,
+        CONTROL_GET_TRAIN_LIST_RES        = 6
     };
 
     static constexpr std::uint32_t GROUP_ID = CONTROL;
@@ -50,6 +56,61 @@ struct ControlGetContactListReq : public ControlMessage {
 
     int layoutId;
 };
+
+struct ControlGetSwitchStateListReq : public ControlMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_SWITCH_STATE_LIST_REQ;
+
+    ControlGetSwitchStateListReq(int layoutId = 0) : layoutId{layoutId} {
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        if(layoutId) {
+            d.SetInt(layoutId);
+        } else {
+            d.SetNull();
+        }
+        return d;
+    }
+
+    int layoutId;
+};
+
+struct ControlGetTrainListReq : public ControlMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_REQ;
+
+    ControlGetTrainListReq(int layoutId = 0) : layoutId{layoutId} {
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        if(layoutId) {
+            d.SetInt(layoutId);
+        } else {
+            d.SetNull();
+        }
+        return d;
+    }
+
+    int layoutId;
+};
+
+struct ControlGetTrainListRes : public ControlMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_RES;
+
+    ControlGetTrainListRes(const rapidjson::Document &d) {
+        trainList = std::make_shared<std::map<int, std::shared_ptr<Train>>>();
+
+        for(auto &iter : d.GetArray()) {
+            (*trainList)[iter["id"].GetInt()] = std::make_shared<Train>(iter);
+        }
+    }
+
+    using TrainListPtr = std::shared_ptr<std::map<int, std::shared_ptr<Train>>>;
+
+    TrainListPtr trainList;
+};
+
 
 /*
 struct ControlGetContactListRes : public ControlMessage {
