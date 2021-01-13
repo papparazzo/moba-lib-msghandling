@@ -31,6 +31,7 @@
 #include "driving_direction.h"
 
 #include "rapidjson/document.h"
+#include "switchstand.h"
 
 using MessageGroups = std::set<Message::MessageGroup>;
 
@@ -45,7 +46,7 @@ struct AppData {
     }
 
     template <typename T>
-    AppData(const T &d) {
+    AppData(const rapidjson::GenericValue<T> &d) {
         appName = d["appName"].GetString();
         version = d["version"].GetString();
         for(auto &v : d["msgGroups"].GetArray()) {
@@ -65,7 +66,7 @@ struct EndpointData {
     }
 
     template <typename T>
-    EndpointData(const T &d) {
+    EndpointData(const rapidjson::GenericValue<T> &d) {
         appId = d["appID"].GetInt();
         addr = d["addr"].GetString();
         port = d["port"].GetInt();
@@ -94,7 +95,7 @@ struct TrackLayoutData {
     }
 
     template <typename T>
-    TrackLayoutData(const T &d) {
+    TrackLayoutData(const rapidjson::GenericValue<T> &d) {
         id = d["id"].GetInt();
         name = d["name"].GetString();
         description = d["description"].GetString();
@@ -159,7 +160,7 @@ struct ContactData {
     }
 
     template <typename T>
-    ContactData(const T &d) {
+    ContactData(const rapidjson::GenericValue<T> &d) {
         modulAddr = d["modulAddr"].GetInt();
         contactNb = d["contactNb"].GetInt();
     }
@@ -186,7 +187,7 @@ struct ContactTriggerData {
     }
 
     template <typename T>
-    ContactTriggerData(const T &d): contactData{d["contact"]} {
+    ContactTriggerData(const rapidjson::GenericValue<T> &d): contactData{d["contact"]} {
         state = d["state"].GetInt();
         time = d["time"].GetInt();
     }
@@ -197,8 +198,9 @@ struct ContactTriggerData {
 };
 
 struct BlockContactData {
+
     template <typename T>
-    BlockContactData(const T &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
+    BlockContactData(const rapidjson::GenericValue<T> &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
         trainId = d["trainId"].GetInt();
         id = d["id"].GetInt();
     }
@@ -209,12 +211,25 @@ struct BlockContactData {
     int id;
 };
 
+struct SwitchStandData {
+    SwitchStandData() {
+    }
+
+    template <typename T>
+    SwitchStandData(const rapidjson::GenericValue<T> &d) {
+        id = d["id"].GetInt();
+        //switchStand = d["switchStand"].GetString();
+    }
+    SwitchStand switchStand;
+    int id;
+};
+
 struct BrakeVectorContact {
     BrakeVectorContact(ContactData contact, int locId = 0) : contact{contact}, localId{localId} {
     }
 
     template <typename T>
-    BrakeVectorContact(const T &d) {
+    BrakeVectorContact(const rapidjson::GenericValue<T> &d) {
         contact = ContactData{d["contact"]};
         localId = d["localId"].GetInt();
     }
