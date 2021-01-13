@@ -29,8 +29,8 @@ struct ControlMessage : public Message {
     enum MessageName {
         CONTROL_GET_CONTACT_LIST_REQ      = 1,
         CONTROL_GET_CONTACT_LIST_RES      = 2,
-        CONTROL_GET_SWITCH_STATE_LIST_REQ = 3,
-        CONTROL_GET_SWITCH_STATE_LIST_RES = 4,
+        CONTROL_GET_SWITCH_STAND_LIST_REQ = 3,
+        CONTROL_GET_SWITCH_STAND_LIST_RES = 4,
         CONTROL_GET_TRAIN_LIST_REQ        = 5,
         CONTROL_GET_TRAIN_LIST_RES        = 6
     };
@@ -58,7 +58,7 @@ struct ControlGetContactListReq : public ControlMessage {
 };
 
 struct ControlGetSwitchStateListReq : public ControlMessage {
-    static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_SWITCH_STATE_LIST_REQ;
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_SWITCH_STAND_LIST_REQ;
 
     ControlGetSwitchStateListReq(int layoutId = 0) : layoutId{layoutId} {
     }
@@ -110,20 +110,3 @@ struct ControlGetTrainListRes : public ControlMessage {
 
     TrainListPtr trainList;
 };
-
-
-/*
-struct ControlGetContactListRes : public ControlMessage {
-    static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_CONTACT_LIST_RES;
-
-    ControlGetContactListRes(const rapidjson::Document &d) {
-        blockContacts = std::make_shared<BlockContacts>();
-
-        for(auto &iter : d.GetArray()) {
-            (*blockContacts)[{iter["xPos"].GetInt(), iter["yPos"].GetInt()}] = BlockContactData(iter);
-        }
-    }
-
-    BlockContactsPtr blockContacts;
-};
- */
