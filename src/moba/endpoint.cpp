@@ -28,8 +28,6 @@
 
 #include <cstdint>
 
-#include <moba-common/log.h>
-
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 
@@ -103,7 +101,6 @@ RawMessage Endpoint::waitForNewMsg() {
     for(int i = 0; i < 3; ++i) {
         d[i] = ::ntohl(d[i]);
     }
-    LOG(moba::common::LogLevel::DEBUG) << "recieve message <" << d[0] << ":" << d[1] << "> {" << d[2] << "} bytes" << std::endl;
     rapidjson::SocketReadStream srs{socket->getSocket(), d[2]};
     return RawMessage{d[0], d[1], srs};
 }
@@ -118,14 +115,12 @@ std::string Endpoint::waitForNewMsgAsString() {
     for(int i = 0; i < 3; ++i) {
         d[i] = ::ntohl(d[i]);
     }
-    LOG(moba::common::LogLevel::DEBUG) << "recieve message <" << d[0] << ":" << d[1] << "> {" << d[2] << "} bytes" << std::endl;
 
     std::string output;
     output.resize(d[2]);
 
     int bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
     if (bytes_received < 0) {
-        std::cerr << "Failed to read data from socket.\n";
         return "";
     }
 
@@ -152,7 +147,6 @@ void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const char *buf
         ::htonl(msgId),
         ::htonl(bufferSize)
     };
-    LOG(moba::common::LogLevel::DEBUG) << "try to send message <" << grpId << ":" << msgId << "> {" << bufferSize << "} bytes" << std::endl;
 
     if(::send(socket->getSocket(), d, sizeof(d), MSG_NOSIGNAL) < static_cast<ssize_t>(sizeof(d))) {
         throw SocketException{"sending header failed"};
