@@ -21,6 +21,7 @@
 #include <string>
 #include <sstream>
 #include <memory>
+#include <cerrno>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -94,7 +95,15 @@ RawMessage Endpoint::recieveMsg(time_t timeoutSec) {
 RawMessage Endpoint::waitForNewMsg() {
     std::uint32_t d[3];
 
-    if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
+    ssize_t rev;
+     // Try again on interrupted function call
+    while((rev = ::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL)) == -1) {
+        if(errno != EINTR) {
+            throw SocketException{std::strerror(errno)};
+        }
+    }
+
+    if(rev < static_cast<ssize_t>(sizeof(d))) {
         throw SocketException{"recv header failed"};
     }
 
