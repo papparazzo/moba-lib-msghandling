@@ -32,7 +32,11 @@ struct ControlMessage : public Message {
         CONTROL_GET_SWITCH_STAND_LIST_REQ = 3,
         CONTROL_GET_SWITCH_STAND_LIST_RES = 4,
         CONTROL_GET_TRAIN_LIST_REQ        = 5,
-        CONTROL_GET_TRAIN_LIST_RES        = 6
+        CONTROL_GET_TRAIN_LIST_RES        = 6,
+        CONTROL_UNLOCK_BLOCK              = 7,
+        CONTROL_BLOCK_UNLOCKED            = 8,
+        CONTROL_LOCK_BLOCK                = 9,
+        CONTROL_BLOCK_LOCKED              = 10,
     };
 
     static constexpr std::uint32_t GROUP_ID = CONTROL;
@@ -110,3 +114,60 @@ struct ControlGetTrainListRes : public ControlMessage {
 
     TrainListPtr trainList;
 };
+
+struct ControlUnlockBlock : public ControlMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_UNLOCK_BLOCK;
+
+    ControlUnlockBlock(int id = 0) : id{id} {
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetInt(id);
+        return d;
+    }
+
+    int id;
+};
+
+struct ControlBlockUnlocked : public ControlMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_BLOCK_UNLOCKED;
+
+    ControlBlockUnlocked(const rapidjson::Document &d) {
+        id = d.GetInt();
+    }
+
+    int id;
+};
+
+struct ControlLockBlock : public ControlMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_LOCK_BLOCK;
+
+    ControlLockBlock(int id = 0) : id{id} {
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetInt(id);
+        return d;
+    }
+
+    int id;
+};
+
+struct ControlBlockLocked : public ControlMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_BLOCK_LOCKED;
+
+    ControlBlockLocked(int id = 0) : id{id} {
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetInt(id);
+        return d;
+    }
+
+    int id;
+};
+
+
