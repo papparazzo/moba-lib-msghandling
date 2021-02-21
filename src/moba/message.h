@@ -52,3 +52,35 @@ struct Message {
         return d;
     }
 };
+
+/* TODO ...
+struct GetByOptionalId {
+    GetByOptionalId(int id = 0) : id{id} {
+    }
+
+    rapidjson::Document getJsonDocument() const {
+        rapidjson::Document d;
+        if(id) {
+            d.SetInt(id);
+        } else {
+            d.SetNull();
+        }
+        return d;
+    }
+
+    int id;
+};
+
+struct GetById {
+    GetById(int id) : id{id} {
+    }
+
+    rapidjson::Document getJsonDocument() const {
+        rapidjson::Document d;
+        d.SetInt(id);
+        return d;
+    }
+
+    int id;
+};
+*/
