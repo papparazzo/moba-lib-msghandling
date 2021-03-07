@@ -218,7 +218,7 @@ struct SwitchStandData {
     template <typename T>
     SwitchStandData(const rapidjson::GenericValue<T> &d) {
         id = d["id"].GetInt();
-        //switchStand = d["switchStand"].GetString();
+        switchStand = stringToSwitchStandEnum(d["switchStand"].GetString());
     }
     SwitchStand switchStand;
     int id;

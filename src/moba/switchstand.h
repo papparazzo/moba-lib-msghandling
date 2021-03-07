@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <moba-common/exception.h>
+
 enum class SwitchStand {
     STRAIGHT_1 = 0,
     BEND_1     = 1,
@@ -27,3 +29,35 @@ enum class SwitchStand {
     BEND_2     = 3,
 };
 
+inline SwitchStand stringToSwitchStandEnum(const std::string &s) {
+    if(s == "STRAIGHT_1") {
+        return SwitchStand::STRAIGHT_1;
+    } else if(s == "BEND_1") {
+        return SwitchStand::BEND_1;
+    } else if(s == "STRAIGHT_2") {
+        return SwitchStand::STRAIGHT_2;
+    } else if(s == "BEND_2") {
+        return SwitchStand::BEND_2;
+    } else {
+        throw moba::common::UnsupportedOperationException{"invalid value given"};
+    }
+}
+
+inline std::string switchStandEnumToString(SwitchStand s) {
+    switch(s) {
+        case SwitchStand::STRAIGHT_1:
+            return "STRAIGHT_1";
+
+        case SwitchStand::BEND_1:
+            return "BEND_1";
+
+        case SwitchStand::STRAIGHT_2:
+            return "STRAIGHT_2";
+
+        case SwitchStand::BEND_2:
+            return "BEND_2";
+
+        default:
+            throw moba::common::UnsupportedOperationException{"invalid value given"};
+    }
+}
