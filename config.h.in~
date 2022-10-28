@@ -6,7 +6,7 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
-/* Define to 1 if you have the `MoBaCommon' library (-lMoBaCommon). */
+/* Define to 1 if you have the `mobacommon' library (-lmobacommon). */
 #undef HAVE_LIBMOBACOMMON
 
 /* Define to 1 if you have the <memory.h> header file. */
