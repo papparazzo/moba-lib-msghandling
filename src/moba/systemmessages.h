@@ -62,13 +62,13 @@ struct SystemTriggerEmergencyStop : public SystemMessage {
         SELF_ACTING_BY_EXTERN_SWITCHING
     };
 
-    SystemSetEmergencyStop(EmergencyTriggerReason emergencyTriggerReason) : emergencyTriggerReason{emergencyTriggerReason} {
+    SystemTriggerEmergencyStop(EmergencyTriggerReason emergencyTriggerReason) : emergencyTriggerReason{emergencyTriggerReason} {
     }
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
 
-        switch(connectivity) {
+        switch(emergencyTriggerReason) {
             case EmergencyTriggerReason::CENTRAL_STATION:
                 d.SetString("CENTRAL_STATION");
                 break;
