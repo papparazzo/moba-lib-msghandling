@@ -62,7 +62,9 @@ struct SystemTriggerEmergencyStop : public SystemMessage {
         SELF_ACTING_BY_EXTERN_SWITCHING
     };
 
-    SystemTriggerEmergencyStop(EmergencyTriggerReason emergencyTriggerReason) : emergencyTriggerReason{emergencyTriggerReason} {
+    SystemTriggerEmergencyStop(
+        EmergencyTriggerReason emergencyTriggerReason = EmergencyTriggerReason::SOFTWARE_MANUELL
+    ) : emergencyTriggerReason{emergencyTriggerReason} {
     }
 
     rapidjson::Document getJsonDocument() const override {
