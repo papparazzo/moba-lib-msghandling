@@ -25,12 +25,13 @@
 struct SystemMessage : public Message {
     enum MessageName {
         SYSTEM_SET_AUTOMATIC_MODE      = 1,
-        SYSTEM_SET_EMERGENCY_STOP      = 2,
-        SYSTEM_SET_STANDBY_MODE        = 3,
-        SYSTEM_GET_HARDWARE_STATE      = 4,
-        SYSTEM_HARDWARE_STATE_CHANGED  = 5,
-        SYSTEM_HARDWARE_SHUTDOWN       = 6,
-        SYSTEM_HARDWARE_RESET          = 7
+        SYSTEM_TRIGGER_EMERGENCY_STOP  = 2,
+        SYSTEM_RELEASE_EMERGENCY_STOP  = 3,
+        SYSTEM_SET_STANDBY_MODE        = 4,
+        SYSTEM_GET_HARDWARE_STATE      = 5,
+        SYSTEM_HARDWARE_STATE_CHANGED  = 6,
+        SYSTEM_HARDWARE_SHUTDOWN       = 7,
+        SYSTEM_HARDWARE_RESET          = 8
     };
 
     static constexpr std::uint32_t GROUP_ID = SYSTEM;
@@ -51,18 +52,47 @@ struct SystemSetAutomaticMode : public SystemMessage {
     bool automaticActive;
 };
 
-struct SystemSetEmergencyStop : public SystemMessage {
-    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_EMERGENCY_STOP;
+struct SystemTriggerEmergencyStop : public SystemMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TRIGGER_EMERGENCY_STOP;
 
-    SystemSetEmergencyStop(bool emergencyStopActive) : emergencyStopActive{emergencyStopActive} {
+    enum class EmergencyTriggerReason {
+        CENTRAL_STATION,
+        EXTERN,
+        SOFTWARE_MANUELL,
+        SELF_ACTING_BY_EXTERN_SWITCHING
+    };
+
+    SystemSetEmergencyStop(EmergencyTriggerReason emergencyTriggerReason) : emergencyTriggerReason{emergencyTriggerReason} {
     }
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
-        d.SetBool(emergencyStopActive);
+
+        switch(connectivity) {
+            case EmergencyTriggerReason::CENTRAL_STATION:
+                d.SetString("CENTRAL_STATION");
+                break;
+
+            case EmergencyTriggerReason::SOFTWARE_MANUELL:
+                d.SetString("SOFTWARE_MANUELL");
+                break;
+
+            case EmergencyTriggerReason::SELF_ACTING_BY_EXTERN_SWITCHING:
+                d.SetString("SELF_ACTING_BY_EXTERN_SWITCHING");
+                break;
+
+            default:
+            case EmergencyTriggerReason::EXTERN:
+                d.SetString("EXTERN");
+                break;
+        }
         return d;
     }
-    bool emergencyStopActive;
+    EmergencyTriggerReason emergencyTriggerReason;
+};
+
+struct SystemReleaseEmergencyStop : public SystemMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_RELEASE_EMERGENCY_STOP;
 };
 
 struct SystemSetStandbyMode : public SystemMessage {
