@@ -25,6 +25,7 @@
 
 #include "message.h"
 #include "shared.h"
+#include "controllablefunction.h"
 
 struct InterfaceMessage : public Message {
     enum MessageName {
@@ -32,7 +33,8 @@ struct InterfaceMessage : public Message {
         CONTACT_TRIGGERED          = 2,
         SET_BRAKE_VECTOR           = 3,
         SET_LOCO_SPEED             = 4,
-        SET_LOCO_DIRECTION         = 5
+        SET_LOCO_DIRECTION         = 5,
+        SET_LOCO_FUNCTION          = 6
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
@@ -184,7 +186,7 @@ struct InterfaceSetLocoDirection : public InterfaceMessage {
     DrivingDirection direction;
 
 protected:
-    DrivingDirection getDirectionFromString(const std::string s) {
+    DrivingDirection getDirectionFromString(const std::string &s) {
         if(s == "RETAIN") {
             return DrivingDirection::RETAIN;
         } else if(s == "FORWARD") {
@@ -197,4 +199,30 @@ protected:
             throw moba::common::UnsupportedOperationException{"invalid value given"};
         }
     }
+};
+
+struct InterfaceSetLocoFunction : public InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_FUNCTION;
+
+    InterfaceSetLocoDirection(std::uint32_t localId, ControllableFunction function, bool active) : localId{localId}, function{function}, active{active} {
+    }
+
+    InterfaceSetLocoFunction(const rapidjson::Document &d) {
+        localId = d["localId"].GetInt();
+        auto s = d["function"].GetString();
+        function = stringToControllableFunctionEnum(s);
+        active = d["active"].GetBool();
+    }
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetObject();
+        d.AddMember("localId", localId, d.GetAllocator());
+        d.AddMember("function", rapidjson::Value(controllableFunctionEnumToString(function), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("localId", localId, d.GetAllocator());
+    }
+
+    std::uint32_t localId;
+    ControllableFunction function;
+    bool active;
 };
