@@ -25,7 +25,7 @@ enum class ControllableFunction {
     OPERATING_SOUNDS = 23,
 };
 
-inline  ControllableFunction stringToControllableFunctionEnum(const std::string &s) {
+inline ControllableFunction stringToControllableFunctionEnum(const std::string &s) {
     if(s == "HEADLIGHTS") {
         return ControllableFunction::HEADLIGHTS;
     } else if(s == "OPERATING_SOUNDS") {
