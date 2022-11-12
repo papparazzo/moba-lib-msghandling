@@ -27,6 +27,7 @@
 
 #include "message.h"
 #include "shared.h"
+#include "day.h"
 
 struct TimerMessage : public Message {
     enum MessageName {
@@ -45,11 +46,20 @@ struct TimerGlobalTimerEvent : public TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_GLOBAL_TIMER_EVENT;
 
     TimerGlobalTimerEvent(const rapidjson::Document &d) {
-        curModelTime = d["curModelTime"].GetString();
+        curModelDay = stringToDayEnum(d["curModelDay"].GetString());
+        auto tmp = d["curModelTime"].GetString();
+        if(tmp.size() != 5) {
+            throw moba::common::UnsupportedOperationException{"invalid time given"};
+        }
+        hours = std::stoi(tmp.substr(0, 2));
+        minutes = std::stoi(tmp.substr(3, 2));
         multiplicator = d["multiplicator"].GetInt();
     }
 
-    std::string curModelTime;
+    unsigned int minutes;
+    unsigned int hours;
+
+    Day curModelDay;
     unsigned int multiplicator;
 };
 
@@ -60,11 +70,12 @@ struct TimerGetGlobalTimer : public TimerMessage {
 struct TimerSetGlobalTimer : public TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_SET_GLOBAL_TIMER;
 
-    TimerSetGlobalTimer(const std::string &curModelTime, unsigned int multiplicator) :
-    curModelTime{curModelTime}, multiplicator{multiplicator} {
+    TimerSetGlobalTimer(Day curModelTime, const std::string &curModelTime, unsigned int multiplicator) :
+    curModelDay{curModelDay}, curModelTime{curModelTime}, multiplicator{multiplicator} {
     }
 
     TimerSetGlobalTimer(const rapidjson::Document &d) {
+        curModelDay = stringToDayEnum(d["curModelDay"].GetString());
         curModelTime = d["curModelTime"].GetString();
         multiplicator = d["multiplicator"].GetInt();
     }
@@ -72,12 +83,16 @@ struct TimerSetGlobalTimer : public TimerMessage {
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetObject();
+        d.AddMember()
+        auto tmp = dayEnumToString(curModelDay);
 
+        d.AddMember("curModelDay", rapidjson::Value(tmp.c_str(), tmp.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("curModelTime", rapidjson::Value(curModelTime.c_str(), curModelTime.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("multiplicator", multiplicator, d.GetAllocator());
         return d;
     }
 
+    Day curModelDay;
     std::string curModelTime;
     unsigned int multiplicator;
 };
