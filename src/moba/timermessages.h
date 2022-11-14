@@ -47,7 +47,7 @@ struct TimerGlobalTimerEvent : public TimerMessage {
 
     TimerGlobalTimerEvent(const rapidjson::Document &d) {
         curModelDay = stringToDayEnum(d["curModelDay"].GetString());
-        auto tmp = d["curModelTime"].GetString();
+        auto tmp = std::string(d["curModelTime"].GetString());
         if(tmp.size() != 5) {
             throw moba::common::UnsupportedOperationException{"invalid time given"};
         }
@@ -70,7 +70,7 @@ struct TimerGetGlobalTimer : public TimerMessage {
 struct TimerSetGlobalTimer : public TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_SET_GLOBAL_TIMER;
 
-    TimerSetGlobalTimer(Day curModelTime, const std::string &curModelTime, unsigned int multiplicator) :
+    TimerSetGlobalTimer(Day curModelDay, const std::string &curModelTime, unsigned int multiplicator) :
     curModelDay{curModelDay}, curModelTime{curModelTime}, multiplicator{multiplicator} {
     }
 
@@ -78,19 +78,25 @@ struct TimerSetGlobalTimer : public TimerMessage {
         curModelDay = stringToDayEnum(d["curModelDay"].GetString());
         curModelTime = d["curModelTime"].GetString();
         multiplicator = d["multiplicator"].GetInt();
+        if(curModelTime.size() != 5) {
+            throw moba::common::UnsupportedOperationException{"invalid time given"};
+        }
+        hours = std::stoi(curModelTime.substr(0, 2));
+        minutes = std::stoi(curModelTime.substr(3, 2));
     }
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetObject();
-        d.AddMember()
         auto tmp = dayEnumToString(curModelDay);
-
         d.AddMember("curModelDay", rapidjson::Value(tmp.c_str(), tmp.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("curModelTime", rapidjson::Value(curModelTime.c_str(), curModelTime.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("multiplicator", multiplicator, d.GetAllocator());
         return d;
     }
+
+    unsigned int minutes;
+    unsigned int hours;
 
     Day curModelDay;
     std::string curModelTime;
