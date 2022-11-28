@@ -2,7 +2,6 @@
 
 Makefile.in
 Makefile
-/src/moba/Makefile
 
 # http://www.gnu.org/software/autoconf
 
