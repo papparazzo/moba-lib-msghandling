@@ -22,6 +22,8 @@
 
 #include <memory>
 
+#include <moba-common/exception.h>
+
 #include "moba/driving_direction.h"
 
 struct Train {

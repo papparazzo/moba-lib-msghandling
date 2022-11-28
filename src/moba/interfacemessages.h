@@ -22,12 +22,13 @@
 
 #include <string>
 #include <vector>
+#include <moba-common/exception.h>
 
 #include "message.h"
 #include "shared.h"
 #include "controllablefunction.h"
 
-struct InterfaceMessage : public Message {
+struct InterfaceMessage: public Message {
     enum MessageName {
         CONNECTIVITY_STATE_CHANGED = 1,
         CONTACT_TRIGGERED          = 2,

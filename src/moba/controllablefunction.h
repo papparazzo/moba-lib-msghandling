@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <moba-common/exception.h>
+
 enum class ControllableFunction {
     HEADLIGHTS       = 1,
     OPERATING_SOUNDS = 23,

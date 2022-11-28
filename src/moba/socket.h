@@ -24,39 +24,37 @@
 #include <string>
 #include <memory>
 
-class SocketException : public std::exception {
+class SocketException: public std::exception {
+public:
+    virtual ~SocketException() noexcept {
 
-    public:
-        virtual ~SocketException() noexcept {
+    }
 
-        }
+    SocketException(const std::string &what): what__{what} {
+    }
 
-        SocketException(const std::string &what) {
-            this->what__ = what;
-        }
+    virtual const char* what() const noexcept {
+        return this->what__.c_str();
+    }
 
-        virtual const char* what() const noexcept {
-            return this->what__.c_str();
-        }
-
-    private:
-        std::string what__;
+private:
+    std::string what__;
 };
 
 class Socket {
-    public:
-        Socket(const std::string &host, int port);
-        virtual ~Socket() noexcept;
+public:
+    Socket(const std::string &host, int port);
+    virtual ~Socket() noexcept;
 
-        int getSocket() const {
-            return socket;
-        }
-        void init();
+    int getSocket() const {
+        return socket;
+    }
+    void init();
 
-    protected:
-        int socket;
-        std::string host;
-        int port;
+protected:
+    int socket;
+    std::string host;
+    int port;
 };
 
 using SocketPtr = std::shared_ptr<Socket>;
