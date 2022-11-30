@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 #include <moba-common/exception.h>
 
 #include "message.h"
@@ -205,7 +206,7 @@ protected:
 struct InterfaceSetLocoFunction : public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_FUNCTION;
 
-    InterfaceSetLocoDirection(std::uint32_t localId, ControllableFunction function, bool active) : localId{localId}, function{function}, active{active} {
+    InterfaceSetLocoFunction(std::uint32_t localId, ControllableFunction function, bool active) : localId{localId}, function{function}, active{active} {
     }
 
     InterfaceSetLocoFunction(const rapidjson::Document &d) {
@@ -219,8 +220,9 @@ struct InterfaceSetLocoFunction : public InterfaceMessage {
         rapidjson::Document d;
         d.SetObject();
         d.AddMember("localId", localId, d.GetAllocator());
-        d.AddMember("function", rapidjson::Value(controllableFunctionEnumToString(function), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("function", rapidjson::Value(controllableFunctionEnumToString(function).c_str(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("localId", localId, d.GetAllocator());
+        return d;
     }
 
     std::uint32_t localId;
