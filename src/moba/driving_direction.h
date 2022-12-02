@@ -48,7 +48,7 @@ struct DrivingDirection {
                 return BACKWARD;
 
             default:
-                throw moba::common::UnsupportedOperationException{"Not supported."};
+                throw moba::UnsupportedOperationException{"Not supported."};
         }
     }
 

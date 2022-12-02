@@ -49,7 +49,7 @@ struct TimerGlobalTimerEvent : public TimerMessage {
         curModelDay = stringToDayEnum(d["curModelDay"].GetString());
         auto tmp = std::string(d["curModelTime"].GetString());
         if(tmp.size() != 5) {
-            throw moba::common::UnsupportedOperationException{"invalid time given"};
+            throw moba::UnsupportedOperationException{"invalid time given"};
         }
         hours = std::stoi(tmp.substr(0, 2));
         minutes = std::stoi(tmp.substr(3, 2));
@@ -79,7 +79,7 @@ struct TimerSetGlobalTimer : public TimerMessage {
         curModelTime = d["curModelTime"].GetString();
         multiplicator = d["multiplicator"].GetInt();
         if(curModelTime.size() != 5) {
-            throw moba::common::UnsupportedOperationException{"invalid time given"};
+            throw moba::UnsupportedOperationException{"invalid time given"};
         }
         hours = std::stoi(curModelTime.substr(0, 2));
         minutes = std::stoi(curModelTime.substr(3, 2));
@@ -151,7 +151,7 @@ struct TimerColorThemeEvent : public TimerMessage {
         } else if(status == "DIM") {
             colorTheme = ColorTheme::DIM;
         } else {
-            throw moba::common::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"invalid value given"};
         }
     }
 

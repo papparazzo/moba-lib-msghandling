@@ -41,7 +41,7 @@ struct AppData {
     }
 
     AppData(
-        const std::string &appName, const moba::common::Version &version, const MessageGroups &groups
+        const std::string &appName, const moba::Version &version, const MessageGroups &groups
     ) : appName{appName}, version{version}, groups{groups} {
     }
 
@@ -55,7 +55,7 @@ struct AppData {
     }
 
     std::string appName;
-    moba::common::Version version;
+    moba::Version version;
     MessageGroups groups;
 };
 
@@ -258,7 +258,7 @@ inline Switch stringToSwitchEnum(const std::string &s) {
     } else if(s == "OFF") {
         return Switch::OFF;
     } else {
-        throw moba::common::UnsupportedOperationException{"invalid value given"};
+        throw moba::UnsupportedOperationException{"invalid value given"};
     }
 }
 
@@ -280,7 +280,7 @@ inline std::string switchEnumToString(Switch s) {
             return "TRIGGER";
 
         default:
-            throw moba::common::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"invalid value given"};
     }
 }
 
@@ -298,7 +298,7 @@ inline ToggleState stringToToggleStateEnum(const std::string &s) {
     } else if(s == "OFF") {
         return ToggleState::OFF;
     } else {
-        throw moba::common::UnsupportedOperationException{"invalid value given"};
+        throw moba::UnsupportedOperationException{"invalid value given"};
     }
 }
 
@@ -314,7 +314,7 @@ inline std::string toggleStateEnumToString(ToggleState t) {
             return "UNSET";
 
         default:
-            throw moba::common::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"invalid value given"};
     }
 }
 
@@ -335,7 +335,7 @@ inline ThreeState stringToThreeStateEnum(const std::string &s) {
     } else if(s == "UNSET") {
         return ThreeState::UNSET;
     } else {
-        throw moba::common::UnsupportedOperationException{"invalid value given"};
+        throw moba::UnsupportedOperationException{"invalid value given"};
     }
 }
 
@@ -354,7 +354,7 @@ inline std::string threeStateEnumToString(ThreeState t) {
             return "UNSET";
 
         default:
-            throw moba::common::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"invalid value given"};
     }
 }
 

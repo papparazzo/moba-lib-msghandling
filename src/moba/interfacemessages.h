@@ -198,7 +198,7 @@ protected:
         } else if(s == "TOGGLE") {
             return DrivingDirection::TOGGLE;
         } else {
-            throw moba::common::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"invalid value given"};
         }
     }
 };

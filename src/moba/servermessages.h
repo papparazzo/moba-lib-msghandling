@@ -98,7 +98,7 @@ struct ServerInfoRes : public ServerMessage {
     }
 
     std::string appName;
-    moba::common::Version version;
+    moba::Version version;
     std::string buildDate;
     std::string startTime;
     int maxClients;

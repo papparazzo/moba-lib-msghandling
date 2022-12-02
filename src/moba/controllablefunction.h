@@ -33,7 +33,7 @@ inline ControllableFunction stringToControllableFunctionEnum(const std::string &
     } else if(s == "OPERATING_SOUNDS") {
         return ControllableFunction::OPERATING_SOUNDS;
     } else {
-        throw moba::common::UnsupportedOperationException{"ControllableFunction: invalid value given"};
+        throw moba::UnsupportedOperationException{"ControllableFunction: invalid value given"};
     }
 }
 
@@ -46,6 +46,6 @@ inline std::string controllableFunctionEnumToString(ControllableFunction s) {
             return "OPERATING_SOUNDS";
 
         default:
-            throw moba::common::UnsupportedOperationException{"ControllableFunction: invalid value given"};
+            throw moba::UnsupportedOperationException{"ControllableFunction: invalid value given"};
     }
 }

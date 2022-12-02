@@ -39,7 +39,7 @@ inline SwitchStand stringToSwitchStandEnum(const std::string &s) {
     } else if(s == "BEND_2") {
         return SwitchStand::BEND_2;
     } else {
-        throw moba::common::UnsupportedOperationException{"SwitchStand: invalid value given"};
+        throw moba::UnsupportedOperationException{"SwitchStand: invalid value given"};
     }
 }
 
@@ -58,6 +58,6 @@ inline std::string switchStandEnumToString(SwitchStand s) {
             return "BEND_2";
 
         default:
-            throw moba::common::UnsupportedOperationException{"SwitchStand: invalid value given"};
+            throw moba::UnsupportedOperationException{"SwitchStand: invalid value given"};
     }
 }

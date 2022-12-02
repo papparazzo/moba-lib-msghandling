@@ -40,12 +40,12 @@
 #include "shared.h"
 
 Endpoint::Endpoint(
-    SocketPtr socket, const std::string &appName, moba::common::Version version, const MessageGroups &groups
+    SocketPtr socket, const std::string &appName, moba::Version version, const MessageGroups &groups
 ) : socket{socket}, appName{appName}, version{version}, groups{groups} {
 }
 
 Endpoint::Endpoint(
-    SocketPtr socket, const std::string &appName, moba::common::Version version
+    SocketPtr socket, const std::string &appName, moba::Version version
 ) : socket{socket}, appName{appName}, version{version} {
 }
 

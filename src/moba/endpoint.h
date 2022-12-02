@@ -32,9 +32,9 @@
 
 class Endpoint {
 public:
-    Endpoint(SocketPtr socket, const std::string &appName, moba::common::Version version, const MessageGroups &groups);
+    Endpoint(SocketPtr socket, const std::string &appName, moba::Version version, const MessageGroups &groups);
 
-    Endpoint(SocketPtr socket, const std::string &appName, moba::common::Version version);
+    Endpoint(SocketPtr socket, const std::string &appName, moba::Version version);
 
     virtual ~Endpoint() noexcept {}
 
@@ -68,7 +68,7 @@ protected:
     long appId;
 
     std::string appName;
-    moba::common::Version version;
+    moba::Version version;
     MessageGroups groups;
 
     static constexpr int MSG_HANDLER_TIME_OUT_SEC = 2;
