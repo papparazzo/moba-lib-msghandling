@@ -105,9 +105,7 @@ struct EnvGetAmbience : public EnvironmentMessage {
 struct EnvSetAmbience : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENCE;
 
-    EnvSetAmbience(
-        ToggleState curtainUp, ToggleState mainLightOn
-    ) : curtainUp{curtainUp}, mainLightOn{mainLightOn} {
+    EnvSetAmbience(ToggleState curtainUp, ToggleState mainLightOn): curtainUp{curtainUp}, mainLightOn{mainLightOn} {
     }
 
     EnvSetAmbience(const rapidjson::Document &d) {
@@ -141,9 +139,7 @@ struct EnvGetAmbientLight : public EnvironmentMessage {
 struct EnvSetAmbientLight : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENT_LIGHT;
 
-    EnvSetAmbientLight(
-        int red, int blue, int green, int white
-    ) : red{red}, blue{blue}, green{green}, white{white} {
+    EnvSetAmbientLight(int red, int blue, int green, int white): red{red}, blue{blue}, green{green}, white{white} {
     }
 
     EnvSetAmbientLight(const rapidjson::Document &d) {
