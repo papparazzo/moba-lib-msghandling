@@ -25,13 +25,15 @@
 struct SystemMessage : public Message {
     enum MessageName {
         SYSTEM_SET_AUTOMATIC_MODE      = 1,
-        SYSTEM_TRIGGER_EMERGENCY_STOP  = 2,
-        SYSTEM_RELEASE_EMERGENCY_STOP  = 3,
-        SYSTEM_SET_STANDBY_MODE        = 4,
-        SYSTEM_GET_HARDWARE_STATE      = 5,
-        SYSTEM_HARDWARE_STATE_CHANGED  = 6,
-        SYSTEM_HARDWARE_SHUTDOWN       = 7,
-        SYSTEM_HARDWARE_RESET          = 8
+        SYSTEM_TOGGLE_AUTOMATIC_MODE   = 2,
+        SYSTEM_TRIGGER_EMERGENCY_STOP  = 3,
+        SYSTEM_RELEASE_EMERGENCY_STOP  = 4,
+        SYSTEM_SET_STANDBY_MODE        = 5,
+        SYSTEM_TOGGLE_STANDBY_MODE     = 6,
+        SYSTEM_GET_HARDWARE_STATE      = 7,
+        SYSTEM_HARDWARE_STATE_CHANGED  = 8,
+        SYSTEM_HARDWARE_SHUTDOWN       = 9,
+        SYSTEM_HARDWARE_RESET          = 10
     };
 
     static constexpr std::uint32_t GROUP_ID = SYSTEM;
@@ -50,6 +52,10 @@ struct SystemSetAutomaticMode : public SystemMessage {
     }
 
     bool automaticActive;
+};
+
+struct SystemToggleAutomaticMode: public SystemMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TOGGLE_AUTOMATIC_MODE;
 };
 
 struct SystemTriggerEmergencyStop : public SystemMessage {
@@ -109,6 +115,10 @@ struct SystemSetStandbyMode : public SystemMessage {
         return d;
     }
     bool standbyActive;
+};
+
+struct SystemToggleStandbyMode: public SystemMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TOGGLE_STANDBY_MODE;
 };
 
 struct SystemGetHardwareState : public SystemMessage {
