@@ -36,7 +36,8 @@ struct InterfaceMessage: public Message {
         SET_BRAKE_VECTOR           = 3,
         SET_LOCO_SPEED             = 4,
         SET_LOCO_DIRECTION         = 5,
-        SET_LOCO_FUNCTION          = 6
+        SET_LOCO_FUNCTION          = 6,
+        SWITCH_ACCESSORY_DECODERS  = 7
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
@@ -220,8 +221,9 @@ struct InterfaceSetLocoFunction : public InterfaceMessage {
         rapidjson::Document d;
         d.SetObject();
         d.AddMember("localId", localId, d.GetAllocator());
-        d.AddMember("function", rapidjson::Value(controllableFunctionEnumToString(function).c_str(), d.GetAllocator()), d.GetAllocator());
-        d.AddMember("localId", localId, d.GetAllocator());
+
+        auto cf = controllableFunctionEnumToString(function);
+        d.AddMember("function", rapidjson::Value(cf.c_str(), cf.length(), d.GetAllocator()), d.GetAllocator());
         return d;
     }
 
