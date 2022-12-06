@@ -42,7 +42,7 @@ struct Train {
         } else if(s == "BACKWARD") {
             direction = DrivingDirection::BACKWARD;
         } else {
-            throw moba::common::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"invalid value given"};
         }
     }
 
