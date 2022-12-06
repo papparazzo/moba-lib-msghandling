@@ -42,6 +42,10 @@ struct SystemMessage : public Message {
 struct SystemSetAutomaticMode : public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_AUTOMATIC_MODE;
 
+    SystemSetAutomaticMode(const rapidjson::Document &d) {
+        automaticActive = d.GetBool();
+    }
+
     SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
     }
 
