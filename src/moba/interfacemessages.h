@@ -231,3 +231,15 @@ struct InterfaceSetLocoFunction : public InterfaceMessage {
     ControllableFunction function;
     bool active;
 };
+
+struct InterfaceSwitchAccessoryDecoders : public InterfaceMessage {
+    InterfaceSwitchAccessoryDecoders(const rapidjson::Document &d) {
+   //     localId = d["localId"].GetInt();
+   //     auto s = d["function"].GetString();
+   //     function = stringToControllableFunctionEnum(s);
+   //     active = d["active"].GetBool();
+    }
+
+    std::uint32_t localId;
+    bool differ;
+};
