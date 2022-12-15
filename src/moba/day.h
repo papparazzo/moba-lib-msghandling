@@ -1,5 +1,5 @@
 /*
- *  Project:    moba-tester
+ *  Project:    moba-lib-msghandling
  *
  *  Copyright (C) 2022 Stefan Paproth <pappi-@gmx.de>
  *
