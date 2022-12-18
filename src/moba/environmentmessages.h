@@ -38,14 +38,14 @@ struct EnvironmentMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = ENVIRONMENT;
 };
 
-struct EnvGetEnvironment : public EnvironmentMessage {
+struct EnvironmentGetEnvironment : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_ENVIRONMENT;
 };
 
-struct EnvSetEnvironment : public EnvironmentMessage {
+struct EnvironmentSetEnvironment : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_ENVIRONMENT;
 
-    EnvSetEnvironment(
+    EnvironmentSetEnvironment(
         Switch thunder,
         Switch wind,
         Switch rain,
@@ -56,7 +56,7 @@ struct EnvSetEnvironment : public EnvironmentMessage {
     ) : thunder{thunder}, wind{wind}, rain{rain}, environmentSound{environmentSound}, aux1{aux1}, aux2{aux2}, aux3{aux3} {
     }
 
-    EnvSetEnvironment(const rapidjson::Document &d) {
+    EnvironmentSetEnvironment(const rapidjson::Document &d) {
         thunder = stringToSwitchEnum(d["thunderStorm"].GetString());
         wind = stringToSwitchEnum(d["wind"].GetString());
         rain = stringToSwitchEnum(d["rain"].GetString());
@@ -97,18 +97,18 @@ protected:
     }
 };
 
-struct EnvGetAmbience : public EnvironmentMessage {
+struct EnvironmentGetAmbience : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_AMBIENCE;
 };
 
 
-struct EnvSetAmbience : public EnvironmentMessage {
+struct EnvironmentSetAmbience : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENCE;
 
-    EnvSetAmbience(ToggleState curtainUp, ToggleState mainLightOn): curtainUp{curtainUp}, mainLightOn{mainLightOn} {
+    EnvironmentSetAmbience(ToggleState curtainUp, ToggleState mainLightOn): curtainUp{curtainUp}, mainLightOn{mainLightOn} {
     }
 
-    EnvSetAmbience(const rapidjson::Document &d) {
+    EnvironmentSetAmbience(const rapidjson::Document &d) {
         curtainUp = stringToToggleStateEnum(d["curtainUp"].GetString());
         mainLightOn = stringToToggleStateEnum(d["mainLightOn"].GetString());
     }
@@ -132,17 +132,17 @@ protected:
     }
 };
 
-struct EnvGetAmbientLight : public EnvironmentMessage {
+struct EnvironmentGetAmbientLight : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_AMBIENT_LIGHT;
 };
 
-struct EnvSetAmbientLight : public EnvironmentMessage {
+struct EnvironmentSetAmbientLight : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENT_LIGHT;
 
-    EnvSetAmbientLight(int red, int blue, int green, int white): red{red}, blue{blue}, green{green}, white{white} {
+    EnvironmentSetAmbientLight(int red, int blue, int green, int white): red{red}, blue{blue}, green{green}, white{white} {
     }
 
-    EnvSetAmbientLight(const rapidjson::Document &d) {
+    EnvironmentSetAmbientLight(const rapidjson::Document &d) {
         red = d["red"].GetInt();
         blue = d["blue"].GetInt();
         green = d["green"].GetInt();
