@@ -29,10 +29,8 @@ struct EnvironmentMessage : public Message {
     enum MessageName {
         ENVIRONMENT_GET_ENVIRONMENT     = 1,
         ENVIRONMENT_SET_ENVIRONMENT     = 2,
-        ENVIRONMENT_GET_AMBIENCE        = 3,
-        ENVIRONMENT_SET_AMBIENCE        = 4,
-        ENVIRONMENT_GET_AMBIENT_LIGHT   = 5,
-        ENVIRONMENT_SET_AMBIENT_LIGHT   = 6
+        ENVIRONMENT_SET_AMBIENCE        = 3,
+        ENVIRONMENT_SET_AMBIENT_LIGHT   = 4
     };
 
     static constexpr std::uint32_t GROUP_ID = ENVIRONMENT;
@@ -97,11 +95,6 @@ protected:
     }
 };
 
-struct EnvironmentGetAmbience : public EnvironmentMessage {
-    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_AMBIENCE;
-};
-
-
 struct EnvironmentSetAmbience : public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENCE;
 
@@ -130,10 +123,6 @@ protected:
         auto v = toggleStateEnumToString(c);
         return rapidjson::Value(v.c_str(), v.length(), d.GetAllocator());
     }
-};
-
-struct EnvironmentGetAmbientLight : public EnvironmentMessage {
-    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_AMBIENT_LIGHT;
 };
 
 struct EnvironmentSetAmbientLight : public EnvironmentMessage {
