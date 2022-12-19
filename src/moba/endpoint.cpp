@@ -54,6 +54,10 @@ long Endpoint::connect() {
     return registerApp();
 }
 
+long Endpoint::getAppId() const {
+    return appId;
+}
+
 long Endpoint::registerApp() {
     sendMsg(ClientStart{AppData{appName, version, groups}});
 

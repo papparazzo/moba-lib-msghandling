@@ -40,7 +40,7 @@ public:
 
     long connect();
 
-    long getAppId() {return appId;}
+    long getAppId() const;
 
     auto recieveMsg(time_t timeoutSec = 0) -> RawMessage;
 
@@ -65,7 +65,7 @@ protected:
 
     std::mutex m;
 
-    long appId;
+    long appId{0};
 
     std::string appName;
     moba::Version version;
