@@ -2,8 +2,9 @@ AUTOMAKE_OPTIONS = subdir-objects
 noinst_LIBRARIES = \
     libmsghandling.a
 libmsghandling_a_SOURCES = \
+    endpoint.cpp \
     socket.cpp \
-    endpoint.cpp
+    timestruct.cpp
 
 LDFLAGS += -L/usr/local/lib
 
