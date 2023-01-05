@@ -25,7 +25,7 @@
 #include "train.h"
 #include <map>
 
-struct ControlMessage : public Message {
+struct ControlMessage: public Message {
     enum MessageName {
         CONTROL_GET_CONTACT_LIST_REQ      = 1,
         CONTROL_GET_CONTACT_LIST_RES      = 2,
@@ -43,10 +43,10 @@ struct ControlMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = CONTROL;
 };
 
-struct ControlGetContactListReq : public ControlMessage {
+struct ControlGetContactListReq: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_CONTACT_LIST_REQ;
 
-    ControlGetContactListReq(int layoutId = 0) : layoutId{layoutId} {
+    ControlGetContactListReq(int layoutId = 0): layoutId{layoutId} {
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -62,10 +62,10 @@ struct ControlGetContactListReq : public ControlMessage {
     int layoutId;
 };
 
-struct ControlGetSwitchStateListReq : public ControlMessage {
+struct ControlGetSwitchStateListReq: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_SWITCH_STAND_LIST_REQ;
 
-    ControlGetSwitchStateListReq(int layoutId = 0) : layoutId{layoutId} {
+    ControlGetSwitchStateListReq(int layoutId = 0): layoutId{layoutId} {
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -81,10 +81,10 @@ struct ControlGetSwitchStateListReq : public ControlMessage {
     int layoutId;
 };
 
-struct ControlGetTrainListReq : public ControlMessage {
+struct ControlGetTrainListReq: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_REQ;
 
-    ControlGetTrainListReq(int layoutId = 0) : layoutId{layoutId} {
+    ControlGetTrainListReq(int layoutId = 0): layoutId{layoutId} {
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -100,7 +100,7 @@ struct ControlGetTrainListReq : public ControlMessage {
     int layoutId;
 };
 
-struct ControlGetTrainListRes : public ControlMessage {
+struct ControlGetTrainListRes: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_RES;
 
     ControlGetTrainListRes(const rapidjson::Document &d) {
@@ -111,12 +111,10 @@ struct ControlGetTrainListRes : public ControlMessage {
         }
     }
 
-    using TrainListPtr = std::shared_ptr<std::map<int, std::shared_ptr<Train>>>;
-
     TrainListPtr trainList;
 };
 
-struct ControlLock : public ControlMessage {
+struct ControlLock: public ControlMessage {
     ControlLock(std::uint32_t b1, std::uint32_t b2) {
         blockVec.push_back(b1);
         blockVec.push_back(b2);
@@ -144,27 +142,27 @@ struct ControlLock : public ControlMessage {
     std::vector<std::uint32_t> blockVec;
 };
 
-struct ControlLockBlock : public ControlLock {
+struct ControlLockBlock: public ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_LOCK_BLOCK;
     using ControlLock::ControlLock;
 };
 
-struct ControlLockBlockWaiting : public ControlLock {
+struct ControlLockBlockWaiting: public ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_LOCK_BLOCK_WAITING;
     using ControlLock::ControlLock;
 };
 
-struct ControlUnlockBlock : public ControlLock {
+struct ControlUnlockBlock: public ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_UNLOCK_BLOCK;
     using ControlLock::ControlLock;
 };
 
-struct ControlBlockLocked : public ControlLock {
+struct ControlBlockLocked: public ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_BLOCK_LOCKED;
     using ControlLock::ControlLock;
 };
 
-struct ControlBlockLockingFailed : public ControlLock {
+struct ControlBlockLockingFailed: public ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_BLOCK_LOCKING_FAILED;
     using ControlLock::ControlLock;
 };

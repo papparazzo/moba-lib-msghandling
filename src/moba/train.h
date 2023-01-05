@@ -21,6 +21,7 @@
 #pragma once
 
 #include <memory>
+#include <map>
 
 #include <moba-common/exception.h>
 
@@ -28,14 +29,14 @@
 
 struct Train {
 
-    Train(int localId, int speed, DrivingDirection direction) : localId {localId}, speed{speed}, direction{direction} {
+    Train(int localId, int speed, DrivingDirection direction): localId {localId}, speed{speed}, direction{direction} {
     }
 
     template <typename T>
     Train(const T &d) {
-        localId = d["localId"].GetInt();
+        localId = d["address"].GetInt();
         speed   = d["speed"].GetInt();
-        std::string s  = d["direction"].GetString();
+        std::string s = d["drivingDirection"].GetString();
 
         if(s == "FORWARD") {
             direction = DrivingDirection::FORWARD;
@@ -60,3 +61,4 @@ struct Train {
 };
 
 using TrainPtr = std::shared_ptr<Train>;
+using TrainListPtr = std::shared_ptr<std::map<int, std::shared_ptr<Train>>>;

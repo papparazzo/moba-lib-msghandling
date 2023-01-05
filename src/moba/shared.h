@@ -188,7 +188,7 @@ struct ContactTriggerData {
 
     template <typename T>
     ContactTriggerData(const rapidjson::GenericValue<T> &d): contactData{d["contact"]} {
-        state = d["state"].GetInt();
+        state = d["state"].GetBool();
         time = d["time"].GetInt();
     }
 

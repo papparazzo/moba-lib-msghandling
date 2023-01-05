@@ -28,7 +28,7 @@
 #include "message.h"
 #include "shared.h"
 
-struct LayoutMessage : public Message {
+struct LayoutMessage: public Message {
     enum MessageName {
         LAYOUT_GET_LAYOUTS_REQ          = 1,
         LAYOUT_GET_LAYOUTS_RES          = 2,
@@ -52,11 +52,11 @@ struct LayoutMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = LAYOUT;
 };
 
-struct LayoutGetLayoutsReq : public LayoutMessage {
+struct LayoutGetLayoutsReq: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUTS_REQ;
 };
 
-struct LayoutGetLayoutsRes : public LayoutMessage {
+struct LayoutGetLayoutsRes: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUTS_RES;
 
     LayoutGetLayoutsRes(const rapidjson::Document &d) {
@@ -68,7 +68,7 @@ struct LayoutGetLayoutsRes : public LayoutMessage {
     std::vector<TrackLayoutData> layouts;
 };
 
-struct LayoutDeleteLayout : public LayoutMessage {
+struct LayoutDeleteLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_DELETE_LAYOUT;
 
     LayoutDeleteLayout(int layoutId): layoutId{layoutId} {
@@ -83,7 +83,7 @@ struct LayoutDeleteLayout : public LayoutMessage {
     int layoutId;
 };
 
-struct LayoutLayoutDeleted : public LayoutMessage {
+struct LayoutLayoutDeleted: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_DELETED;
 
     LayoutLayoutDeleted(const rapidjson::Document &d) {
@@ -93,7 +93,7 @@ struct LayoutLayoutDeleted : public LayoutMessage {
     int layoutId;
 };
 
-struct LayoutCreateLayout : public LayoutMessage {
+struct LayoutCreateLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_CREATE_LAYOUT;
 
     LayoutCreateLayout(const TrackLayoutData &tracklayout): tracklayout{tracklayout} {
@@ -115,7 +115,7 @@ struct LayoutCreateLayout : public LayoutMessage {
     TrackLayoutData tracklayout;
 };
 
-struct LayoutLayoutCreated : public LayoutMessage {
+struct LayoutLayoutCreated: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_CREATED;
 
     LayoutLayoutCreated(const rapidjson::Document &d): tracklayout{d} {
@@ -124,7 +124,7 @@ struct LayoutLayoutCreated : public LayoutMessage {
     TrackLayoutData tracklayout;
 };
 
-struct LayoutUpdateLayout : public LayoutMessage {
+struct LayoutUpdateLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_UPDATE_LAYOUT;
 
     LayoutUpdateLayout(const TrackLayoutData &tracklayout): tracklayout{tracklayout} {
@@ -143,7 +143,7 @@ struct LayoutUpdateLayout : public LayoutMessage {
     TrackLayoutData tracklayout;
 };
 
-struct LayoutLayoutUpdated : public LayoutMessage {
+struct LayoutLayoutUpdated: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_UPDATED;
 
     LayoutLayoutUpdated(const rapidjson::Document &d): tracklayout{d} {
@@ -152,7 +152,7 @@ struct LayoutLayoutUpdated : public LayoutMessage {
     TrackLayoutData tracklayout;
 };
 
-struct LayoutUnlockLayout : public LayoutMessage {
+struct LayoutUnlockLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_UNLOCK_LAYOUT;
 
     LayoutUnlockLayout(int layoutId): layoutId{layoutId} {
@@ -167,7 +167,7 @@ struct LayoutUnlockLayout : public LayoutMessage {
     int layoutId;
 };
 
-struct LayoutLayoutUnlocked : public LayoutMessage {
+struct LayoutLayoutUnlocked: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_UNLOCKED;
 
     LayoutLayoutUnlocked(const rapidjson::Document &d) {
@@ -177,7 +177,7 @@ struct LayoutLayoutUnlocked : public LayoutMessage {
     int layoutId;
 };
 
-struct LayoutLockLayout : public LayoutMessage {
+struct LayoutLockLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LOCK_LAYOUT;
 
     LayoutLockLayout(int layoutId): layoutId{layoutId} {
@@ -192,7 +192,7 @@ struct LayoutLockLayout : public LayoutMessage {
     int layoutId;
 };
 
-struct LayoutLayoutLocked : public LayoutMessage {
+struct LayoutLayoutLocked: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_LOCKED;
 
     LayoutLayoutLocked(const rapidjson::Document &d) {
@@ -202,7 +202,7 @@ struct LayoutLayoutLocked : public LayoutMessage {
     int layoutId;
 };
 
-struct LayoutGetLayoutReq : public LayoutMessage {
+struct LayoutGetLayoutReq: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_REQ;
 
     LayoutGetLayoutReq(): layoutId{} {
@@ -241,7 +241,7 @@ struct LayoutGetLayoutReadOnlyReq : public LayoutMessage {
     std::optional<int> layoutId;
 };
 
-struct LayoutGetLayoutRes : public LayoutMessage {
+struct LayoutGetLayoutRes: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_RES;
 
     LayoutGetLayoutRes(const rapidjson::Document &d): specificLayoutData{d} {
@@ -250,7 +250,7 @@ struct LayoutGetLayoutRes : public LayoutMessage {
     SpecificLayoutData specificLayoutData;
 };
 
-struct LayoutSaveLayout : public LayoutMessage {
+struct LayoutSaveLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_SAVE_LAYOUT;
 
     LayoutSaveLayout() {
