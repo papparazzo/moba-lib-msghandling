@@ -24,7 +24,7 @@
 #include "message.h"
 #include "shared.h"
 
-struct ClientMessage : public Message {
+struct ClientMessage: public Message {
     enum MessageName {
         CLIENT_VOID         = 1,
         CLIENT_ECHO_REQ     = 2,
@@ -41,14 +41,14 @@ struct ClientMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = CLIENT;
 };
 
-struct ClientVoid : public ClientMessage {
+struct ClientVoid: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_VOID;
 };
 
-struct ClientEchoReq : public ClientMessage {
+struct ClientEchoReq: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_REQ;
 
-    ClientEchoReq(const std::string &payload) : payload{payload} {
+    ClientEchoReq(const std::string &payload): payload{payload} {
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -60,7 +60,7 @@ struct ClientEchoReq : public ClientMessage {
     std::string payload;
 };
 
-struct ClientEchoRes : public ClientMessage {
+struct ClientEchoRes: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_RES;
 
     ClientEchoRes(const rapidjson::Document &d) {
@@ -70,7 +70,7 @@ struct ClientEchoRes : public ClientMessage {
     std::string payload;
 };
 
-struct ClientError : public ClientMessage {
+struct ClientError: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ERROR;
 
     ClientError(const rapidjson::Document &d) {
@@ -82,10 +82,10 @@ struct ClientError : public ClientMessage {
     std::string additionalMsg;
 };
 
-struct ClientStart : public ClientMessage {
+struct ClientStart: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_START;
 
-    ClientStart(const AppData &appData) : appData{appData} {
+    ClientStart(const AppData &appData): appData{appData} {
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -107,7 +107,7 @@ struct ClientStart : public ClientMessage {
     AppData appData;
 };
 
-struct ClientConnected : public ClientMessage {
+struct ClientConnected: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_CONNECTED;
 
     ClientConnected(const rapidjson::Document &d) {
@@ -117,22 +117,22 @@ struct ClientConnected : public ClientMessage {
     long appId;
 };
 
-struct ClientClose : public ClientMessage {
+struct ClientClose: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_CLOSE;
 };
 
-struct ClientShutdown : public ClientMessage {
+struct ClientShutdown: public ClientMessage {
 
     ClientShutdown(const rapidjson::Document &d) {
     }
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };
 
-struct ClientReset : public ClientMessage {
+struct ClientReset: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_RESET;
 };
 
-struct ClientSelfTesting : public ClientMessage {
+struct ClientSelfTesting: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SELF_TESTING;
 };
 
