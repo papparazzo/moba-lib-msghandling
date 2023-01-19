@@ -31,7 +31,7 @@
 #include <netdb.h>
 #include <unistd.h>
 
-Socket::Socket(const std::string &host, int port) : socket{-1} {
+Socket::Socket(const std::string &host, int port): socket{-1} {
     if(host == "" || port > 64738 || port < 1024) {
         throw SocketException{"either host or port is invalid!"};
     }
@@ -67,7 +67,7 @@ void Socket::init() {
         hints.ai_flags |= AI_NUMERICHOST;
     }
 
-    if (getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &result) != 0) {
+    if(getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &result) != 0) {
         throw SocketException{"resolving url failed"};
     }
 
