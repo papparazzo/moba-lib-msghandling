@@ -40,7 +40,7 @@ Socket::Socket(const std::string &host, int port): socket{-1} {
 }
 
 Socket::~Socket() {
-    if (socket != -1) {
+    if(socket != -1) {
         close(socket);
     }
 }
