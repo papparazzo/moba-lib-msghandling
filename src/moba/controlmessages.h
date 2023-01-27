@@ -107,7 +107,7 @@ struct ControlGetTrainListRes: public ControlMessage {
         trainList = std::make_shared<std::map<int, std::shared_ptr<Train>>>();
 
         for(auto &iter : d.GetArray()) {
-            (*trainList)[iter["id"].GetInt()] = std::make_shared<Train>(iter);
+            (*trainList)[iter["blockId"].GetInt()] = std::make_shared<Train>(iter);
         }
     }
 
