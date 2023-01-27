@@ -36,6 +36,7 @@ struct Train {
     Train(const T &d) {
         localId = d["address"].GetInt();
         speed   = d["speed"].GetInt();
+        id      = d["id"].GetInt();
         std::string s = d["drivingDirection"].GetString();
 
         if(s == "FORWARD") {
@@ -54,6 +55,7 @@ struct Train {
         direction = DrivingDirection::flip(direction);
     }
 
+    int id;
     int localId;
     int speed;
 
