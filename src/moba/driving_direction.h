@@ -28,7 +28,7 @@ struct DrivingDirection {
         BACKWARD
     };
 
-    DrivingDirection(DrivingDirectionEnum val = DrivingDirection::FORWARD) : value{val} {
+    DrivingDirection(DrivingDirectionEnum val = DrivingDirection::FORWARD): value{val} {
     }
 
     void toggle() {
