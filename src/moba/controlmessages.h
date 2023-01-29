@@ -27,8 +27,8 @@
 
 struct ControlMessage: public Message {
     enum MessageName {
-        CONTROL_GET_CONTACT_LIST_REQ      = 1,
-        CONTROL_GET_CONTACT_LIST_RES      = 2,
+        CONTROL_GET_BLOCK_LIST_REQ        = 1,
+        CONTROL_GET_BLOCK_LIST_RES        = 2,
         CONTROL_GET_SWITCH_STAND_LIST_REQ = 3,
         CONTROL_GET_SWITCH_STAND_LIST_RES = 4,
         CONTROL_GET_TRAIN_LIST_REQ        = 5,
@@ -44,7 +44,7 @@ struct ControlMessage: public Message {
 };
 
 struct ControlGetContactListReq: public ControlMessage {
-    static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_CONTACT_LIST_REQ;
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_BLOCK_LIST_REQ;
 
     ControlGetContactListReq(int layoutId = 0): layoutId{layoutId} {
     }
