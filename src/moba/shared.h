@@ -201,11 +201,13 @@ struct BlockContactData {
 
     template <typename T>
     BlockContactData(const rapidjson::GenericValue<T> &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
+        trainId = d["trainId"].GetInt();
         id = d["id"].GetInt();
     }
 
     ContactData brakeTriggerContact;
     ContactData blockContact;
+    int trainId;
     int id;
 };
 
