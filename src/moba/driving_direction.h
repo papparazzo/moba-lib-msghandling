@@ -28,15 +28,44 @@ struct DrivingDirection {
         BACKWARD
     };
 
-    DrivingDirection(DrivingDirectionEnum val = DrivingDirection::FORWARD): value{val} {
+    DrivingDirection(std::uint8_t drivingDirection) {
+         this->drivingDirection = static_cast<DrivingDirectionEnum>(drivingDirection);
+    }
+
+    DrivingDirection(DrivingDirectionEnum drivingDirection = DrivingDirection::FORWARD): drivingDirection{drivingDirection} {
+    }
+
+    DrivingDirection(const std::string &drivingDirection) {
+        setDrivingDirection(drivingDirection);
     }
 
     void toggle() {
-        value = DrivingDirection::flip(value);
+        drivingDirection = DrivingDirection::flip(drivingDirection);
+    }
+
+    void setDrivingDirection(const std::string &s) {
+        if(s == "FORWARD") {
+            drivingDirection = DrivingDirection::FORWARD;
+        } else if(s == "BACKWARD") {
+            drivingDirection = DrivingDirection::BACKWARD;
+        } else {
+            throw moba::UnsupportedOperationException{"invalid value given"};
+        }
+    }
+
+    std::string getDrivingDirection() const {
+        switch(drivingDirection) {
+            case DrivingDirection::FORWARD:
+                return "FORWARD";
+
+            case DrivingDirection::BACKWARD:
+                return "BACKWARD";
+        }
+        throw moba::UnsupportedOperationException{"Not supported."};
     }
 
     static DrivingDirectionEnum flip(DrivingDirection d) {
-        return flip(d.value);
+        return flip(d.drivingDirection);
     }
 
     static DrivingDirectionEnum flip(DrivingDirectionEnum d) {
@@ -52,6 +81,6 @@ struct DrivingDirection {
         }
     }
 
-    DrivingDirectionEnum value;
+    DrivingDirectionEnum drivingDirection;
 };
 
