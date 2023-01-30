@@ -23,6 +23,7 @@
 #include "message.h"
 #include "shared.h"
 #include "train.h"
+#include "driving_direction.h"
 #include <map>
 
 struct ControlMessage: public Message {
@@ -38,6 +39,7 @@ struct ControlMessage: public Message {
         CONTROL_BLOCK_LOCKED              = 9,
         CONTROL_BLOCK_LOCKING_FAILED      = 10,
         CONTROL_UNLOCK_BLOCK              = 11,
+        CONTROL_PUSH_TRAIN                = 12
     };
 
     static constexpr std::uint32_t GROUP_ID = CONTROL;
@@ -106,8 +108,8 @@ struct ControlGetTrainListRes: public ControlMessage {
     ControlGetTrainListRes(const rapidjson::Document &d) {
         trainList = std::make_shared<std::map<int, std::shared_ptr<Train>>>();
 
-        for(auto &iter : d.GetArray()) {
-            (*trainList)[iter["blockId"].GetInt()] = std::make_shared<Train>(iter);
+        for(auto &iter: d.GetArray()) {
+            (*trainList)[iter["id"].GetInt()] = std::make_shared<Train>(iter);
         }
     }
 
@@ -121,7 +123,7 @@ struct ControlLock: public ControlMessage {
     }
 
     ControlLock(const rapidjson::Document &d) {
-        for(auto &iter : d.GetArray()) {
+        for(auto &iter: d.GetArray()) {
             blockVec.push_back(iter.GetUint());
         }
     }
@@ -133,7 +135,7 @@ struct ControlLock: public ControlMessage {
 
         d.SetArray();
         d.Reserve(blockVec.size(), allocator);
-        for(auto &iter : blockVec) {
+        for(auto &iter: blockVec) {
             d.PushBack(iter, allocator);
         }
         return d;
@@ -165,5 +167,44 @@ struct ControlBlockLocked: public ControlLock {
 struct ControlBlockLockingFailed: public ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_BLOCK_LOCKING_FAILED;
     using ControlLock::ControlLock;
+};
+
+struct ControlPushTrain: public ControlMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONTROL_PUSH_TRAIN;
+
+    ControlPushTrain(std::uint32_t blockId, std::uint32_t trainId, DrivingDirection drivingDirection):
+    blockId{blockId}, trainId{trainId}, drivingDirection{drivingDirection} {
+    }
+
+    /*
+    ControlPushTrain(const rapidjson::Document &d) {
+    }
+    */
+
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+
+        auto &allocator = d.GetAllocator();
+        d.SetObject();
+
+        d.AddMember("id", trainId, allocator);
+
+        auto s = drivingDirection.getDrivingDirection();
+
+        //d.AddMember("name", rapidjson::Value(tracklayout.name.c_str(), tracklayout.name.length(), d.GetAllocator()), d.GetAllocator());
+
+        d.AddMember("address", trainId, allocator); // FIXME: Do not forget to change this.
+        d.AddMember("direction", rapidjson::Value(s.c_str(), s.length(), allocator), allocator);
+        d.AddMember("blockId", blockId, allocator);
+
+
+        return d;
+    }
+
+    std::uint32_t blockId;
+    std::uint32_t trainId;
+
+
+    DrivingDirection drivingDirection;
 };
 
