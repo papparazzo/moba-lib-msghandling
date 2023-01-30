@@ -29,35 +29,25 @@
 
 struct Train {
 
-    Train(int localId, int speed, DrivingDirection direction): localId {localId}, speed{speed}, direction{direction} {
+    Train(
+    std::uint32_t id, std::uint32_t address, std::uint32_t speed, DrivingDirection direction):
+    id{id}, address {address}, speed{speed}, direction{direction} {
     }
 
     template <typename T>
     Train(const T &d) {
-        localId = d["address"].GetInt();
+        address = d["address"].GetInt();
         speed   = d["speed"].GetInt();
         id      = d["id"].GetInt();
-        std::string s = d["drivingDirection"].GetString();
-
-        if(s == "FORWARD") {
-            direction = DrivingDirection::FORWARD;
-        } else if(s == "BACKWARD") {
-            direction = DrivingDirection::BACKWARD;
-        } else {
-            throw moba::UnsupportedOperationException{"invalid value given"};
-        }
+        direction.setDrivingDirection(d["drivingDirection"].GetString());
     }
 
     virtual ~Train() {
     }
 
-    void switchDirection() {
-        direction = DrivingDirection::flip(direction);
-    }
-
-    int id;
-    int localId;
-    int speed;
+    std::uint32_t id;
+    std::uint32_t address;
+    std::uint32_t speed;
 
     DrivingDirection direction;
 };
