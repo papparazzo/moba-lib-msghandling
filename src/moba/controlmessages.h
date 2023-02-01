@@ -45,10 +45,10 @@ struct ControlMessage: public Message {
     static constexpr std::uint32_t GROUP_ID = CONTROL;
 };
 
-struct ControlGetContactListReq: public ControlMessage {
+struct ControlGetBlockListReq: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_BLOCK_LIST_REQ;
 
-    ControlGetContactListReq(int layoutId = 0): layoutId{layoutId} {
+    ControlGetBlockListReq(int layoutId = 0): layoutId{layoutId} {
     }
 
     rapidjson::Document getJsonDocument() const override {
