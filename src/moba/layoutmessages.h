@@ -158,20 +158,14 @@ struct LayoutUnlockLayout: public LayoutMessage {
     LayoutUnlockLayout(int layoutId): layoutId{layoutId} {
     }
 
+    LayoutUnlockLayout(const rapidjson::Document &d) {
+        layoutId = d.GetInt();
+    }
+
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetInt(layoutId);
         return d;
-    }
-
-    int layoutId;
-};
-
-struct LayoutLayoutUnlocked: public LayoutMessage {
-    static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_UNLOCKED;
-
-    LayoutLayoutUnlocked(const rapidjson::Document &d) {
-        layoutId = d.GetInt();
     }
 
     int layoutId;
@@ -183,20 +177,14 @@ struct LayoutLockLayout: public LayoutMessage {
     LayoutLockLayout(int layoutId): layoutId{layoutId} {
     }
 
+    LayoutLockLayout(const rapidjson::Document &d) {
+        layoutId = d.GetInt();
+    }
+
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetInt(layoutId);
         return d;
-    }
-
-    int layoutId;
-};
-
-struct LayoutLayoutLocked: public LayoutMessage {
-    static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_LOCKED;
-
-    LayoutLayoutLocked(const rapidjson::Document &d) {
-        layoutId = d.GetInt();
     }
 
     int layoutId;
