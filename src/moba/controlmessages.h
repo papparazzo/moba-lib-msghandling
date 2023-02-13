@@ -172,14 +172,17 @@ struct ControlBlockLockingFailed: public ControlLock {
 struct ControlPushTrain: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_PUSH_TRAIN;
 
-    ControlPushTrain(std::uint32_t blockId, std::uint32_t trainId, DrivingDirection drivingDirection):
-    blockId{blockId}, trainId{trainId}, drivingDirection{drivingDirection} {
+    ControlPushTrain(std::uint32_t trainId, std::uint32_t fromBlock, std::uint32_t toBlock, DrivingDirection drivingDirection):
+    trainId{trainId}, fromBlock{fromBlock}, toBlock{toBlock}, direction{direction} {
     }
 
-    /*
+
     ControlPushTrain(const rapidjson::Document &d) {
+        trainId = d["trainId"].GetUint();
+        fromBlock = d["fromBlock"].GetUint();
+        toBlock = d["toBlock"].GetUint();
+        direction.setDrivingDirection(d["direction"].GetString());
     }
-    */
 
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
@@ -187,24 +190,21 @@ struct ControlPushTrain: public ControlMessage {
         auto &allocator = d.GetAllocator();
         d.SetObject();
 
-        d.AddMember("id", trainId, allocator);
+        d.AddMember("trainId", trainId, allocator);
 
-        auto s = drivingDirection.getDrivingDirection();
+        auto s = direction.getDrivingDirection();
 
-        //d.AddMember("name", rapidjson::Value(tracklayout.name.c_str(), tracklayout.name.length(), d.GetAllocator()), d.GetAllocator());
-
-        d.AddMember("address", trainId, allocator); // FIXME: Do not forget to change this.
         d.AddMember("direction", rapidjson::Value(s.c_str(), s.length(), allocator), allocator);
-        d.AddMember("blockId", blockId, allocator);
-
+        d.AddMember("fromBlock", fromBlock, allocator);
+        d.AddMember("toBlock", toBlock, allocator);
 
         return d;
     }
 
-    std::uint32_t blockId;
     std::uint32_t trainId;
+    std::uint32_t fromBlock;
+    std::uint32_t toBlock;
 
-
-    DrivingDirection drivingDirection;
+    DrivingDirection direction;
 };
 
