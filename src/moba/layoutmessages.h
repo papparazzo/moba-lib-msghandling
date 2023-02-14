@@ -33,15 +33,12 @@ struct LayoutMessage: public Message {
         LAYOUT_GET_LAYOUTS_REQ          = 1,
         LAYOUT_GET_LAYOUTS_RES          = 2,
         LAYOUT_DELETE_LAYOUT            = 3,
-        LAYOUT_LAYOUT_DELETED           = 4,
         LAYOUT_CREATE_LAYOUT            = 5,
         LAYOUT_LAYOUT_CREATED           = 6,
         LAYOUT_UPDATE_LAYOUT            = 7,
         LAYOUT_LAYOUT_UPDATED           = 8,
         LAYOUT_UNLOCK_LAYOUT            = 9,
-        LAYOUT_LAYOUT_UNLOCKED          = 10,
         LAYOUT_LOCK_LAYOUT              = 11,
-        LAYOUT_LAYOUT_LOCKED            = 12,
         LAYOUT_GET_LAYOUT_REQ           = 13,
         LAYOUT_GET_LAYOUT_READ_ONLY_REQ = 14,
         LAYOUT_GET_LAYOUT_RES           = 15,
@@ -74,20 +71,14 @@ struct LayoutDeleteLayout: public LayoutMessage {
     LayoutDeleteLayout(int layoutId): layoutId{layoutId} {
     }
 
+    LayoutDeleteLayout(const rapidjson::Document &d) {
+        layoutId = d.GetInt();
+    }
+
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetInt(layoutId);
         return d;
-    }
-
-    int layoutId;
-};
-
-struct LayoutLayoutDeleted: public LayoutMessage {
-    static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_DELETED;
-
-    LayoutLayoutDeleted(const rapidjson::Document &d) {
-        layoutId = d.GetInt();
     }
 
     int layoutId;
