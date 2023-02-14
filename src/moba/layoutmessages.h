@@ -34,7 +34,6 @@ struct LayoutMessage: public Message {
         LAYOUT_GET_LAYOUTS_RES          = 2,
         LAYOUT_DELETE_LAYOUT            = 3,
         LAYOUT_CREATE_LAYOUT            = 5,
-        LAYOUT_LAYOUT_CREATED           = 6,
         LAYOUT_UPDATE_LAYOUT            = 7,
         LAYOUT_UNLOCK_LAYOUT            = 9,
         LAYOUT_LOCK_LAYOUT              = 11,
