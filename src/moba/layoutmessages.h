@@ -36,7 +36,6 @@ struct LayoutMessage: public Message {
         LAYOUT_CREATE_LAYOUT            = 5,
         LAYOUT_LAYOUT_CREATED           = 6,
         LAYOUT_UPDATE_LAYOUT            = 7,
-        LAYOUT_LAYOUT_UPDATED           = 8,
         LAYOUT_UNLOCK_LAYOUT            = 9,
         LAYOUT_LOCK_LAYOUT              = 11,
         LAYOUT_GET_LAYOUT_REQ           = 13,
@@ -121,6 +120,9 @@ struct LayoutUpdateLayout: public LayoutMessage {
     LayoutUpdateLayout(const TrackLayoutData &tracklayout): tracklayout{tracklayout} {
     }
 
+    LayoutLayoutUpdated(const rapidjson::Document &d): tracklayout{d} {
+    }
+
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetObject();
@@ -129,15 +131,6 @@ struct LayoutUpdateLayout: public LayoutMessage {
         d.AddMember("name", rapidjson::Value(tracklayout.name.c_str(), tracklayout.name.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("description", rapidjson::Value(tracklayout.description.c_str(), tracklayout.description.length(), d.GetAllocator()), d.GetAllocator());
         return d;
-    }
-
-    TrackLayoutData tracklayout;
-};
-
-struct LayoutLayoutUpdated: public LayoutMessage {
-    static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_UPDATED;
-
-    LayoutLayoutUpdated(const rapidjson::Document &d): tracklayout{d} {
     }
 
     TrackLayoutData tracklayout;
