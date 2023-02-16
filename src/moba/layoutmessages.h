@@ -91,6 +91,9 @@ struct LayoutCreateLayout: public LayoutMessage {
     LayoutCreateLayout(const std::string &name, const std::string &description, bool active) : tracklayout{name, description, active} {
     }
 
+    LayoutCreateLayout(const rapidjson::Document &d): tracklayout{d} {
+    }
+
     rapidjson::Document getJsonDocument() const override {
         rapidjson::Document d;
         d.SetObject();
@@ -104,22 +107,13 @@ struct LayoutCreateLayout: public LayoutMessage {
     TrackLayoutData tracklayout;
 };
 
-struct LayoutLayoutCreated: public LayoutMessage {
-    static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LAYOUT_CREATED;
-
-    LayoutLayoutCreated(const rapidjson::Document &d): tracklayout{d} {
-    }
-
-    TrackLayoutData tracklayout;
-};
-
 struct LayoutUpdateLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_UPDATE_LAYOUT;
 
     LayoutUpdateLayout(const TrackLayoutData &tracklayout): tracklayout{tracklayout} {
     }
 
-    LayoutLayoutUpdated(const rapidjson::Document &d): tracklayout{d} {
+    LayoutUpdateLayout(const rapidjson::Document &d): tracklayout{d} {
     }
 
     rapidjson::Document getJsonDocument() const override {
