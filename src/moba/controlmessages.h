@@ -172,10 +172,9 @@ struct ControlBlockLockingFailed: public ControlLock {
 struct ControlPushTrain: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_PUSH_TRAIN;
 
-    ControlPushTrain(std::uint32_t trainId, std::uint32_t fromBlock, std::uint32_t toBlock, DrivingDirection drivingDirection):
+    ControlPushTrain(std::uint32_t trainId, std::uint32_t fromBlock, std::uint32_t toBlock, DrivingDirection direction):
     trainId{trainId}, fromBlock{fromBlock}, toBlock{toBlock}, direction{direction} {
     }
-
 
     ControlPushTrain(const rapidjson::Document &d) {
         trainId = d["trainId"].GetUint();
