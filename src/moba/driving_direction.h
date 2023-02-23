@@ -39,6 +39,8 @@ struct DrivingDirection {
         setDrivingDirection(drivingDirection);
     }
 
+    DrivingDirection(const DrivingDirection &) = default;
+
     void toggle() {
         drivingDirection = DrivingDirection::flip(drivingDirection);
     }
