@@ -42,6 +42,7 @@ struct LayoutMessage: public Message {
         LAYOUT_GET_LAYOUT_RES           = 10,
         LAYOUT_SAVE_LAYOUT              = 11,
         LAYOUT_LAYOUT_CHANGED           = 12,
+        LAYOUT_DEFAULT_LAYOUT_CHANGED   = 13
     };
 
     static constexpr std::uint32_t GROUP_ID = LAYOUT;
@@ -248,4 +249,14 @@ struct LayoutSaveLayout: public LayoutMessage {
     }
 
     SpecificLayoutData specificLayoutData;
+};
+
+struct LayoutDefaultLayoutChanged: public LayoutMessage {
+    static constexpr std::uint32_t MESSAGE_ID = LAYOUT_DEFAULT_LAYOUT_CHANGED;
+
+    LayoutDefaultLayoutChanged(const rapidjson::Document &d) {
+        layoutId = d.GetInt();
+    }
+
+    int layoutId;
 };
