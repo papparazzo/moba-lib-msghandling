@@ -30,16 +30,19 @@ struct ControlMessage: public Message {
     enum MessageName {
         CONTROL_GET_BLOCK_LIST_REQ        = 1,
         CONTROL_GET_BLOCK_LIST_RES        = 2,
-        CONTROL_GET_SWITCH_STAND_LIST_REQ = 3,
-        CONTROL_GET_SWITCH_STAND_LIST_RES = 4,
-        CONTROL_GET_TRAIN_LIST_REQ        = 5,
-        CONTROL_GET_TRAIN_LIST_RES        = 6,
-        CONTROL_LOCK_BLOCK                = 7,
-        CONTROL_LOCK_BLOCK_WAITING        = 8,
-        CONTROL_BLOCK_LOCKED              = 9,
-        CONTROL_BLOCK_LOCKING_FAILED      = 10,
-        CONTROL_UNLOCK_BLOCK              = 11,
-        CONTROL_PUSH_TRAIN                = 12
+        CONTROL_SAVE_BLOCK_LIST           = 3,
+        CONTROL_GET_SWITCH_STAND_LIST_REQ = 4,
+        CONTROL_GET_SWITCH_STAND_LIST_RES = 5,
+        CONTROL_SAVE_SWITCH_STAND_LIST    = 6,
+        CONTROL_GET_TRAIN_LIST_REQ        = 7,
+        CONTROL_GET_TRAIN_LIST_RES        = 8,
+        CONTROL_SAVE_TRAIN_LIST           = 9,
+        CONTROL_LOCK_BLOCK                = 10,
+        CONTROL_LOCK_BLOCK_WAITING        = 11,
+        CONTROL_BLOCK_LOCKED              = 12,
+        CONTROL_BLOCK_LOCKING_FAILED      = 13,
+        CONTROL_UNLOCK_BLOCK              = 14,
+        CONTROL_PUSH_TRAIN                = 15
     };
 
     static constexpr std::uint32_t GROUP_ID = CONTROL;
