@@ -210,6 +210,9 @@ struct BlockContactData {
     ContactData brakeTriggerContact;
     ContactData blockContact;
     int trainId;
+    
+    // ToDo Consider to make trainId optional
+    //std::optional<int> trainId;
     int id;
 };
 
