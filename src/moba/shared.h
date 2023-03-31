@@ -200,7 +200,10 @@ struct ContactTriggerData {
 struct BlockContactData {
     template <typename T>
     BlockContactData(const rapidjson::GenericValue<T> &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
-        trainId = d["trainId"].GetInt();
+        if(!d["trainId"].IsNull()) {
+            trainId = d["trainId"].GetInt();
+        }
+        
         id = d["id"].GetInt();
     }
 
