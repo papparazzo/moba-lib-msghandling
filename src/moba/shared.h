@@ -121,8 +121,8 @@ struct TrackLayoutSymbol {
     }
     TrackLayoutSymbol(int id, int symbol): id{id}, symbol{symbol} {
     }
-	int id;
-	int symbol;
+    int id;
+    int symbol;
 };
 
 // Thanks to https://stackoverflow.com/a/45395204
