@@ -43,7 +43,7 @@ struct InterfaceMessage: public Message {
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
 };
 
-struct InterfaceConnectivityStateChanged : public InterfaceMessage {
+struct InterfaceConnectivityStateChanged: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONNECTIVITY_STATE_CHANGED;
 
     enum class Connectivity {
@@ -51,7 +51,7 @@ struct InterfaceConnectivityStateChanged : public InterfaceMessage {
         ERROR
     };
 
-    InterfaceConnectivityStateChanged(Connectivity connectivity) : connectivity{connectivity} {
+    InterfaceConnectivityStateChanged(Connectivity connectivity): connectivity{connectivity} {
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -73,13 +73,13 @@ struct InterfaceConnectivityStateChanged : public InterfaceMessage {
     Connectivity connectivity;
 };
 
-struct InterfaceContactTriggered : public InterfaceMessage {
+struct InterfaceContactTriggered: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
     InterfaceContactTriggered(const rapidjson::Document &d): contactTrigger{d} {
     }
 
-    InterfaceContactTriggered(const ContactTriggerData &contactTrigger) : contactTrigger{contactTrigger} {
+    InterfaceContactTriggered(const ContactTriggerData &contactTrigger): contactTrigger{contactTrigger} {
     }
 
     rapidjson::Document getJsonDocument() const override {
@@ -100,11 +100,11 @@ struct InterfaceContactTriggered : public InterfaceMessage {
     ContactTriggerData contactTrigger;
 };
 
-struct InterfaceSetBrakeVector : public InterfaceMessage {
+struct InterfaceSetBrakeVector: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
 
     InterfaceSetBrakeVector(const rapidjson::Document &d) {
-        for(auto &iter : d.GetArray()) {
+        for(auto &iter: d.GetArray()) {
             items.push_back(BrakeVectorContact{iter});
         }
     }
@@ -112,10 +112,10 @@ struct InterfaceSetBrakeVector : public InterfaceMessage {
     std::vector<BrakeVectorContact> items;
 };
 
-struct InterfaceSetLocoSpeed : public InterfaceMessage {
+struct InterfaceSetLocoSpeed: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_SPEED;
 
-    InterfaceSetLocoSpeed(std::uint32_t localId, std::uint16_t speed) : localId{localId}, speed{speed} {
+    InterfaceSetLocoSpeed(std::uint32_t localId, std::uint16_t speed): localId{localId}, speed{speed} {
     }
 
     InterfaceSetLocoSpeed(const rapidjson::Document &d) {
@@ -136,20 +136,20 @@ struct InterfaceSetLocoSpeed : public InterfaceMessage {
     std::uint16_t speed;
 };
 
-struct InterfaceSetLocoDirection : public InterfaceMessage {
+struct InterfaceSetLocoDirection: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_DIRECTION;
 
     enum class DrivingDirection	{
         RETAIN   = 0,
-		FORWARD  = 1,
-		BACKWARD = 2,
-		TOGGLE   = 3,
+        FORWARD  = 1,
+        BACKWARD = 2,
+        TOGGLE   = 3,
     };
 
-    InterfaceSetLocoDirection(std::uint32_t localId, DrivingDirection direction) : localId{localId}, direction{direction} {
+    InterfaceSetLocoDirection(std::uint32_t localId, DrivingDirection direction): localId{localId}, direction{direction} {
     }
 
-    InterfaceSetLocoDirection(std::uint32_t localId, std::uint8_t drivingDirection) : localId{localId} {
+    InterfaceSetLocoDirection(std::uint32_t localId, std::uint8_t drivingDirection): localId{localId} {
          direction = static_cast<DrivingDirection>(drivingDirection);
     }
 
@@ -204,10 +204,10 @@ protected:
     }
 };
 
-struct InterfaceSetLocoFunction : public InterfaceMessage {
+struct InterfaceSetLocoFunction: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_FUNCTION;
 
-    InterfaceSetLocoFunction(std::uint32_t localId, ControllableFunction function, bool active) : localId{localId}, function{function}, active{active} {
+    InterfaceSetLocoFunction(std::uint32_t localId, ControllableFunction function, bool active): localId{localId}, function{function}, active{active} {
     }
 
     InterfaceSetLocoFunction(const rapidjson::Document &d) {
@@ -232,13 +232,17 @@ struct InterfaceSetLocoFunction : public InterfaceMessage {
     bool active;
 };
 
-struct InterfaceSwitchAccessoryDecoders : public InterfaceMessage {
+struct InterfaceSwitchAccessoryDecoders: public InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SWITCH_ACCESSORY_DECODERS;
+
     InterfaceSwitchAccessoryDecoders(const rapidjson::Document &d) {
    //     localId = d["localId"].GetInt();
    //     auto s = d["function"].GetString();
    //     function = stringToControllableFunctionEnum(s);
    //     active = d["active"].GetBool();
     }
+
+    // FIXME vector needed!
 
     std::uint32_t localId;
     bool differ;
