@@ -34,10 +34,11 @@ struct InterfaceMessage: public Message {
         CONNECTIVITY_STATE_CHANGED = 1,
         CONTACT_TRIGGERED          = 2,
         SET_BRAKE_VECTOR           = 3,
-        SET_LOCO_SPEED             = 4,
-        SET_LOCO_DIRECTION         = 5,
-        SET_LOCO_FUNCTION          = 6,
-        SWITCH_ACCESSORY_DECODERS  = 7
+        RESET_BRAKE_VECTOR         = 4,  
+        SET_LOCO_SPEED             = 5,
+        SET_LOCO_DIRECTION         = 6,
+        SET_LOCO_FUNCTION          = 7,
+        SWITCH_ACCESSORY_DECODERS  = 8
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
@@ -104,6 +105,18 @@ struct InterfaceSetBrakeVector: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
 
     InterfaceSetBrakeVector(const rapidjson::Document &d) {
+        for(auto &iter: d.GetArray()) {
+            items.push_back(BrakeVectorContact{iter});
+        }
+    }
+
+    std::vector<BrakeVectorContact> items;
+};
+
+struct InterfaceResetBrakeVector: public InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = RESET_BRAKE_VECTOR;
+
+    InterfaceResetBrakeVector(const rapidjson::Document &d) {
         for(auto &iter: d.GetArray()) {
             items.push_back(BrakeVectorContact{iter});
         }
