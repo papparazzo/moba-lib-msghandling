@@ -23,6 +23,7 @@
 #include <moba-common/version.h>
 #include "message.h"
 #include "shared.h"
+#include "errorid.h"
 
 struct ClientMessage: public Message {
     enum MessageName {
@@ -72,13 +73,28 @@ struct ClientEchoRes: public ClientMessage {
 
 struct ClientError: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ERROR;
-
+   
+    ClientError(ErrorId errorId, const std::string &additionalMsg): 
+        errorId{errorId}, additionalMsg{additionalMsg} 
+    {
+    }
+    
     ClientError(const rapidjson::Document &d) {
-        errorId = d["errorId"].GetString();
+        auto s = d["errorId"].GetString();
+        errorId = stringToErrorIdEnum(s);
         additionalMsg = d["additonalMsg"].GetString();
     }
 
-    std::string errorId;
+    rapidjson::Document getJsonDocument() const override {
+        rapidjson::Document d;
+        d.SetObject();
+        auto cf = errorIdEnumToString(errorId);
+        d.AddMember("errorId", rapidjson::Value(cf.c_str(), cf.length(), d.GetAllocator()), d.GetAllocator());
+        d.AddMember("additonalMsg", rapidjson::Value(additionalMsg.c_str(), additionalMsg.length(), d.GetAllocator()), d.GetAllocator());
+        return d;
+    }
+    
+    ErrorId errorId;
     std::string additionalMsg;
 };
 
