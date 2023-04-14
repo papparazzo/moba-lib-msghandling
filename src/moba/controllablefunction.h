@@ -333,7 +333,7 @@ inline std::string controllableFunctionEnumToString(ErrorId s) {
             return "TABLE_LIGHT_2";
 
         case ControllableFunction::GRATE_SHAKING_2:
-            return "GRATE_SHAKING_";
+            return "GRATE_SHAKING_2";
 
         case ControllableFunction::RAIL_JOINTS:
             return "RAIL_JOINTS";
