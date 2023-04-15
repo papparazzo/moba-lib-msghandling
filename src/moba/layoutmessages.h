@@ -56,7 +56,7 @@ struct LayoutGetLayoutsRes: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUTS_RES;
 
     LayoutGetLayoutsRes(const rapidjson::Document &d) {
-        for(auto &iter : d.GetArray()) {
+        for(auto &iter: d.GetArray()) {
             layouts.push_back(iter);
         }
     }
