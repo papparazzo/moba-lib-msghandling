@@ -24,6 +24,7 @@
 #include <memory>
 #include "message.h"
 #include "shared.h"
+#include "enumtogglestate.h"
 
 struct EnvironmentMessage : public Message {
     enum MessageName {
