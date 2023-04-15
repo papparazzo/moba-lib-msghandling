@@ -220,7 +220,7 @@ protected:
 struct InterfaceSetLocoFunction: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_FUNCTION;
 
-    InterfaceSetLocoFunction(std::uint32_t localId, ControllableFunction function, bool active): localId{localId}, function{function}, active{active} {
+    InterfaceSetLocoFunction(std::uint32_t localId, Function function, bool active): localId{localId}, function{function}, active{active} {
     }
 
     InterfaceSetLocoFunction(const rapidjson::Document &d) {
@@ -241,7 +241,7 @@ struct InterfaceSetLocoFunction: public InterfaceMessage {
     }
 
     std::uint32_t localId;
-    ControllableFunction function;
+    Function function;
     bool active;
 };
 
@@ -250,10 +250,10 @@ struct InterfaceSwitchAccessoryDecoders: public InterfaceMessage {
 
     InterfaceSwitchAccessoryDecoders(const rapidjson::Document &d) {
         for(auto &iter: d.GetArray()) {
-            layouts.push_back(iter);
+     //       layouts.push_back(iter);
         }
 
-        switchStack
+        //switchStack
         
    //     localId = d["localId"].GetInt();
    //     auto s = d["function"].GetString();
@@ -270,7 +270,7 @@ struct InterfaceSwitchAccessoryDecoders: public InterfaceMessage {
     
     std::vector<Switch> switchStack;
 };
-
+/*
 struct TrackLayoutData {
     TrackLayoutData(
         int id, const std::string &name, const std::string &description, const std::string &created, const std::string &modified, bool active, int locked
@@ -304,3 +304,5 @@ struct TrackLayoutData {
     int locked;
 };
 
+
+ */

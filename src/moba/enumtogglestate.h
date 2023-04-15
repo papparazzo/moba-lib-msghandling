@@ -41,7 +41,7 @@ inline ToggleState stringToToggleStateEnum(const std::string &s) {
     throw moba::UnsupportedOperationException{"ToggleState: invalid value given"};
 }
 
-inline std::string toggleStateEnumToString(ErrorId s) {
+inline std::string toggleStateEnumToString(ToggleState s) {
     switch(s) {
         case ToggleState::ON:
             return "ON";
