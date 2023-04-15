@@ -23,7 +23,7 @@
 #include <moba-common/version.h>
 #include "message.h"
 #include "shared.h"
-#include "errorid.h"
+#include "enumerrorid.h"
 
 struct ClientMessage: public Message {
     enum MessageName {
