@@ -250,59 +250,8 @@ struct InterfaceSwitchAccessoryDecoders: public InterfaceMessage {
 
     InterfaceSwitchAccessoryDecoders(const rapidjson::Document &d) {
         for(auto &iter: d.GetArray()) {
-     //       layouts.push_back(iter);
+            switchingOutputs.push_back(iter);
         }
-
-        //switchStack
-        
-   //     localId = d["localId"].GetInt();
-   //     auto s = d["function"].GetString();
-   //     function = stringToControllableFunctionEnum(s);
-   //     active = d["active"].GetBool();
     }
-
-    // FIXME vector needed!
-
-    struct Switch {
-        std::uint32_t localId;
-        bool differ;
-    };
-    
-    std::vector<Switch> switchStack;
+    SwitchingOutputs switchingOutputs;
 };
-/*
-struct TrackLayoutData {
-    TrackLayoutData(
-        int id, const std::string &name, const std::string &description, const std::string &created, const std::string &modified, bool active, int locked
-    ) : id{id}, name{name}, description{description}, created{created}, modified{modified}, active{active}, locked{locked} {
-
-    }
-
-    TrackLayoutData(
-        const std::string &name, const std::string &description, bool active
-    ) : name{name}, description{description}, active{active} {
-
-    }
-
-    template <typename T>
-    TrackLayoutData(const rapidjson::GenericValue<T> &d) {
-        id = d["id"].GetInt();
-        name = d["name"].GetString();
-        description = d["description"].GetString();
-        created = d["created"].GetString();
-        modified = d["modified"].GetString();
-        active = d["active"].GetBool();
-        locked = d["locked"].GetInt();
-    }
-
-	int id;
-    std::string name;
-    std::string description;
-    std::string created;
-    std::string modified;
-    bool active;
-    int locked;
-};
-
-
- */
