@@ -45,7 +45,7 @@ inline ThreeState stringToThreeStateEnum(const std::string &s) {
     throw moba::UnsupportedOperationException{"ThreeState: invalid value given"};
 }
 
-inline std::string threeStateEnumToString(ErrorId s) {
+inline std::string threeStateEnumToString(ThreeState s) {
     switch(s) {
         case ThreeState::ON:
             return "ON";
