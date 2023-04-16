@@ -31,7 +31,7 @@
 #include "driving_direction.h"
 
 #include "rapidjson/document.h"
-#include "switchstand.h"
+#include "enumswitchstand.h"
 
 using MessageGroups = std::set<Message::MessageGroup>;
 
@@ -243,49 +243,19 @@ struct BrakeVectorContact {
     int localId;
 };
 
-enum class Switch {
-    ON,
-    AUTO,
-    UNSET,
-    TRIGGER,
-    OFF
+struct SwitchingOutput {
+    SwitchingOutput(std::uint32_t localId, bool differ): localId{localId}, differ{differ} {
+        
+    }
+
+    template <typename T>
+    SwitchingOutput(const rapidjson::GenericValue<T> &d) {
+        localId = d["localId"].GetInt();
+        differ = d["differ"].GetBool();
+    }
+    
+    std::uint32_t localId;
+    bool differ;
 };
 
-inline Switch stringToSwitchEnum(const std::string &s) {
-    if(s == "ON") {
-        return Switch::ON;
-    } else if(s == "AUTO") {
-        return Switch::AUTO;
-    } else if(s == "UNSET") {
-        return Switch::UNSET;
-    } else if(s == "TRIGGER") {
-        return Switch::TRIGGER;
-    } else if(s == "OFF") {
-        return Switch::OFF;
-    } else {
-        throw moba::UnsupportedOperationException{"invalid value given"};
-    }
-}
-
-inline std::string switchEnumToString(Switch s) {
-    switch(s) {
-        case Switch::ON:
-            return "ON";
-
-        case Switch::OFF:
-            return "OFF";
-
-        case Switch::AUTO:
-            return "AUTO";
-
-        case Switch::UNSET:
-            return "UNSET";
-
-        case Switch::TRIGGER:
-            return "TRIGGER";
-
-        default:
-            throw moba::UnsupportedOperationException{"invalid value given"};
-    }
-}
-
+using SwitchingOutputs = std::vector<SwitchingOutput>;
