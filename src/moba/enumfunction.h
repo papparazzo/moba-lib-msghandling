@@ -429,3 +429,135 @@ inline std::string controllableFunctionEnumToString(Function s) {
             throw moba::UnsupportedOperationException{"ControllableFunction: invalid value given"};
     }
 }
+
+inline Function getAlternativeFunction(Function s) {
+    switch(s) {
+/*
+        case Function::HORN:
+            return "HORN";
+
+        case Function::WHISTLE_LONG:
+            return "WHISTLE_LONG";
+
+        case Function::BELL:
+            return "BELL";
+
+        case Function::CONDUCTOR_WHISTLE:
+            return Function::DOORSCLOSING;
+
+        case Function::SHOVELING_COAL:            
+            return Function::SHOVELING_COAL_2;
+            
+        case Function::SHOVELING_COAL_2:
+            return Function::SHOVELING_COAL;
+
+        case Function::CEILING_LIGHT:
+            return "CEILING_LIGHT";
+
+        case Function::TABLE_LIGHT_2:
+            return "TABLE_LIGHT_2";
+
+        case Function::GRATE_SHAKING_2:
+            return "GRATE_SHAKING_2";
+
+        case Function::RAIL_JOINTS:
+            return "RAIL_JOINTS";
+
+        case Function::REAR_LIGHT:
+            return "REAR_LIGHT";
+
+        case Function::FRONT_LIGHT:
+            return "FRONT_LIGHT";
+
+        case Function::COUPLING_UNCOUPLING_SOUND:
+            return "COUPLING_UNCOUPLING_SOUND";
+
+        case Function::SPEECHOUTPUT:
+            return "SPEECHOUTPUT";
+
+        case Function::CAB_LIGHT:
+            return "CAB_LIGHT";
+
+        case Function::INJECTOR:
+            return "INJECTOR";
+
+        case Function::REAR_TELEX:
+            return "REAR_TELEX";
+
+        case Function::FRONT_TELEX:
+            return "FRONT_TELEX";
+
+        case Function::REAR_PANTO:
+            return "REAR_PANTO";
+
+        case Function::FRONT_PANTO:
+            return Function::PANTO_SOUND_UP_DOWN;
+
+        case Function::RUNNING_GEARLIGHT:
+            return "RUNNING_GEARLIGHT";
+
+        case Function::PANTO_SOUND_UP_DOWN:
+            return "PANTO_SOUND_UP_DOWN";
+
+        case Function::STATION_ANNOUNCEMENT:
+            return "STATION_ANNOUNCEMENT";
+
+        case Function::FEED_WATER_PUMP:
+            return "FEED_WATER_PUMP";
+
+        case Function::COMPRESSED_AIR:
+            return "COMPRESSED_AIR";
+
+        case Function::RELAYSTEPS:
+            return "RELAYSTEPS";
+
+        case Function::HORN_SHORT:
+            return "HORN_SHORT";
+
+        case Function::WHISTLE_SHORT:
+            return "WHISTLE_SHORT";
+
+        case Function::STATION_ANNOUNCEMENT_2:
+            return "STATION_ANNOUNCEMENT_2";
+
+        case Function::DOORS_CLOSING:
+            return Function::CONDUCTOR_WHISTLE;
+
+        case Function::COUPLING_UNCOUPLING_SOUND_2:
+            return "COUPLING_UNCOUPLING_SOUND_2";
+
+        case Function::BUFFERS_STRIKING:
+            return "BUFFERS_STRIKING";
+
+        case Function::SPEECHOUTPUT_2:
+            return "SPEECHOUTPUT_2";
+
+        case Function::CYLINDER_STEAM:
+            return "CYLINDER_STEAM";
+
+        case Function::COMPRESSED_AIR_2:
+            return "COMPRESSED_AIR_2";
+
+        case Function::RADIO_DIALOG:
+            return "RADIO_DIALOG";
+
+        case Function::PLATFORM_ANNOUNCEMENT:
+            return "PLATFORM_ANNOUNCEMENT";
+
+        case Function::CAB_CONVERSATION:
+            return "CAB_CONVERSATION";
+
+        case Function::SANDING:
+            return "SANDING";
+            */
+        default:
+            throw moba::UnsupportedOperationException{"ControllableFunction: invalid value given"};
+    }
+}
+
+inline Function getFollowupFunction(Function f) {
+    switch(f) {
+        case Function::CONDUCTOR_WHISTLE:
+            return Function::DOORS_CLOSING;
+    }
+}
