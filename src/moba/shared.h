@@ -230,7 +230,7 @@ struct SwitchStandData {
 };
 
 struct BrakeVectorContact {
-    BrakeVectorContact(ContactData contact, int locId = 0) : contact{contact}, localId{localId} {
+    BrakeVectorContact(ContactData contact, int localId = 0) : contact{contact}, localId{localId} {
     }
 
     template <typename T>
