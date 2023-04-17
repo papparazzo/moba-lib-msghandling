@@ -22,7 +22,7 @@
 
 #include "message.h"
 
-struct SystemMessage : public Message {
+struct SystemMessage: public Message {
     enum MessageName {
         SYSTEM_SET_AUTOMATIC_MODE      = 1,
         SYSTEM_TOGGLE_AUTOMATIC_MODE   = 2,
@@ -39,7 +39,7 @@ struct SystemMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = SYSTEM;
 };
 
-struct SystemSetAutomaticMode : public SystemMessage {
+struct SystemSetAutomaticMode: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_AUTOMATIC_MODE;
 
     SystemSetAutomaticMode(const rapidjson::Document &d) {
@@ -62,7 +62,7 @@ struct SystemToggleAutomaticMode: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TOGGLE_AUTOMATIC_MODE;
 };
 
-struct SystemTriggerEmergencyStop : public SystemMessage {
+struct SystemTriggerEmergencyStop: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TRIGGER_EMERGENCY_STOP;
 
     enum class EmergencyTriggerReason {
@@ -103,11 +103,11 @@ struct SystemTriggerEmergencyStop : public SystemMessage {
     EmergencyTriggerReason emergencyTriggerReason;
 };
 
-struct SystemReleaseEmergencyStop : public SystemMessage {
+struct SystemReleaseEmergencyStop: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_RELEASE_EMERGENCY_STOP;
 };
 
-struct SystemSetStandbyMode : public SystemMessage {
+struct SystemSetStandbyMode: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_STANDBY_MODE;
 
     SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
@@ -125,14 +125,14 @@ struct SystemToggleStandbyMode: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TOGGLE_STANDBY_MODE;
 };
 
-struct SystemGetHardwareState : public SystemMessage {
+struct SystemGetHardwareState: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_GET_HARDWARE_STATE;
 
     SystemGetHardwareState() {
     }
 };
 
-struct SystemHardwareStateChanged : public SystemMessage {
+struct SystemHardwareStateChanged: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_STATE_CHANGED;
 
     enum class HardwareState {
@@ -161,10 +161,10 @@ struct SystemHardwareStateChanged : public SystemMessage {
     HardwareState hardwareState;
 };
 
-struct SystemHardwareShutdown : public SystemMessage {
+struct SystemHardwareShutdown: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_SHUTDOWN;
 };
 
-struct SystemHardwareReset : public SystemMessage {
+struct SystemHardwareReset: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_RESET;
 };
