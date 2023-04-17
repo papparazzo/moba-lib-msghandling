@@ -43,7 +43,7 @@ enum class Function {
     GENERATOR                   = 22,  // Generator
     OPERATION_SOUNDS            = 23,  // Betriebsgeräusch
     SHOVELING_COAL              = 26,  // Kohle schaufeln Wie 31…
-    DOORSCLOSING                = 28,  // Türenschließen Wie 156…
+    DOORS_CLOSING               = 28,  // Türenschließen Wie 156…
     BLOWERS                     = 29,  // Lüfter
     SHOVELING_COAL_2            = 31,  // Brennergeräusch Wie 26…
     CEILING_LIGHT               = 32,  // Deckenlicht
@@ -71,7 +71,7 @@ enum class Function {
     HORN_SHORT                  = 138, // Rangierhorn kurz
     WHISTLE_SHORT               = 140, // Rangierpfiff kurz
     STATION_ANNOUNCEMENT_2      = 153, // Bahnhofsdurchsage Wie 107…
-    DOORS_CLOSING               = 156, // Türenschließen
+    DOORS_CLOSING_2             = 156, // Türenschließen Wie 28
     COUPLING_UNCOUPLING_SOUND_2 = 171, // An-/Abkuppelngeräusch Wie 43…
     BUFFERS_STRIKING            = 172, // Pufferstoß
     SPEECHOUTPUT_2              = 173, // Sprachausgabe
@@ -145,7 +145,7 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
         return Function::SHOVELING_COAL;
     }
     if(s == "DOORSCLOSING") {
-        return Function::DOORSCLOSING;
+        return Function::DOORS_CLOSING;
     }
     if(s == "BLOWERS") {
         return Function::BLOWERS;
@@ -223,7 +223,7 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
         return Function::STATION_ANNOUNCEMENT_2;
     }
     if(s == "DOORS_CLOSING") {
-        return Function::DOORS_CLOSING;
+        return Function::DOORS_CLOSING_2;
     }
     if(s == "COUPLING_UNCOUPLING_SOUND_2") {
         return Function::COUPLING_UNCOUPLING_SOUND_2;
@@ -317,7 +317,7 @@ inline std::string controllableFunctionEnumToString(Function s) {
         case Function::SHOVELING_COAL:
             return "SHOVELING_COAL";
 
-        case Function::DOORSCLOSING:
+        case Function::DOORS_CLOSING:
             return "DOORSCLOSING";
 
         case Function::BLOWERS:
@@ -395,7 +395,7 @@ inline std::string controllableFunctionEnumToString(Function s) {
         case Function::STATION_ANNOUNCEMENT_2:
             return "STATION_ANNOUNCEMENT_2";
 
-        case Function::DOORS_CLOSING:
+        case Function::DOORS_CLOSING_2:
             return "DOORS_CLOSING";
 
         case Function::COUPLING_UNCOUPLING_SOUND_2:
