@@ -559,5 +559,7 @@ inline Function getFollowupFunction(Function f) {
     switch(f) {
         case Function::CONDUCTOR_WHISTLE:
             return Function::DOORS_CLOSING;
+        default:
+            throw moba::UnsupportedOperationException{"ControllableFunction: invalid value given"};
     }
 }
