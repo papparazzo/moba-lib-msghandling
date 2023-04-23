@@ -24,6 +24,7 @@
 #include <string>
 #include <functional>
 #include <memory>
+#include <utility>
 
 #include "rawmessage.h"
 #include "rapidjson/document.h"
@@ -44,11 +45,20 @@ class Registry {
         virtual ~Registry() noexcept {
         }
 
+        // TODO: deprecated! remove this
         template<typename T>
         void registerHandler(std::function<void(const T&)> fn) {
             handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
                 T m{data};
                 fn(m);
+            };
+        }
+        
+        template<typename T>
+        void registerHandler(std::function<void(T&&)> fn) {
+            handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
+                T m{data};
+                fn(std::move(m));
             };
         }
 
