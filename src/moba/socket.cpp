@@ -39,7 +39,7 @@ Socket::Socket(const std::string &host, int port): socket{-1} {
     this->port = port;
 }
 
-Socket::~Socket() {
+Socket::~Socket() noexcept {
     if(socket != -1) {
         close(socket);
     }
