@@ -25,7 +25,7 @@
 
 #include "message.h"
 
-struct GuiMessage : public Message {
+struct GuiMessage: public Message {
     enum MessageName {
         GUI_SYSTEM_NOTICE = 1,
     };
@@ -33,7 +33,7 @@ struct GuiMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = GUI;
 };
 
-struct GuiSystemNotice : public GuiMessage {
+struct GuiSystemNotice: public GuiMessage {
     static constexpr std::uint32_t MESSAGE_ID = GUI_SYSTEM_NOTICE;
 
     enum class NoticeType {
