@@ -27,7 +27,7 @@
 #include "enumtogglestate.h"
 #include "enumswitch.h"
 
-struct EnvironmentMessage : public Message {
+struct EnvironmentMessage: public Message {
     enum MessageName {
         ENVIRONMENT_GET_ENVIRONMENT     = 1,
         ENVIRONMENT_SET_ENVIRONMENT     = 2,
@@ -38,11 +38,11 @@ struct EnvironmentMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = ENVIRONMENT;
 };
 
-struct EnvironmentGetEnvironment : public EnvironmentMessage {
+struct EnvironmentGetEnvironment: public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_ENVIRONMENT;
 };
 
-struct EnvironmentSetEnvironment : public EnvironmentMessage {
+struct EnvironmentSetEnvironment: public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_ENVIRONMENT;
 
     EnvironmentSetEnvironment(
@@ -97,10 +97,11 @@ protected:
     }
 };
 
-struct EnvironmentSetAmbience : public EnvironmentMessage {
+struct EnvironmentSetAmbience: public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENCE;
 
-    EnvironmentSetAmbience(ToggleState curtainUp, ToggleState mainLightOn): curtainUp{curtainUp}, mainLightOn{mainLightOn} {
+    EnvironmentSetAmbience(ToggleState curtainUp, ToggleState mainLightOn): 
+    curtainUp{curtainUp}, mainLightOn{mainLightOn} {
     }
 
     EnvironmentSetAmbience(const rapidjson::Document &d) {
@@ -127,10 +128,11 @@ protected:
     }
 };
 
-struct EnvironmentSetAmbientLight : public EnvironmentMessage {
+struct EnvironmentSetAmbientLight: public EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENT_LIGHT;
 
-    EnvironmentSetAmbientLight(int red, int blue, int green, int white): red{red}, blue{blue}, green{green}, white{white} {
+    EnvironmentSetAmbientLight(int red, int blue, int green, int white):
+    red{red}, blue{blue}, green{green}, white{white} {
     }
 
     EnvironmentSetAmbientLight(const rapidjson::Document &d) {
