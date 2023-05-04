@@ -30,7 +30,7 @@
 #include "day.h"
 #include "timestruct.h"
 
-struct TimerMessage : public Message {
+struct TimerMessage: public Message {
     enum MessageName {
         TIMER_GLOBAL_TIMER_EVENT = 1,
         TIMER_GET_GLOBAL_TIMER   = 2,
@@ -40,7 +40,7 @@ struct TimerMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = TIMER;
 };
 
-struct TimerGlobalTimerEvent : public TimerMessage {
+struct TimerGlobalTimerEvent: public TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_GLOBAL_TIMER_EVENT;
 
     TimerGlobalTimerEvent(const rapidjson::Document &d) {
@@ -52,11 +52,11 @@ struct TimerGlobalTimerEvent : public TimerMessage {
     Day curModelDay;
 };
 
-struct TimerGetGlobalTimer : public TimerMessage {
+struct TimerGetGlobalTimer: public TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_GET_GLOBAL_TIMER;
 };
 
-struct TimerSetGlobalTimer : public TimerMessage {
+struct TimerSetGlobalTimer: public TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_SET_GLOBAL_TIMER;
 
     TimerSetGlobalTimer(
@@ -89,7 +89,16 @@ struct TimerSetGlobalTimer : public TimerMessage {
         v.SetObject();
 
         auto tmp = dayEnumToString(curModelDay);
-        v.AddMember("day", rapidjson::Value(tmp.c_str(), tmp.length(), d.GetAllocator()), d.GetAllocator());
+        v.AddMember(
+            "day",
+            rapidjson::Value(
+                tmp.c_str(),
+                tmp.length(),
+                d.GetAllocator()
+            ),
+            d.GetAllocator()
+        );
+        
         v.AddMember("time", curModelTime.getTime(), d.GetAllocator());
 
         d.AddMember("modelTime", v, d.GetAllocator());
