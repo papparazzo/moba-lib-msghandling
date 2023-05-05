@@ -89,7 +89,8 @@ struct LayoutCreateLayout: public LayoutMessage {
     LayoutCreateLayout(const TrackLayoutData &tracklayout): tracklayout{tracklayout} {
     }
 
-    LayoutCreateLayout(const std::string &name, const std::string &description, bool active) : tracklayout{name, description, active} {
+    LayoutCreateLayout(const std::string &name, const std::string &description, bool active):
+    tracklayout{name, description, active} {
     }
 
     LayoutCreateLayout(const rapidjson::Document &d): tracklayout{d} {
