@@ -24,13 +24,12 @@
 #include <map>
 
 #include <moba-common/exception.h>
-
-#include "moba/driving_direction.h"
+#include <moba-common/drivingdirection.h>
 
 struct Train {
 
     Train(
-    std::uint32_t id, std::uint32_t address, std::uint32_t speed, DrivingDirection direction):
+    std::uint32_t id, std::uint32_t address, std::uint32_t speed, moba::DrivingDirection direction):
     id{id}, address {address}, speed{speed}, direction{direction} {
     }
 
@@ -49,7 +48,7 @@ struct Train {
     std::uint32_t address;
     std::uint32_t speed;
 
-    DrivingDirection direction;
+    moba::DrivingDirection direction;
 };
 
 using TrainPtr = std::shared_ptr<Train>;

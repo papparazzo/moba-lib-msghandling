@@ -27,11 +27,11 @@
 #include <utility>
 #include <moba-common/exception.h>
 #include <moba-common/version.h>
-#include "message.h"
-#include "driving_direction.h"
+#include <moba-common/drivingdirection.h>
+#include <moba-common/enumswitchstand.h>
 
+#include "message.h"
 #include "rapidjson/document.h"
-#include "enumswitchstand.h"
 
 using MessageGroups = std::set<Message::MessageGroup>;
 
@@ -223,9 +223,9 @@ struct SwitchStandData {
     template <typename T>
     SwitchStandData(const rapidjson::GenericValue<T> &d) {
         id = d["id"].GetInt();
-        switchStand = stringToSwitchStandEnum(d["switchStand"].GetString());
+        switchStand = moba::stringToSwitchStandEnum(d["switchStand"].GetString());
     }
-    SwitchStand switchStand;
+    moba::SwitchStand switchStand;
     int id;
 };
 

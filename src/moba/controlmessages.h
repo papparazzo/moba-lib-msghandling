@@ -23,7 +23,8 @@
 #include "message.h"
 #include "shared.h"
 #include "train.h"
-#include "driving_direction.h"
+
+#include <moba-common/drivingdirection.h>
 #include <map>
 
 struct ControlMessage: public Message {
@@ -175,7 +176,7 @@ struct ControlBlockLockingFailed: public ControlLock {
 struct ControlPushTrain: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_PUSH_TRAIN;
 
-    ControlPushTrain(std::uint32_t trainId, std::uint32_t fromBlock, std::uint32_t toBlock, DrivingDirection direction):
+    ControlPushTrain(std::uint32_t trainId, std::uint32_t fromBlock, std::uint32_t toBlock, moba::DrivingDirection direction):
     trainId{trainId}, fromBlock{fromBlock}, toBlock{toBlock}, direction{direction} {
     }
 
@@ -207,6 +208,6 @@ struct ControlPushTrain: public ControlMessage {
     std::uint32_t fromBlock;
     std::uint32_t toBlock;
 
-    DrivingDirection direction;
+    moba::DrivingDirection direction;
 };
 
