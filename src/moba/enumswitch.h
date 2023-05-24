@@ -65,4 +65,3 @@ inline std::string switchEnumToString(Switch s) {
             throw moba::UnsupportedOperationException{"invalid value given"};
     }
 }
-

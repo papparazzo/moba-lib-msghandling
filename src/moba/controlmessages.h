@@ -210,4 +210,3 @@ struct ControlPushTrain: public ControlMessage {
 
     moba::DrivingDirection direction;
 };
-
