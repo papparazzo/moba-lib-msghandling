@@ -41,8 +41,7 @@ struct Train {
         direction.setDrivingDirection(d["drivingDirection"].GetString());
     }
 
-    virtual ~Train() {
-    }
+    virtual ~Train() noexcept = default;
 
     std::uint32_t id;
     std::uint32_t address;

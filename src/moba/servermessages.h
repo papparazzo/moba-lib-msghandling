@@ -26,7 +26,7 @@
 #include "message.h"
 #include "shared.h"
 
-struct ServerMessage : public Message {
+struct ServerMessage: public Message {
     enum MessageName {
         SERVER_NEW_CLIENT_STARTED  = 1,
         SERVER_CLIENT_CLOSED       = 2,
@@ -41,7 +41,7 @@ struct ServerMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = SERVER;
 };
 
-struct ServerNewClientStarted : public ServerMessage {
+struct ServerNewClientStarted: public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_NEW_CLIENT_STARTED;
 
     ServerNewClientStarted(const rapidjson::Document &d) : endpoint{d} {
@@ -49,7 +49,7 @@ struct ServerNewClientStarted : public ServerMessage {
     EndpointData endpoint;
 };
 
-struct ServerClientClosed : public ServerMessage {
+struct ServerClientClosed: public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_CLIENT_CLOSED;
 
     ServerClientClosed(const rapidjson::Document &d) {
@@ -59,7 +59,7 @@ struct ServerClientClosed : public ServerMessage {
     long clientId;
 };
 
-struct ServerResetClient : public ServerMessage {
+struct ServerResetClient: public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_RESET_CLIENT;
 
     ServerResetClient(long appId) : appId{appId} {
@@ -74,7 +74,7 @@ struct ServerResetClient : public ServerMessage {
     long appId;
 };
 
-struct ServerInfoReq : public ServerMessage {
+struct ServerInfoReq: public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_INFO_REQ;
     ServerInfoReq() {
     }
