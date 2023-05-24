@@ -36,8 +36,7 @@ struct RawMessage {
     RawMessage(std::uint32_t grpId = 0, std::uint32_t msgId = 0) : groupId{grpId}, messageId{msgId} {
     }
 
-    virtual ~RawMessage() noexcept {
-    }
+    virtual ~RawMessage() noexcept = default;
 
     bool operator!() const {
         if(groupId && messageId) {

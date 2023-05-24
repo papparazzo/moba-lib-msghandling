@@ -32,82 +32,81 @@
 #include "servermessages.h"
 
 class Registry {
-    public:
+public:
 
-        using HandlerMsgFnWrapper = std::function<void(const rapidjson::Document &data)>;
-        using HandlerDefFnWrapper = std::function<void(std::uint32_t, std::uint32_t, const rapidjson::Document &data)>;
+    using HandlerMsgFnWrapper = std::function<void(const rapidjson::Document &data)>;
+    using HandlerDefFnWrapper = std::function<void(std::uint32_t, std::uint32_t, const rapidjson::Document &data)>;
 
-        Registry() {
+    Registry() {
+    }
+
+    Registry(const Registry& orig) = delete;
+
+    virtual ~Registry() noexcept {
+    }
+
+    // TODO: deprecated! remove this
+    template<typename T>
+    void registerHandler(std::function<void(const T&)> fn) {
+        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
+            T m{data};
+            fn(m);
+        };
+    }
+    
+    template<typename T>
+    void registerHandler(std::function<void(T&&)> fn) {
+        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
+            T m{data};
+            fn(std::move(m));
+        };
+    }
+
+    template<typename T>
+    void registerHandler(std::function<void()> fn) {
+        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
+            fn();
+        };
+    }
+
+    void registerDefaultHandler(HandlerDefFnWrapper fn) {
+        defHandler = fn;
+    }
+
+    void registerAuxiliaryHandler(HandlerDefFnWrapper fn) {
+        auxHandler = fn;
+    }
+
+    auto handleMsg(const RawMessage &msg) -> bool {
+        if(!msg) {
+            return true;
         }
 
-        Registry(const Registry& orig) = delete;
-
-        virtual ~Registry() noexcept {
+        if(auxHandler) {
+            auxHandler(msg.groupId, msg.messageId, msg.data);
         }
 
-        // TODO: deprecated! remove this
-        template<typename T>
-        void registerHandler(std::function<void(const T&)> fn) {
-            handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
-                T m{data};
-                fn(m);
-            };
-        }
-        
-        template<typename T>
-        void registerHandler(std::function<void(T&&)> fn) {
-            handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
-                T m{data};
-                fn(std::move(m));
-            };
-        }
+        auto iter = handlers.find(msg.groupId);
 
-        template<typename T>
-        void registerHandler(std::function<void()> fn) {
-            handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
-                fn();
-            };
-        }
-
-        void registerDefaultHandler(HandlerDefFnWrapper fn) {
-            defHandler = fn;
-        }
-
-        void registerAuxiliaryHandler(HandlerDefFnWrapper fn) {
-            auxHandler = fn;
-        }
-
-        auto handleMsg(const RawMessage &msg) -> bool {
-            if(!msg) {
+        if(iter != handlers.end()) {
+            auto iter2 = iter->second.find(msg.messageId);
+            if(iter2 != iter->second.end()) {
+                iter2->second(msg.data);
                 return true;
             }
-
-            if(auxHandler) {
-                auxHandler(msg.groupId, msg.messageId, msg.data);
-            }
-
-            auto iter = handlers.find(msg.groupId);
-
-            if(iter != handlers.end()) {
-                auto iter2 = iter->second.find(msg.messageId);
-                if(iter2 != iter->second.end()) {
-                    iter2->second(msg.data);
-                    return true;
-                }
-            }
-
-            if(defHandler) {
-                defHandler(msg.groupId, msg.messageId, msg.data);
-            }
-            return false;
         }
 
-    protected:
-        using HandlerMapG = std::unordered_map<std::uint32_t, HandlerMsgFnWrapper>;
-        using HandlerMapF = std::unordered_map<std::uint32_t, HandlerMapG>;
+        if(defHandler) {
+            defHandler(msg.groupId, msg.messageId, msg.data);
+        }
+        return false;
+    }
 
-        HandlerMapF         handlers;
-        HandlerDefFnWrapper defHandler;
-        HandlerDefFnWrapper auxHandler;
+protected:
+    using HandlerMapG = std::unordered_map<std::uint32_t, HandlerMsgFnWrapper>;
+    using HandlerMapF = std::unordered_map<std::uint32_t, HandlerMapG>;
+
+    HandlerMapF         handlers;
+    HandlerDefFnWrapper defHandler;
+    HandlerDefFnWrapper auxHandler;
 };
-

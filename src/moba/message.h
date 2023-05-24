@@ -43,8 +43,7 @@ struct Message {
         CONTROL     = 10,
     };
 
-    virtual ~Message() noexcept {
-    }
+    virtual ~Message() noexcept = default;
 
     virtual rapidjson::Document getJsonDocument() const {
         rapidjson::Document d;
