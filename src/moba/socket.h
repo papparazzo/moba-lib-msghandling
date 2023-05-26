@@ -26,8 +26,7 @@
 
 class SocketException: public std::exception {
 public:
-    virtual ~SocketException() noexcept {
-    }
+    virtual ~SocketException() noexcept = default;
 
     SocketException(const std::string &what): what__{what} {
     }
