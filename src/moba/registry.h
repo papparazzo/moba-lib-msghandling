@@ -42,8 +42,7 @@ public:
 
     Registry(const Registry& orig) = delete;
 
-    virtual ~Registry() noexcept {
-    }
+    virtual ~Registry() noexcept = default;
 
     // TODO: deprecated! remove this
     template<typename T>
