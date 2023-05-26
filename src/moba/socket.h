@@ -25,6 +25,9 @@
 #include <memory>
 
 class SocketException: public std::exception {
+
+    std::string what__;
+    
 public:
     virtual ~SocketException() noexcept = default;
 
@@ -34,9 +37,6 @@ public:
     virtual const char* what() const noexcept {
         return this->what__.c_str();
     }
-
-private:
-    std::string what__;
 };
 
 class Socket {
