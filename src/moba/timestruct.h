@@ -29,6 +29,8 @@ struct Time final {
     Time(const std::string &time);
     Time(const Time& t) = default;
 
+    virtual ~Time() noexcept = default;
+    
     unsigned int getHours() const;
     unsigned int getMinutes() const;
     unsigned int getTime() const;
@@ -42,8 +44,6 @@ struct Time final {
 
     friend bool operator<= (const Time& t1, const Time& t2);
     friend bool operator>= (const Time& t1, const Time& t2);
-
-
 
 private:
     unsigned int time;
