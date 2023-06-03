@@ -56,4 +56,3 @@ protected:
 };
 
 using SocketPtr = std::shared_ptr<Socket>;
-
