@@ -30,8 +30,8 @@
 #include <moba-common/drivingdirection.h>
 #include <moba-common/enumswitchstand.h>
 
+#include "nlohmann/json.hpp"
 #include "message.h"
-#include "rapidjson/document.h"
 
 using MessageGroups = std::set<Message::MessageGroup>;
 
@@ -45,13 +45,12 @@ struct AppData {
     ) : appName{appName}, version{version}, groups{groups} {
     }
 
-    template <typename T>
-    AppData(const rapidjson::GenericValue<T> &d) {
-        appName = d["appName"].GetString();
-        version = d["version"].GetString();
-        for(auto &v : d["msgGroups"].GetArray()) {
-            groups.insert(static_cast<Message::MessageGroup>(v.GetInt()));
+    AppData(const nlohmann::json &d) {
+        version = d["version"].get<std::string>();  
+        for(auto &v : d["msgGroups"]) {
+            groups.insert(static_cast<Message::MessageGroup>(v.get<int>()));
         }
+        appName = d["appName"].get<std::string>();
     }
 
     std::string appName;
@@ -65,12 +64,11 @@ struct EndpointData {
     ) : appInfo{appInfo}, appId{appId}, startTime{startTime}, addr{addr} {
     }
 
-    template <typename T>
-    EndpointData(const rapidjson::GenericValue<T> &d) {
-        appId = d["appID"].GetInt();
-        addr = d["addr"].GetString();
-        port = d["port"].GetInt();
-        startTime = d["startTime"].GetString();
+    EndpointData(const nlohmann::json &d) {
+        appId = d["appID"].get<int>();
+        addr = d["addr"].get<std::string>();
+        port = d["port"].get<int>();
+        startTime = d["startTime"].get<std::string>();
         appInfo = AppData{d["appInfo"]};
     }
 
@@ -94,15 +92,14 @@ struct TrackLayoutData {
 
     }
 
-    template <typename T>
-    TrackLayoutData(const rapidjson::GenericValue<T> &d) {
-        id = d["id"].GetInt();
-        name = d["name"].GetString();
-        description = d["description"].GetString();
-        created = d["created"].GetString();
-        modified = d["modified"].GetString();
-        active = d["active"].GetBool();
-        locked = d["locked"].GetInt();
+    TrackLayoutData(const nlohmann::json &d) {
+        id = d["id"].get<int>();
+        name = d["name"].get<std::string>();
+        description = d["description"].get<std::string>();
+        created = d["created"].get<std::string>();
+        modified = d["modified"].get<std::string>();
+        active = d["active"].get<bool>();
+        locked = d["locked"].get<int>();
     }
 
 	int id;
@@ -136,17 +133,17 @@ struct SpecificLayoutData {
         symbols = std::make_shared<Symbols>();
     }
 
-    SpecificLayoutData(const rapidjson::Document &d) {
+    SpecificLayoutData(const nlohmann::json &d) {
         symbols = std::make_shared<Symbols>();
-        id = d["id"].GetInt();
+        id = d["id"].get<int>();
 
-        for(auto &iter : d["symbols"].GetArray()) {
+        for(auto &iter : d["symbols"]) {
             (*symbols)[{
-                iter["xPos"].GetInt(),
-                iter["yPos"].GetInt()
+                iter["xPos"].get<int>(),
+                iter["yPos"].get<int>()
             }] = TrackLayoutSymbol(
-                iter["id"].GetInt(),
-                iter["symbol"].GetInt()
+                iter["id"].get<int>(),
+                iter["symbol"].get<int>()
             );
         }
     }
@@ -159,10 +156,9 @@ struct ContactData {
     ContactData(std::uint16_t modulAddr = 0, std::uint16_t contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
     }
 
-    template <typename T>
-    ContactData(const rapidjson::GenericValue<T> &d) {
-        modulAddr = d["modulAddr"].GetInt();
-        contactNb = d["contactNb"].GetInt();
+    ContactData(const nlohmann::json &d) {
+        modulAddr = d["modulAddr"].get<int>();
+        contactNb = d["contactNb"].get<int>();
     }
 
     friend bool operator<(const ContactData &l, const ContactData &r) {
@@ -186,10 +182,9 @@ struct ContactTriggerData {
 
     }
 
-    template <typename T>
-    ContactTriggerData(const rapidjson::GenericValue<T> &d): contactData{d["contact"]} {
-        state = d["state"].GetBool();
-        time = d["time"].GetInt();
+    ContactTriggerData(const nlohmann::json &d): contactData{d["contact"]} {
+        state = d["state"].get<bool>();
+        time = d["time"].get<int>();
     }
 
     ContactData contactData;
@@ -199,12 +194,12 @@ struct ContactTriggerData {
 
 struct BlockContactData {
     template <typename T>
-    BlockContactData(const rapidjson::GenericValue<T> &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
-        if(!d["trainId"].IsNull()) {
-            trainId = d["trainId"].GetInt();
+    BlockContactData(const nlohmann::json &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
+        if(!d["trainId"].is_null()) {
+            trainId = d["trainId"].get<int>();
         }
         
-        id = d["id"].GetInt();
+        id = d["id"].get<int>();
     }
 
     ContactData brakeTriggerContact;
@@ -220,10 +215,9 @@ struct SwitchStandData {
     SwitchStandData() {
     }
 
-    template <typename T>
-    SwitchStandData(const rapidjson::GenericValue<T> &d) {
-        id = d["id"].GetInt();
-        switchStand = moba::stringToSwitchStandEnum(d["switchStand"].GetString());
+    SwitchStandData(const nlohmann::json &d) {
+        id = d["id"].get<int>();
+        switchStand = moba::stringToSwitchStandEnum(d["switchStand"].get<std::string>());
     }
     moba::SwitchStand switchStand;
     int id;
@@ -233,10 +227,9 @@ struct BrakeVectorContact {
     BrakeVectorContact(ContactData contact, int localId = 0) : contact{contact}, localId{localId} {
     }
 
-    template <typename T>
-    BrakeVectorContact(const rapidjson::GenericValue<T> &d) {
+    BrakeVectorContact(const nlohmann::json &d) {
         contact = ContactData{d["contact"]};
-        localId = d["localId"].GetInt();
+        localId = d["localId"].get<int>();
     }
 
     ContactData contact;
@@ -248,10 +241,9 @@ struct SwitchingOutput {
         
     }
 
-    template <typename T>
-    SwitchingOutput(const rapidjson::GenericValue<T> &d) {
-        localId = d["localId"].GetInt();
-        differ = d["differ"].GetBool();
+    SwitchingOutput(const nlohmann::json &d) {
+        localId = d["localId"].get<int>();
+        differ = d["differ"].get<bool>();
     }
     
     std::uint32_t localId;

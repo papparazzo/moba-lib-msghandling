@@ -23,11 +23,9 @@
 #include <string>
 #include <cstddef>
 #include <cstdint>
-
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-
 #include <iostream>
+
+#include "nlohmann/json.hpp"
 
 struct Message {
     enum MessageGroup {
@@ -45,10 +43,8 @@ struct Message {
 
     virtual ~Message() noexcept = default;
 
-    virtual rapidjson::Document getJsonDocument() const {
-        rapidjson::Document d;
-        d.SetNull();
-        return d;
+    virtual nlohmann::json getJsonDocument() const {
+        return nlohmann::json{};
     }
 };
 

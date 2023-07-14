@@ -29,12 +29,6 @@
 
 #include <cstdint>
 
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
-
-#include "rapidjson/socketwritestream.h"
-#include "rapidjson/socketreadstream.h"
-
 #include "clientmessages.h"
 #include "endpoint.h"
 #include "shared.h"
@@ -63,7 +57,7 @@ long Endpoint::registerApp() {
 
     auto msg = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
 
-    if(!msg.data.IsInt()) {
+    if(!msg.data.is_number()) {
         throw SocketException{"msg data is not an int"};
     }
 
@@ -71,7 +65,7 @@ long Endpoint::registerApp() {
         throw SocketException{"did not recieve CLIENT_CONNECTED"};
     }
 
-    return appId = msg.data.GetInt();
+    return appId = msg.data.get<int>();
 }
 
 RawMessage Endpoint::recieveMsg(time_t timeoutSec) {
@@ -114,8 +108,9 @@ RawMessage Endpoint::waitForNewMsg() {
     for(int i = 0; i < 3; ++i) {
         d[i] = ::ntohl(d[i]);
     }
-    rapidjson::SocketReadStream srs{socket->getSocket(), d[2]};
-    return RawMessage{d[0], d[1], srs};
+  //  rapidjson::SocketReadStream srs{socket->getSocket(), d[2]};
+  //  return RawMessage{d[0], d[1], srs};
+  return RawMessage{};
 }
 
 std::string Endpoint::waitForNewMsgAsString() {
@@ -143,15 +138,15 @@ std::string Endpoint::waitForNewMsgAsString() {
     return ss.str();
 }
 
-void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson::Document &data) {
+void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const nlohmann::json &data) {
     std::lock_guard<std::mutex> l{m};
 
-    rapidjson::StringBuffer buffer;
-    rapidjson::Writer writer{buffer};
-    data.Accept(writer);
+    //rapidjson::StringBuffer buffer;
+    //rapidjson::Writer writer{buffer};
+    //data.Accept(writer);
 
-    size_t bufferSize = buffer.GetSize();
-    sendMsg(grpId, msgId, buffer.GetString(), bufferSize);
+    //size_t bufferSize = buffer.GetSize();
+    //sendMsg(grpId, msgId, buffer.GetString(), bufferSize);
 }
 
 void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const char *buffer, std::size_t bufferSize) {

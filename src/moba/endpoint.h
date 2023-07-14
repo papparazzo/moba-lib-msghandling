@@ -28,7 +28,7 @@
 #include "socket.h"
 #include "shared.h"
 
-#include "rapidjson/document.h"
+#include "nlohmann/json.hpp"
 
 class Endpoint {
 public:
@@ -52,7 +52,7 @@ public:
         sendMsg(T::GROUP_ID, T::MESSAGE_ID, msg.getJsonDocument());
     }
 
-    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const rapidjson::Document &data);
+    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const nlohmann::json &data);
 
     void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const std::string &data) {
         sendMsg(grpId, msgId, data.c_str(), data.length());

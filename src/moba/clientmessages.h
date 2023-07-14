@@ -52,10 +52,8 @@ struct ClientEchoReq: public ClientMessage {
     ClientEchoReq(const std::string &payload): payload{payload} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetString(payload.c_str(), payload.length(), d.GetAllocator());
-        return d;
+    nlohmann::json getJsonDocument() const override {
+        return nlohmann::json{payload};
     }
 
     std::string payload;
@@ -64,8 +62,8 @@ struct ClientEchoReq: public ClientMessage {
 struct ClientEchoRes: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_RES;
 
-    ClientEchoRes(const rapidjson::Document &d) {
-        payload = d.GetString();
+    ClientEchoRes(const nlohmann::json &d) {
+        payload = d.get<std::string>();
     }
 
     std::string payload;
@@ -78,19 +76,21 @@ struct ClientError: public ClientMessage {
         errorId{errorId}, additionalMsg{additionalMsg} 
     {
     }
-    
-    ClientError(const rapidjson::Document &d) {
-        auto s = d["errorId"].GetString();
+
+    ClientError(const nlohmann::json &d) {
+        auto s = d["errorId"].get<std::string>();
         errorId = stringToErrorIdEnum(s);
-        additionalMsg = d["additonalMsg"].GetString();
+        additionalMsg = d["additonalMsg"].get<std::string>();
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
+    nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+        /*
         d.SetObject();
         auto cf = errorIdEnumToString(errorId);
         d.AddMember("errorId", rapidjson::Value(cf.c_str(), cf.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("additonalMsg", rapidjson::Value(additionalMsg.c_str(), additionalMsg.length(), d.GetAllocator()), d.GetAllocator());
+        */
         return d;
     }
     
@@ -103,10 +103,10 @@ struct ClientStart: public ClientMessage {
 
     ClientStart(const AppData &appData): appData{appData} {
     }
-
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        std::string version = appData.version.getString();
+/*
+    nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+        std::string version = appData.version.get<std::string>();
         d.SetObject();
         d.AddMember("appName", rapidjson::Value(appData.appName.c_str(), appData.appName.length(), d.GetAllocator()), d.GetAllocator());
         d.AddMember("version", rapidjson::Value(version.c_str(), version.length(), d.GetAllocator()), d.GetAllocator());
@@ -119,15 +119,16 @@ struct ClientStart: public ClientMessage {
         d.AddMember("msgGroups", g, d.GetAllocator());
         return d;
     }
+*/
 
     AppData appData;
 };
 
 struct ClientConnected: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_CONNECTED;
-
-    ClientConnected(const rapidjson::Document &d) {
-        appId = d.GetInt();
+  
+    ClientConnected(const nlohmann::json &d) {
+        appId = d.get<int>();
     }
 
     long appId;
@@ -139,7 +140,7 @@ struct ClientClose: public ClientMessage {
 
 struct ClientShutdown: public ClientMessage {
 
-    ClientShutdown(const rapidjson::Document &d) {
+    ClientShutdown(const nlohmann::json &d) {
     }
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };

@@ -23,14 +23,13 @@
 #include <string>
 #include <cstdint>
 
-#include "rapidjson/document.h"
-#include "rapidjson/writer.h"
+#include "nlohmann/json.hpp"
 
 struct RawMessage {
 
     template<typename InputStream>
     RawMessage(std::uint32_t grpId, std::uint32_t msgId, InputStream &s) : groupId{grpId}, messageId{msgId} {
-        data.ParseStream(s);
+        //data.ParseStream(s);
     }
 
     RawMessage(std::uint32_t grpId = 0, std::uint32_t msgId = 0) : groupId{grpId}, messageId{msgId} {
@@ -47,11 +46,11 @@ struct RawMessage {
 
     template<typename OutputStream>
     void Accept(OutputStream &s) const {
-        rapidjson::Writer<OutputStream> w{s};
-        data.Accept(w);
+       // rapidjson::Writer<OutputStream> w{s};
+     //   data.Accept(w);
     }
 
-    rapidjson::Document data;
-    std::uint32_t groupId;
-    std::uint32_t messageId;
+    nlohmann::json data;
+    std::uint32_t  groupId;
+    std::uint32_t  messageId;
 };
