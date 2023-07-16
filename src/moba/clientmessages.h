@@ -21,6 +21,8 @@
 #pragma once
 
 #include <moba-common/version.h>
+
+#include <utility>
 #include "message.h"
 #include "shared.h"
 #include "enumerrorid.h"
@@ -49,7 +51,7 @@ struct ClientVoid: public ClientMessage {
 struct ClientEchoReq: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_REQ;
 
-    explicit ClientEchoReq(const std::string &payload): payload{payload} {
+    explicit ClientEchoReq(std::string payload): payload{std::move(payload)} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -72,8 +74,8 @@ struct ClientEchoRes: public ClientMessage {
 struct ClientError: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ERROR;
    
-    ClientError(ErrorId errorId, const std::string &additionalMsg): 
-        errorId{errorId}, additionalMsg{additionalMsg} 
+    ClientError(ErrorId errorId, std::string additionalMsg):
+    errorId{errorId}, additionalMsg{std::move(additionalMsg)}
     {
     }
 
@@ -101,7 +103,7 @@ struct ClientError: public ClientMessage {
 struct ClientStart: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_START;
 
-    ClientStart(const AppData &appData): appData{appData} {
+    explicit ClientStart(AppData appData): appData{std::move(appData)} {
     }
 /*
     nlohmann::json getJsonDocument() const override {
@@ -140,7 +142,7 @@ struct ClientClose: public ClientMessage {
 
 struct ClientShutdown: public ClientMessage {
 
-    explicit ClientShutdown(const nlohmann::json &d) {
+    explicit ClientShutdown(const nlohmann::json &) {
     }
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };
