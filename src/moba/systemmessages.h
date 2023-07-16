@@ -42,17 +42,15 @@ struct SystemMessage: public Message {
 struct SystemSetAutomaticMode: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_AUTOMATIC_MODE;
 
-    SystemSetAutomaticMode(const rapidjson::Document &d) {
-        automaticActive = d.GetBool();
+    SystemSetAutomaticMode(const nlohmann::json &d) {
+        automaticActive = d.get<bool>();
     }
 
     SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetBool(automaticActive);
-        return d;
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        return nlohmann::json{automaticActive};
     }
 
     bool automaticActive;
@@ -77,25 +75,25 @@ struct SystemTriggerEmergencyStop: public SystemMessage {
     ) : emergencyTriggerReason{emergencyTriggerReason} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
         switch(emergencyTriggerReason) {
             case EmergencyTriggerReason::CENTRAL_STATION:
-                d.SetString("CENTRAL_STATION");
+                d = "CENTRAL_STATION";
                 break;
 
             case EmergencyTriggerReason::SOFTWARE_MANUELL:
-                d.SetString("SOFTWARE_MANUELL");
+                d = "SOFTWARE_MANUELL";
                 break;
 
             case EmergencyTriggerReason::SELF_ACTING_BY_EXTERN_SWITCHING:
-                d.SetString("SELF_ACTING_BY_EXTERN_SWITCHING");
+                d = "SELF_ACTING_BY_EXTERN_SWITCHING";
                 break;
 
             default:
             case EmergencyTriggerReason::EXTERN:
-                d.SetString("EXTERN");
+                d = "EXTERN";
                 break;
         }
         return d;
@@ -113,10 +111,8 @@ struct SystemSetStandbyMode: public SystemMessage {
     SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetBool(standbyActive);
-        return d;
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        return nlohmann::json{standbyActive};
     }
     bool standbyActive;
 };
@@ -143,8 +139,8 @@ struct SystemHardwareStateChanged: public SystemMessage {
         AUTOMATIC
     };
 
-    SystemHardwareStateChanged(const rapidjson::Document &d) {
-        std::string status = d.GetString();
+    SystemHardwareStateChanged(const nlohmann::json &d) {
+        std::string status = d.get<std::string>();
         if(status == "ERROR") {
             hardwareState = HardwareState::ERROR;
         } else if(status == "EMERGENCY_STOP") {

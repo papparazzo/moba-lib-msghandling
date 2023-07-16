@@ -38,7 +38,7 @@ struct Train {
         address = d["address"].GetInt();
         speed   = d["speed"].GetInt();
         id      = d["id"].GetInt();
-        direction.setDrivingDirection(d["drivingDirection"].GetString());
+        direction.setDrivingDirection(d["drivingDirection"].get<std::string>());
     }
 
     virtual ~Train() noexcept = default;

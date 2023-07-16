@@ -43,8 +43,8 @@ struct TimerMessage: public Message {
 struct TimerGlobalTimerEvent: public TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_GLOBAL_TIMER_EVENT;
 
-    TimerGlobalTimerEvent(const rapidjson::Document &d) {
-        curModelDay = stringToDayEnum(d["day"].GetString());
+    TimerGlobalTimerEvent(const nlohmann::json &d) {
+        curModelDay = stringToDayEnum(d["day"].get<std::string>());
         time = Time{d["time"].GetUint()};
     }
 
@@ -69,9 +69,9 @@ struct TimerSetGlobalTimer: public TimerMessage {
     {
     }
 
-    TimerSetGlobalTimer(const rapidjson::Document &d) {
+    TimerSetGlobalTimer(const nlohmann::json &d) {
         auto modelTime = d["modelTime"].GetObject();
-        curModelDay = stringToDayEnum(modelTime["day"].GetString());
+        curModelDay = stringToDayEnum(modelTime["day"].get<std::string>());
         curModelTime = Time{modelTime["time"].GetUint()};
         multiplicator = d["multiplicator"].GetInt();
 
@@ -81,7 +81,7 @@ struct TimerSetGlobalTimer: public TimerMessage {
         sunsetStartTime = Time{d["sunsetStartTime"].GetUint()};
     }
 
-    rapidjson::Document getJsonDocument() const override {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         rapidjson::Document d;
         d.SetObject();
 

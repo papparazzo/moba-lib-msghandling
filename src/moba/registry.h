@@ -33,8 +33,8 @@
 class Registry {
 public:
 
-    using HandlerMsgFnWrapper = std::function<void(const rapidjson::Document &data)>;
-    using HandlerDefFnWrapper = std::function<void(std::uint32_t, std::uint32_t, const rapidjson::Document &data)>;
+    using HandlerMsgFnWrapper = std::function<void(const nlohmann::json &data)>;
+    using HandlerDefFnWrapper = std::function<void(std::uint32_t, std::uint32_t, const nlohmann::json &data)>;
 
     Registry() {
     }
@@ -46,7 +46,7 @@ public:
     // TODO: deprecated! remove this
     template<typename T>
     void registerHandler(std::function<void(const T&)> fn) {
-        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
+        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const nlohmann::json &data) {
             T m{data};
             fn(m);
         };
@@ -54,7 +54,7 @@ public:
     
     template<typename T>
     void registerHandler(std::function<void(T&&)> fn) {
-        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
+        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const nlohmann::json &data) {
             T m{data};
             fn(std::move(m));
         };
@@ -62,7 +62,7 @@ public:
 
     template<typename T>
     void registerHandler(std::function<void()> fn) {
-        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const rapidjson::Document &data) {
+        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const nlohmann::json &data) {
             fn();
         };
     }

@@ -55,17 +55,17 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
     InterfaceConnectivityStateChanged(Connectivity connectivity): connectivity{connectivity} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
         switch(connectivity) {
             case Connectivity::CONNECTED:
-                d.SetString("CONNECTED");
+                d = "CONNECTED";
                 break;
 
             case Connectivity::ERROR:
             default:
-                d.SetString("ERROR");
+                d = "ERROR";
                 break;
         }
         return d;
@@ -77,24 +77,24 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
 struct InterfaceContactTriggered: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
-    InterfaceContactTriggered(const rapidjson::Document &d): contactTrigger{d} {
+    InterfaceContactTriggered(const nlohmann::json &d): contactTrigger{d} {
     }
 
     InterfaceContactTriggered(const ContactTriggerData &contactTrigger): contactTrigger{contactTrigger} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
-        d.AddMember("state", contactTrigger.state, d.GetAllocator());
-        d.AddMember("time", contactTrigger.time, d.GetAllocator());
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        rapidjson::Value v;
-        v.SetObject();
-        v.AddMember("modulAddr", contactTrigger.contactData.modulAddr, d.GetAllocator());
-        v.AddMember("contactNb", contactTrigger.contactData.contactNb, d.GetAllocator());
+        d["state"] = contactTrigger.state;
+        d["time"] = contactTrigger.time;
 
-        d.AddMember("contact", v, d.GetAllocator());
+        nlohmann::json  v;
+
+        v["modulAddr"] = contactTrigger.contactData.modulAddr;
+        v["contactNb"] = contactTrigger.contactData.contactNb;
+
+        d["contact"] = v;
         return d;
     }
 
@@ -104,8 +104,8 @@ struct InterfaceContactTriggered: public InterfaceMessage {
 struct InterfaceSetBrakeVector: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
 
-    InterfaceSetBrakeVector(const rapidjson::Document &d) {
-        for(auto &iter: d.GetArray()) {
+    InterfaceSetBrakeVector(const nlohmann::json &d) {
+        for(auto &iter: d) {
             items.push_back(BrakeVectorContact{iter});
         }
     }
@@ -116,8 +116,8 @@ struct InterfaceSetBrakeVector: public InterfaceMessage {
 struct InterfaceResetBrakeVector: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = RESET_BRAKE_VECTOR;
 
-    InterfaceResetBrakeVector(const rapidjson::Document &d) {
-        for(auto &iter: d.GetArray()) {
+    InterfaceResetBrakeVector(const nlohmann::json &d) {
+        for(auto &iter: d) {
             items.push_back(BrakeVectorContact{iter});
         }
     }
@@ -131,17 +131,16 @@ struct InterfaceSetLocoSpeed: public InterfaceMessage {
     InterfaceSetLocoSpeed(std::uint32_t localId, std::uint16_t speed): localId{localId}, speed{speed} {
     }
 
-    InterfaceSetLocoSpeed(const rapidjson::Document &d) {
-        localId = d["localId"].GetInt();
-        speed = d["speed"].GetInt();
+    InterfaceSetLocoSpeed(const nlohmann::json &d) {
+        localId = d["localId"].get<int>();
+        speed = d["speed"].get<int>();
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        d.AddMember("localId", localId, d.GetAllocator());
-        d.AddMember("speed", speed, d.GetAllocator());
+        d["localId"] = localId;
+        d["speed"] = speed;
         return d;
     }
 
@@ -166,33 +165,32 @@ struct InterfaceSetLocoDirection: public InterfaceMessage {
          direction = static_cast<DrivingDirection>(drivingDirection);
     }
 
-    InterfaceSetLocoDirection(const rapidjson::Document &d) {
-        localId = d["localId"].GetInt();
-        auto s = d["direction"].GetString();
+    InterfaceSetLocoDirection(const nlohmann::json &d) {
+        localId = d["localId"].get<int>();
+        auto s = d["direction"].get<std::string>();
         direction = getDirectionFromString(s);
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        d.AddMember("localId", localId, d.GetAllocator());
+        d["localId"] = localId;
         switch(direction) {
             case DrivingDirection::FORWARD:
-                d.AddMember("direction", rapidjson::Value("FORWARD", d.GetAllocator()), d.GetAllocator());
+                d["direction"] = "FORWARD";
                 break;
 
             case DrivingDirection::BACKWARD:
-                d.AddMember("direction", rapidjson::Value("BACKWARD", d.GetAllocator()), d.GetAllocator());
+                d["direction"] = "BACKWARD";
                 break;
 
             case DrivingDirection::TOGGLE:
-                d.AddMember("direction", rapidjson::Value("TOGGLE", d.GetAllocator()), d.GetAllocator());
+                d["direction"] = "TOGGLE";
                 break;
 
             case DrivingDirection::RETAIN:
             default:
-                d.AddMember("direction", rapidjson::Value("RETAIN", d.GetAllocator()), d.GetAllocator());
+                d["direction"] = "RETAIN";
                 break;
         }
         return d;
@@ -223,20 +221,19 @@ struct InterfaceSetLocoFunction: public InterfaceMessage {
     InterfaceSetLocoFunction(std::uint32_t localId, Function function, bool active): localId{localId}, function{function}, active{active} {
     }
 
-    InterfaceSetLocoFunction(const rapidjson::Document &d) {
-        localId = d["localId"].GetInt();
-        auto s = d["function"].GetString();
+    InterfaceSetLocoFunction(const nlohmann::json &d) {
+        localId = d["localId"].get<int>();
+        auto s = d["function"].get<std::string>();
         function = stringToControllableFunctionEnum(s);
-        active = d["active"].GetBool();
+        active = d["active"].get<bool>();
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
-        d.AddMember("localId", localId, d.GetAllocator());
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        auto cf = controllableFunctionEnumToString(function);
-        d.AddMember("function", rapidjson::Value(cf.c_str(), cf.length(), d.GetAllocator()), d.GetAllocator());
+        d["localId"] = localId;
+        d["function"] = controllableFunctionEnumToString(function);
+
         return d;
     }
 
@@ -248,8 +245,8 @@ struct InterfaceSetLocoFunction: public InterfaceMessage {
 struct InterfaceSwitchAccessoryDecoders: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SWITCH_ACCESSORY_DECODERS;
 
-    InterfaceSwitchAccessoryDecoders(const rapidjson::Document &d) {
-        for(auto &iter: d.GetArray()) {
+    InterfaceSwitchAccessoryDecoders(const nlohmann::json &d) {
+        for(auto &iter: d) {
             switchingOutputs.push_back(iter);
         }
     }

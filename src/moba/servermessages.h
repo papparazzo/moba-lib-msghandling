@@ -44,7 +44,7 @@ struct ServerMessage: public Message {
 struct ServerNewClientStarted: public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_NEW_CLIENT_STARTED;
 
-    ServerNewClientStarted(const rapidjson::Document &d) : endpoint{d} {
+    ServerNewClientStarted(const nlohmann::json &d) : endpoint{d} {
     }
     EndpointData endpoint;
 };
@@ -52,8 +52,8 @@ struct ServerNewClientStarted: public ServerMessage {
 struct ServerClientClosed: public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_CLIENT_CLOSED;
 
-    ServerClientClosed(const rapidjson::Document &d) {
-        clientId = d.GetInt64();
+    ServerClientClosed(const nlohmann::json &d) {
+        clientId = d.get<long>();
     }
 
     long clientId;
@@ -65,9 +65,9 @@ struct ServerResetClient: public ServerMessage {
     ServerResetClient(long appId) : appId{appId} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetInt64(appId);
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+        d = appId;
         return d;
     }
 
@@ -83,18 +83,18 @@ struct ServerInfoReq: public ServerMessage {
 
 struct ServerInfoRes: public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_INFO_RES;
-    ServerInfoRes(const rapidjson::Document &d) {
-        appName = d["appName"].GetString();
-        version = d["version"].GetString();
-        buildDate = d["buildDate"].GetString();
-        startTime = d["startTime"].GetString();
-        maxClients = d["maxClients"].GetInt();
-        connectedClients = d["connectedClients"].GetInt();
-        osArch = d["osArch"].GetString();
-        osName = d["osName"].GetString();
-        osVersion = d["osVersion"].GetString();
-        fwType = d["fwType"].GetString();
-        fwVersion = d["fwVersion"].GetString();
+    ServerInfoRes(const nlohmann::json &d) {
+        appName = d["appName"].get<std::string>();
+        version = d["version"].get<std::string>();
+        buildDate = d["buildDate"].get<std::string>();
+        startTime = d["startTime"].get<std::string>();
+        maxClients = d["maxClients"].get<int>();
+        connectedClients = d["connectedClients"].get<int>();
+        osArch = d["osArch"].get<std::string>();
+        osName = d["osName"].get<std::string>();
+        osVersion = d["osVersion"].get<std::string>();
+        fwType = d["fwType"].get<std::string>();
+        fwVersion = d["fwVersion"].get<std::string>();
     }
 
     std::string appName;
@@ -120,8 +120,8 @@ struct ServerConClientsReq: public ServerMessage {
 
 struct ServerConClientsRes: public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_RES;
-    ServerConClientsRes(const rapidjson::Document &d) {
-        for(auto &iter : d.GetArray()) {
+    ServerConClientsRes(const nlohmann::json &d) {
+        for(auto &iter : d) {
             endpoints.push_back(EndpointData{iter});
         }
     }
@@ -134,10 +134,8 @@ struct ServerSelfTestingClient: public ServerMessage {
     ServerSelfTestingClient(long appId) : appId{appId} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetInt(appId);
-        return d;
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        return nlohmann::json{appId};
     }
 
     long appId;

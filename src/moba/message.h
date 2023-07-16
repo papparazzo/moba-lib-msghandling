@@ -53,7 +53,7 @@ struct GetByOptionalId {
     GetByOptionalId(int id = 0) : id{id} {
     }
 
-    rapidjson::Document getJsonDocument() const {
+  [[nodiscard]] nlohmann::json getJsonDocument() const override {
         rapidjson::Document d;
         if(id) {
             d.SetInt(id);
@@ -70,7 +70,7 @@ struct GetById {
     GetById(int id) : id{id} {
     }
 
-    rapidjson::Document getJsonDocument() const {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         rapidjson::Document d;
         d.SetInt(id);
         return d;

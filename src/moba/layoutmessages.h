@@ -55,8 +55,8 @@ struct LayoutGetLayoutsReq: public LayoutMessage {
 struct LayoutGetLayoutsRes: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUTS_RES;
 
-    LayoutGetLayoutsRes(const rapidjson::Document &d) {
-        for(auto &iter: d.GetArray()) {
+    LayoutGetLayoutsRes(const nlohmann::json &d) {
+        for(auto &iter: d) {
             layouts.push_back(iter);
         }
     }
@@ -70,13 +70,13 @@ struct LayoutDeleteLayout: public LayoutMessage {
     LayoutDeleteLayout(int layoutId): layoutId{layoutId} {
     }
 
-    LayoutDeleteLayout(const rapidjson::Document &d) {
-        layoutId = d.GetInt();
+    LayoutDeleteLayout(const nlohmann::json &d) {
+        layoutId = d.get<int>();
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetInt(layoutId);
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+        d = layoutId;
         return d;
     }
 
@@ -93,16 +93,15 @@ struct LayoutCreateLayout: public LayoutMessage {
     tracklayout{name, description, active} {
     }
 
-    LayoutCreateLayout(const rapidjson::Document &d): tracklayout{d} {
+    LayoutCreateLayout(const nlohmann::json &d): tracklayout{d} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        d.AddMember("name", rapidjson::Value(tracklayout.name.c_str(), tracklayout.name.length(), d.GetAllocator()), d.GetAllocator());
-        d.AddMember("description", rapidjson::Value(tracklayout.description.c_str(), tracklayout.description.length(), d.GetAllocator()), d.GetAllocator());
-        d.AddMember("active", tracklayout.active, d.GetAllocator());
+        d["name"] = tracklayout.name;
+        d["description"] = tracklayout.description;
+        d["active"] = tracklayout.active;
         return d;
     }
 
@@ -115,16 +114,15 @@ struct LayoutUpdateLayout: public LayoutMessage {
     LayoutUpdateLayout(const TrackLayoutData &tracklayout): tracklayout{tracklayout} {
     }
 
-    LayoutUpdateLayout(const rapidjson::Document &d): tracklayout{d} {
+    LayoutUpdateLayout(const nlohmann::json &d): tracklayout{d} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        d.AddMember("id", tracklayout.id, d.GetAllocator());
-        d.AddMember("name", rapidjson::Value(tracklayout.name.c_str(), tracklayout.name.length(), d.GetAllocator()), d.GetAllocator());
-        d.AddMember("description", rapidjson::Value(tracklayout.description.c_str(), tracklayout.description.length(), d.GetAllocator()), d.GetAllocator());
+        d["id"] = tracklayout.id;
+        d["name"] = tracklayout.name;
+        d["description"] = tracklayout.description;
         return d;
     }
 
@@ -137,13 +135,13 @@ struct LayoutUnlockLayout: public LayoutMessage {
     LayoutUnlockLayout(int layoutId): layoutId{layoutId} {
     }
 
-    LayoutUnlockLayout(const rapidjson::Document &d) {
-        layoutId = d.GetInt();
+    LayoutUnlockLayout(const nlohmann::json &d) {
+        layoutId = d.get<int>();
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetInt(layoutId);
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+        d = layoutId;
         return d;
     }
 
@@ -156,13 +154,13 @@ struct LayoutLockLayout: public LayoutMessage {
     LayoutLockLayout(int layoutId): layoutId{layoutId} {
     }
 
-    LayoutLockLayout(const rapidjson::Document &d) {
-        layoutId = d.GetInt();
+    LayoutLockLayout(const nlohmann::json &d) {
+        layoutId = d.get<int>();
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetInt(layoutId);
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+        d = layoutId;
         return d;
     }
 
@@ -178,10 +176,10 @@ struct LayoutGetLayoutReq: public LayoutMessage {
     LayoutGetLayoutReq(int layoutId): layoutId{layoutId} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
         if(layoutId) {
-            d.SetInt(*layoutId);
+            d = *layoutId;
         }
         return d;
     }
@@ -197,10 +195,10 @@ struct LayoutGetLayoutReadOnlyReq : public LayoutMessage {
     LayoutGetLayoutReadOnlyReq(int layoutId): layoutId{layoutId} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
         if(layoutId) {
-            d.SetInt(*layoutId);
+            d = *layoutId;
         }
         return d;
     }
@@ -211,7 +209,7 @@ struct LayoutGetLayoutReadOnlyReq : public LayoutMessage {
 struct LayoutGetLayoutRes: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_RES;
 
-    LayoutGetLayoutRes(const rapidjson::Document &d): specificLayoutData{d} {
+    LayoutGetLayoutRes(const nlohmann::json &d): specificLayoutData{d} {
     }
 
     SpecificLayoutData specificLayoutData;
@@ -224,27 +222,26 @@ struct LayoutSaveLayout: public LayoutMessage {
         specificLayoutData.id = 4;
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        rapidjson::Value a(rapidjson::kArrayType);
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+        auto a = nlohmann::json::array();
 
         for(auto &iter : *specificLayoutData.symbols) {
-            rapidjson::Value s(rapidjson::kObjectType);
+            nlohmann::json s;
             if(iter.second.id == 0) {
-                s.AddMember("id", rapidjson::kNullType, d.GetAllocator());
+                s["id"] = nullptr;
             } else {
-                s.AddMember("id", iter.second.id, d.GetAllocator());
+                s["id"] = iter.second.id;
             }
-            s.AddMember("xPos", iter.first.first, d.GetAllocator());
-            s.AddMember("yPos", iter.first.second, d.GetAllocator());
-            s.AddMember("symbol", iter.second.symbol, d.GetAllocator());
+            s["xPos"] = iter.first.first;
+            s["yPos"] = iter.first.second;
+            s["symbol"] = iter.second.symbol;
 
-            a.PushBack(s, d.GetAllocator());
+            a.push_back(s);
         }
 
-        d.SetObject();
-        d.AddMember("id", specificLayoutData.id, d.GetAllocator());
-        d.AddMember("symbols", a, d.GetAllocator());
+        d["id"] = specificLayoutData.id;
+        d["symbols"] = a;
 
         return d;
     }
@@ -255,8 +252,8 @@ struct LayoutSaveLayout: public LayoutMessage {
 struct LayoutDefaultLayoutChanged: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_DEFAULT_LAYOUT_CHANGED;
 
-    LayoutDefaultLayoutChanged(const rapidjson::Document &d) {
-        layoutId = d.GetInt();
+    LayoutDefaultLayoutChanged(const nlohmann::json &d) {
+        layoutId = d.get<int>();
     }
 
     int layoutId;
