@@ -56,28 +56,27 @@ struct EnvironmentSetEnvironment: public EnvironmentMessage {
     ) : thunder{thunder}, wind{wind}, rain{rain}, environmentSound{environmentSound}, aux1{aux1}, aux2{aux2}, aux3{aux3} {
     }
 
-    EnvironmentSetEnvironment(const rapidjson::Document &d) {
-        thunder = stringToSwitchEnum(d["thunderStorm"].GetString());
-        wind = stringToSwitchEnum(d["wind"].GetString());
-        rain = stringToSwitchEnum(d["rain"].GetString());
-        environmentSound = stringToSwitchEnum(d["environmentSound"].GetString());
-        aux1 = stringToSwitchEnum(d["aux1"].GetString());
-        aux2 = stringToSwitchEnum(d["aux2"].GetString());
-        aux3 = stringToSwitchEnum(d["aux3"].GetString());
+    EnvironmentSetEnvironment(const nlohmann::json &d) {
+        thunder = stringToSwitchEnum(d["thunderStorm"].get<std::string>());
+        wind = stringToSwitchEnum(d["wind"].get<std::string>());
+        rain = stringToSwitchEnum(d["rain"].get<std::string>());
+        environmentSound = stringToSwitchEnum(d["environmentSound"].get<std::string>());
+        aux1 = stringToSwitchEnum(d["aux1"].get<std::string>());
+        aux2 = stringToSwitchEnum(d["aux2"].get<std::string>());
+        aux3 = stringToSwitchEnum(d["aux3"].get<std::string>());
     }
 
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        d.AddMember("thunderStorm", getJsonValue(d, thunder), d.GetAllocator());
-        d.AddMember("wind", getJsonValue(d, wind), d.GetAllocator());
-        d.AddMember("rain", getJsonValue(d, rain), d.GetAllocator());
-        d.AddMember("environmentSound", getJsonValue(d, environmentSound), d.GetAllocator());
-        d.AddMember("aux01", getJsonValue(d, aux1), d.GetAllocator());
-        d.AddMember("aux02", getJsonValue(d, aux2), d.GetAllocator());
-        d.AddMember("aux03", getJsonValue(d, aux3), d.GetAllocator());
+        d["thunderStorm"] = switchEnumToString(thunder);
+        d["wind"] = switchEnumToString(wind);
+        d["rain"] = switchEnumToString(rain);
+        d["environmentSound"] = switchEnumToString(environmentSound);
+        d["aux01"] = switchEnumToString(aux1);
+        d["aux02"] = switchEnumToString(aux2);
+        d["aux03"] = switchEnumToString(aux3);
 
         return d;
     }
@@ -89,12 +88,6 @@ struct EnvironmentSetEnvironment: public EnvironmentMessage {
     Switch aux1;
     Switch aux2;
     Switch aux3;
-
-protected:
-    rapidjson::Value getJsonValue(rapidjson::Document &d, Switch c) const {
-        auto v = switchEnumToString(c);
-        return rapidjson::Value(v.c_str(), v.length(), d.GetAllocator());
-    }
 };
 
 struct EnvironmentSetAmbience: public EnvironmentMessage {
@@ -104,28 +97,22 @@ struct EnvironmentSetAmbience: public EnvironmentMessage {
     curtainUp{curtainUp}, mainLightOn{mainLightOn} {
     }
 
-    EnvironmentSetAmbience(const rapidjson::Document &d) {
-        curtainUp = stringToToggleStateEnum(d["curtainUp"].GetString());
-        mainLightOn = stringToToggleStateEnum(d["mainLightOn"].GetString());
+    EnvironmentSetAmbience(const nlohmann::json &d) {
+        curtainUp = stringToToggleStateEnum(d["curtainUp"].get<std::string>());
+        mainLightOn = stringToToggleStateEnum(d["mainLightOn"].get<std::string>());
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        d.AddMember("curtainUp", getJsonValue(d, curtainUp), d.GetAllocator());
-        d.AddMember("mainLightOn", getJsonValue(d, mainLightOn), d.GetAllocator());
+        d["curtainUp"] = toggleStateEnumToString(curtainUp);
+        d["mainLightOn"] = toggleStateEnumToString(mainLightOn);
+
         return d;
     }
 
     ToggleState curtainUp;
     ToggleState mainLightOn;
-
-protected:
-    rapidjson::Value getJsonValue(rapidjson::Document &d, ToggleState c) const {
-        auto v = toggleStateEnumToString(c);
-        return rapidjson::Value(v.c_str(), v.length(), d.GetAllocator());
-    }
 };
 
 struct EnvironmentSetAmbientLight: public EnvironmentMessage {
@@ -135,21 +122,20 @@ struct EnvironmentSetAmbientLight: public EnvironmentMessage {
     red{red}, blue{blue}, green{green}, white{white} {
     }
 
-    EnvironmentSetAmbientLight(const rapidjson::Document &d) {
-        red = d["red"].GetInt();
-        blue = d["blue"].GetInt();
-        green = d["green"].GetInt();
-        white = d["white"].GetInt();
+    EnvironmentSetAmbientLight(const nlohmann::json &d) {
+        red = d["red"].get<int>();
+        blue = d["blue"].get<int>();
+        green = d["green"].get<int>();
+        white = d["white"].get<int>();
     }
 
-    rapidjson::Document getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
 
-        d.AddMember("red", red, d.GetAllocator());
-        d.AddMember("blue", blue, d.GetAllocator());
-        d.AddMember("green", green, d.GetAllocator());
-        d.AddMember("white", white, d.GetAllocator());
+        d["red"] = red;
+        d["blue"] =  blue;
+        d["green"] =  green;
+        d["white"] =  white;
 
         return d;
     }

@@ -56,11 +56,11 @@ struct ControlGetBlockListReq: public ControlMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        rapidjson::Document d;
+        nlohmann::json d;
         if(layoutId) {
-            d.SetInt(layoutId);
+            d = layoutId;
         } else {
-            d.SetNull();
+            d = nullptr;
         }
         return d;
     }
@@ -75,11 +75,11 @@ struct ControlGetSwitchStateListReq: public ControlMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        rapidjson::Document d;
+        nlohmann::json d;
         if(layoutId) {
-            d.SetInt(layoutId);
+            d = layoutId;
         } else {
-            d.SetNull();
+            d = nullptr;
         }
         return d;
     }
@@ -94,11 +94,11 @@ struct ControlGetTrainListReq: public ControlMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        rapidjson::Document d;
+        nlohmann::json d;
         if(layoutId) {
-            d.SetInt(layoutId);
+            d = layoutId;
         } else {
-            d.SetNull();
+            d = nullptr;
         }
         return d;
     }
@@ -112,8 +112,8 @@ struct ControlGetTrainListRes: public ControlMessage {
     ControlGetTrainListRes(const nlohmann::json &d) {
         trainList = std::make_shared<std::map<int, std::shared_ptr<Train>>>();
 
-        for(auto &iter: d.GetArray()) {
-            (*trainList)[iter["id"].GetInt()] = std::make_shared<Train>(iter);
+        for(auto &iter: d) {
+            (*trainList)[iter["id"].get<int>()] = std::make_shared<Train>(iter);
         }
     }
 
@@ -127,21 +127,13 @@ struct ControlLock: public ControlMessage {
     }
 
     ControlLock(const nlohmann::json &d) {
-        for(auto &iter: d.GetArray()) {
-            blockVec.push_back(iter.GetUint());
+        for(auto &iter: d){
+            blockVec.push_back(iter.get<unsigned int>());
         }
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        rapidjson::Document d;
-
-        auto &allocator = d.GetAllocator();
-
-        d.SetArray();
-        d.Reserve(blockVec.size(), allocator);
-        for(auto &iter: blockVec) {
-            d.PushBack(iter, allocator);
-        }
+        nlohmann::json d = blockVec;
         return d;
     }
 
@@ -181,25 +173,19 @@ struct ControlPushTrain: public ControlMessage {
     }
 
     ControlPushTrain(const nlohmann::json &d) {
-        trainId = d["trainId"].GetUint();
-        fromBlock = d["fromBlock"].GetUint();
-        toBlock = d["toBlock"].GetUint();
-        direction.setDrivingDirection(d["direction"].GetString());
+        trainId = d["trainId"].get<unsigned int>();
+        fromBlock = d["fromBlock"].get<unsigned int>();
+        toBlock = d["toBlock"].get<unsigned int>();
+        direction.setDrivingDirection(d["direction"].get<std::string>());
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        rapidjson::Document d;
+        nlohmann::json d;
 
-        auto &allocator = d.GetAllocator();
-        d.SetObject();
-
-        d.AddMember("trainId", trainId, allocator);
-
-        auto s = direction.getDrivingDirection();
-
-        d.AddMember("direction", rapidjson::Value(s.c_str(), s.length(), allocator), allocator);
-        d.AddMember("fromBlock", fromBlock, allocator);
-        d.AddMember("toBlock", toBlock, allocator);
+        d["trainId"] = trainId;
+        d["direction"] = direction.getDrivingDirection();
+        d["fromBlock"] = fromBlock;
+        d["toBlock"] = toBlock;
 
         return d;
     }

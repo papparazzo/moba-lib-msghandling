@@ -42,10 +42,10 @@ struct GuiSystemNotice: public GuiMessage {
         ERROR
     };
 
-    GuiSystemNotice(const rapidjson::Document &d) {
-        std::string type = d["type"].GetString();
-        caption = d["caption"].GetString();
-        text = d["text"].GetString();
+    GuiSystemNotice(const nlohmann::json &d) {
+        std::string type = d["type"].get<std::string>();
+        caption = d["caption"].get<std::string>();
+        text = d["text"].get<std::string>();
 
         if(type == "INFO") {
             noticeType = NoticeType::INFO;

@@ -87,12 +87,8 @@ struct ClientError: public ClientMessage {
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
-        /*
-        d.SetObject();
-        auto cf = errorIdEnumToString(errorId);
-        d.AddMember("errorId", rapidjson::Value(cf.c_str(), cf.length(), d.GetAllocator()), d.GetAllocator());
-        d.AddMember("additonalMsg", rapidjson::Value(additionalMsg.c_str(), additionalMsg.length(), d.GetAllocator()), d.GetAllocator());
-        */
+        d["errorId"] = errorIdEnumToString(errorId);
+        d["additonalMsg"] = additionalMsg;
         return d;
     }
     
@@ -105,23 +101,15 @@ struct ClientStart: public ClientMessage {
 
     explicit ClientStart(AppData appData): appData{std::move(appData)} {
     }
-/*
-    nlohmann::json getJsonDocument() const override {
+
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
-        std::string version = appData.version.get<std::string>();
-        d.SetObject();
-        d.AddMember("appName", rapidjson::Value(appData.appName.c_str(), appData.appName.length(), d.GetAllocator()), d.GetAllocator());
-        d.AddMember("version", rapidjson::Value(version.c_str(), version.length(), d.GetAllocator()), d.GetAllocator());
 
-        rapidjson::Value g(rapidjson::kArrayType);
-
-        for(auto &v : appData.groups) {
-            g.PushBack(v, d.GetAllocator());
-        }
-        d.AddMember("msgGroups", g, d.GetAllocator());
+        d["appName"] = appData.appName;
+        d["version"] = appData.version.getString();
+        d["msgGroups"] = nlohmann::json::parse(appData.groups);
         return d;
     }
-*/
 
     AppData appData;
 };
