@@ -23,6 +23,7 @@
 #include <exception>
 #include <string>
 #include <memory>
+#include <utility>
 
 class SocketException: public std::exception {
 
@@ -31,10 +32,10 @@ class SocketException: public std::exception {
 public:
     ~SocketException() noexcept override = default;
 
-    explicit SocketException(const std::string &what): what_{what} {
+    explicit SocketException(std::string what): what_{std::move(what)} {
     }
 
-    [[nodiscard]] virtual const char* what() const noexcept {
+    [[nodiscard]] const char* what() const noexcept override {
         return this->what_.c_str();
     }
 };
