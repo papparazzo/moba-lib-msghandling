@@ -26,16 +26,16 @@
 
 class SocketException: public std::exception {
 
-    std::string what__;
+    std::string what_;
     
 public:
-    virtual ~SocketException() noexcept = default;
+    ~SocketException() noexcept override = default;
 
-    SocketException(const std::string &what): what__{what} {
+    explicit SocketException(const std::string &what): what_{what} {
     }
 
-    virtual const char* what() const noexcept {
-        return this->what__.c_str();
+    [[nodiscard]] virtual const char* what() const noexcept {
+        return this->what_.c_str();
     }
 };
 
@@ -44,7 +44,7 @@ public:
     Socket(const std::string &host, int port);
     virtual ~Socket() noexcept;
 
-    int getSocket() const {
+    [[nodiscard]] int getSocket() const {
         return socket;
     }
     void init();

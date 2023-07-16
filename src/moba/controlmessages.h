@@ -55,7 +55,7 @@ struct ControlGetBlockListReq: public ControlMessage {
     ControlGetBlockListReq(int layoutId = 0): layoutId{layoutId} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         rapidjson::Document d;
         if(layoutId) {
             d.SetInt(layoutId);
@@ -74,7 +74,7 @@ struct ControlGetSwitchStateListReq: public ControlMessage {
     ControlGetSwitchStateListReq(int layoutId = 0): layoutId{layoutId} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         rapidjson::Document d;
         if(layoutId) {
             d.SetInt(layoutId);
@@ -93,7 +93,7 @@ struct ControlGetTrainListReq: public ControlMessage {
     ControlGetTrainListReq(int layoutId = 0): layoutId{layoutId} {
     }
 
-    rapidjson::Document getJsonDocument() const override {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         rapidjson::Document d;
         if(layoutId) {
             d.SetInt(layoutId);
@@ -109,7 +109,7 @@ struct ControlGetTrainListReq: public ControlMessage {
 struct ControlGetTrainListRes: public ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_RES;
 
-    ControlGetTrainListRes(const rapidjson::Document &d) {
+    ControlGetTrainListRes(const nlohmann::json &d) {
         trainList = std::make_shared<std::map<int, std::shared_ptr<Train>>>();
 
         for(auto &iter: d.GetArray()) {
@@ -126,13 +126,13 @@ struct ControlLock: public ControlMessage {
         blockVec.push_back(b2);
     }
 
-    ControlLock(const rapidjson::Document &d) {
+    ControlLock(const nlohmann::json &d) {
         for(auto &iter: d.GetArray()) {
             blockVec.push_back(iter.GetUint());
         }
     }
 
-    rapidjson::Document getJsonDocument() const override {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         rapidjson::Document d;
 
         auto &allocator = d.GetAllocator();
@@ -180,14 +180,14 @@ struct ControlPushTrain: public ControlMessage {
     trainId{trainId}, fromBlock{fromBlock}, toBlock{toBlock}, direction{direction} {
     }
 
-    ControlPushTrain(const rapidjson::Document &d) {
+    ControlPushTrain(const nlohmann::json &d) {
         trainId = d["trainId"].GetUint();
         fromBlock = d["fromBlock"].GetUint();
         toBlock = d["toBlock"].GetUint();
         direction.setDrivingDirection(d["direction"].GetString());
     }
 
-    rapidjson::Document getJsonDocument() const override {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         rapidjson::Document d;
 
         auto &allocator = d.GetAllocator();

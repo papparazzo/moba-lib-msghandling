@@ -49,10 +49,10 @@ struct ClientVoid: public ClientMessage {
 struct ClientEchoReq: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_REQ;
 
-    ClientEchoReq(const std::string &payload): payload{payload} {
+    explicit ClientEchoReq(const std::string &payload): payload{payload} {
     }
 
-    nlohmann::json getJsonDocument() const override {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         return nlohmann::json{payload};
     }
 
@@ -62,7 +62,7 @@ struct ClientEchoReq: public ClientMessage {
 struct ClientEchoRes: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_RES;
 
-    ClientEchoRes(const nlohmann::json &d) {
+    explicit ClientEchoRes(const nlohmann::json &d) {
         payload = d.get<std::string>();
     }
 
@@ -77,13 +77,13 @@ struct ClientError: public ClientMessage {
     {
     }
 
-    ClientError(const nlohmann::json &d) {
+    explicit ClientError(const nlohmann::json &d) {
         auto s = d["errorId"].get<std::string>();
         errorId = stringToErrorIdEnum(s);
         additionalMsg = d["additonalMsg"].get<std::string>();
     }
 
-    nlohmann::json getJsonDocument() const override {
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
         /*
         d.SetObject();
@@ -127,7 +127,7 @@ struct ClientStart: public ClientMessage {
 struct ClientConnected: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_CONNECTED;
   
-    ClientConnected(const nlohmann::json &d) {
+    explicit ClientConnected(const nlohmann::json &d) {
         appId = d.get<int>();
     }
 
@@ -140,7 +140,7 @@ struct ClientClose: public ClientMessage {
 
 struct ClientShutdown: public ClientMessage {
 
-    ClientShutdown(const nlohmann::json &d) {
+    explicit ClientShutdown(const nlohmann::json &d) {
     }
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };

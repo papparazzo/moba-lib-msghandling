@@ -32,7 +32,7 @@ struct RawMessage {
         //data.ParseStream(s);
     }
 
-    RawMessage(std::uint32_t grpId = 0, std::uint32_t msgId = 0) : groupId{grpId}, messageId{msgId} {
+    explicit RawMessage(std::uint32_t grpId = 0, std::uint32_t msgId = 0) : groupId{grpId}, messageId{msgId} {
     }
 
     virtual ~RawMessage() noexcept = default;

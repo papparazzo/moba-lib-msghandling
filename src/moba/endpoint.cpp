@@ -27,8 +27,6 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 
-#include <cstdint>
-
 #include "clientmessages.h"
 #include "endpoint.h"
 #include "shared.h"
@@ -55,7 +53,7 @@ long Endpoint::getAppId() const {
 long Endpoint::registerApp() {
     sendMsg(ClientStart{AppData{appName, version, groups}});
 
-    auto msg = recieveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
+    auto msg = receiveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
 
     if(!msg.data.is_number()) {
         throw SocketException{"msg data is not an int"};
@@ -68,8 +66,8 @@ long Endpoint::registerApp() {
     return appId = msg.data.get<int>();
 }
 
-RawMessage Endpoint::recieveMsg(time_t timeoutSec) {
-    struct timeval timeout;
+RawMessage Endpoint::receiveMsg(time_t timeoutSec) {
+    struct timeval timeout{};
     fd_set         read_sock;
 
     int sd = socket->getSocket();
@@ -80,7 +78,7 @@ RawMessage Endpoint::recieveMsg(time_t timeoutSec) {
     timeout.tv_sec = timeoutSec;
     timeout.tv_usec = MSG_HANDLER_TIME_OUT_USEC;
 
-    if(::select(sd + 1, &read_sock, NULL, NULL, &timeout) == -1) {
+    if(::select(sd + 1, &read_sock, nullptr, nullptr, &timeout) == -1) {
         throw SocketException{"select-error occured!"};
     }
 
@@ -105,8 +103,8 @@ RawMessage Endpoint::waitForNewMsg() {
         throw SocketException{"recv header failed"};
     }
 
-    for(int i = 0; i < 3; ++i) {
-        d[i] = ::ntohl(d[i]);
+    for(unsigned int &i : d) {
+        i = ::ntohl(i);
     }
   //  rapidjson::SocketReadStream srs{socket->getSocket(), d[2]};
   //  return RawMessage{d[0], d[1], srs};
@@ -120,14 +118,14 @@ std::string Endpoint::waitForNewMsgAsString() {
         throw SocketException{"recv header failed"};
     }
 
-    for(int i = 0; i < 3; ++i) {
-        d[i] = ::ntohl(d[i]);
+    for(unsigned int &i : d) {
+        i = ::ntohl(i);
     }
 
     std::string output;
     output.resize(d[2]);
 
-    int bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
+    auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
     if(bytes_received < 0) {
         return "";
     }

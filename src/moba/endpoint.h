@@ -40,9 +40,9 @@ public:
     
     long connect();
 
-    long getAppId() const;
+    [[nodiscard]] long getAppId() const;
 
-    auto recieveMsg(time_t timeoutSec = 0) -> RawMessage;
+    auto receiveMsg(time_t timeoutSec = 0) -> RawMessage;
 
     auto waitForNewMsg() -> RawMessage;
     std::string waitForNewMsgAsString();

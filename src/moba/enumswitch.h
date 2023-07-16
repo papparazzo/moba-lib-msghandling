@@ -20,6 +20,9 @@
  
 #pragma once
 
+#include <string>
+#include <moba-common/exception.h>
+
 enum class Switch {
     ON,
     AUTO,

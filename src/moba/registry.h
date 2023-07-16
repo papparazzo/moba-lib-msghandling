@@ -27,7 +27,6 @@
 #include <utility>
 
 #include "rawmessage.h"
-#include "rapidjson/document.h"
 #include "systemmessages.h"
 #include "servermessages.h"
 

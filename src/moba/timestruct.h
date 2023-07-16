@@ -25,14 +25,14 @@
 struct Time final {
     Time();
     Time(unsigned int hours, unsigned int minutes);
-    Time(unsigned int time);
-    Time(const std::string &time);
+    explicit Time(unsigned int time);
+    explicit Time(const std::string &time);
     Time(const Time& t) = default;
 
-    unsigned int getHours() const;
-    unsigned int getMinutes() const;
-    unsigned int getTime() const;
-    std::string getTimeAsString() const;
+    [[nodiscard]] unsigned int getHours() const;
+    [[nodiscard]] unsigned int getMinutes() const;
+    [[nodiscard]] unsigned int getTime() const;
+    [[nodiscard]] std::string getTimeAsString() const;
 
     friend bool operator== (const Time& t1, const Time& t2);
     friend bool operator!= (const Time& t1, const Time& t2);

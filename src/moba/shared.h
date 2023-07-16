@@ -37,15 +37,14 @@ using MessageGroups = std::set<Message::MessageGroup>;
 
 struct AppData {
 
-    AppData() {
-    }
+    AppData() = default;
 
     AppData(
         const std::string &appName, const moba::Version &version, const MessageGroups &groups
     ) : appName{appName}, version{version}, groups{groups} {
     }
 
-    AppData(const nlohmann::json &d) {
+    explicit AppData(const nlohmann::json &d) {
         version = d["version"].get<std::string>();  
         for(auto &v : d["msgGroups"]) {
             groups.insert(static_cast<Message::MessageGroup>(v.get<int>()));
@@ -64,7 +63,7 @@ struct EndpointData {
     ) : appInfo{appInfo}, appId{appId}, startTime{startTime}, addr{addr} {
     }
 
-    EndpointData(const nlohmann::json &d) {
+    explicit EndpointData(const nlohmann::json &d) {
         appId = d["appID"].get<int>();
         addr = d["addr"].get<std::string>();
         port = d["port"].get<int>();
@@ -76,7 +75,7 @@ struct EndpointData {
     long        appId;
     std::string startTime;
     std::string addr;
-    long        port;
+    long        port{};
 };
 
 struct TrackLayoutData {
@@ -92,7 +91,7 @@ struct TrackLayoutData {
 
     }
 
-    TrackLayoutData(const nlohmann::json &d) {
+    explicit TrackLayoutData(const nlohmann::json &d) {
         id = d["id"].get<int>();
         name = d["name"].get<std::string>();
         description = d["description"].get<std::string>();
@@ -102,24 +101,26 @@ struct TrackLayoutData {
         locked = d["locked"].get<int>();
     }
 
-	int id;
+	int id{};
     std::string name;
     std::string description;
     std::string created;
     std::string modified;
     bool active;
-    int locked;
+    int locked{};
 };
 
 struct TrackLayoutSymbol {
-    TrackLayoutSymbol() {
+    TrackLayoutSymbol() = default;
+
+    explicit TrackLayoutSymbol(int symbol): id{0}, symbol{symbol} {
     }
-    TrackLayoutSymbol(int symbol): id{0}, symbol{symbol} {
-    }
+
     TrackLayoutSymbol(int id, int symbol): id{id}, symbol{symbol} {
     }
-    int id;
-    int symbol;
+
+    int id{};
+    int symbol{};
 };
 
 // Thanks to https://stackoverflow.com/a/45395204
@@ -133,7 +134,7 @@ struct SpecificLayoutData {
         symbols = std::make_shared<Symbols>();
     }
 
-    SpecificLayoutData(const nlohmann::json &d) {
+    explicit SpecificLayoutData(const nlohmann::json &d) {
         symbols = std::make_shared<Symbols>();
         id = d["id"].get<int>();
 
@@ -148,15 +149,16 @@ struct SpecificLayoutData {
         }
     }
 
-    int id;
+    int id{};
     SymbolsPtr symbols;
 };
 
 struct ContactData {
-    ContactData(std::uint16_t modulAddr = 0, std::uint16_t contactNb = 0) : modulAddr{modulAddr}, contactNb{contactNb} {
+    explicit ContactData(std::uint16_t modulAddr = 0, std::uint16_t contactNb = 0):
+    modulAddr{modulAddr}, contactNb{contactNb} {
     }
 
-    ContactData(const nlohmann::json &d) {
+    explicit ContactData(const nlohmann::json &d) {
         modulAddr = d["modulAddr"].get<int>();
         contactNb = d["contactNb"].get<int>();
     }
@@ -182,7 +184,7 @@ struct ContactTriggerData {
 
     }
 
-    ContactTriggerData(const nlohmann::json &d): contactData{d["contact"]} {
+    explicit ContactTriggerData(const nlohmann::json &d): contactData{d["contact"]} {
         state = d["state"].get<bool>();
         time = d["time"].get<int>();
     }
@@ -194,7 +196,8 @@ struct ContactTriggerData {
 
 struct BlockContactData {
     template <typename T>
-    BlockContactData(const nlohmann::json &d): brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
+    explicit BlockContactData(const nlohmann::json &d):
+    brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
         if(!d["trainId"].is_null()) {
             trainId = d["trainId"].get<int>();
         }
@@ -212,22 +215,21 @@ struct BlockContactData {
 };
 
 struct SwitchStandData {
-    SwitchStandData() {
-    }
+    SwitchStandData() = default;
 
-    SwitchStandData(const nlohmann::json &d) {
+    explicit SwitchStandData(const nlohmann::json &d) {
         id = d["id"].get<int>();
         switchStand = moba::stringToSwitchStandEnum(d["switchStand"].get<std::string>());
     }
     moba::SwitchStand switchStand;
-    int id;
+    int id{};
 };
 
 struct BrakeVectorContact {
-    BrakeVectorContact(ContactData contact, int localId = 0) : contact{contact}, localId{localId} {
+    explicit BrakeVectorContact(ContactData contact, int localId = 0) : contact{contact}, localId{localId} {
     }
 
-    BrakeVectorContact(const nlohmann::json &d) {
+    explicit BrakeVectorContact(const nlohmann::json &d) {
         contact = ContactData{d["contact"]};
         localId = d["localId"].get<int>();
     }
@@ -241,7 +243,7 @@ struct SwitchingOutput {
         
     }
 
-    SwitchingOutput(const nlohmann::json &d) {
+    explicit SwitchingOutput(const nlohmann::json &d) {
         localId = d["localId"].get<int>();
         differ = d["differ"].get<bool>();
     }
