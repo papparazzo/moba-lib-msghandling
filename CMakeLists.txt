@@ -10,7 +10,7 @@ configure_file(config.h.in config.h)
 
 include(GNUInstallDirs)
 add_library(
-    moba-lib-msghandling SHARED 
+    moba-lib-msghandling 
 
     src/moba/endpoint.cpp 
     src/moba/socket.cpp 
