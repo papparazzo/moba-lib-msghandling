@@ -22,6 +22,7 @@
 
 #include <memory>
 #include <set>
+#include <utility>
 #include <vector>
 #include <map>
 #include <utility>
@@ -40,8 +41,8 @@ struct AppData {
     AppData() = default;
 
     AppData(
-        const std::string &appName, const moba::Version &version, const MessageGroups &groups
-    ) : appName{appName}, version{version}, groups{groups} {
+        std::string appName, const moba::Version &version, MessageGroups groups
+    ) : appName{std::move(appName)}, version{version}, groups{std::move(groups)} {
     }
 
     explicit AppData(const nlohmann::json &d) {
@@ -59,8 +60,8 @@ struct AppData {
 
 struct EndpointData {
     EndpointData(
-        const AppData &appInfo, long appId, const std::string &startTime, const std::string &addr, long port
-    ) : appInfo{appInfo}, appId{appId}, startTime{startTime}, addr{addr} {
+        AppData appInfo, long appId, std::string startTime, std::string addr, long port
+    ) : appInfo{std::move(appInfo)}, appId{appId}, startTime{std::move(startTime)}, addr{std::move(addr)}, port{port} {
     }
 
     explicit EndpointData(const nlohmann::json &d) {
@@ -75,23 +76,23 @@ struct EndpointData {
     long        appId;
     std::string startTime;
     std::string addr;
-    long        port{};
+    long        port;
 };
 
 struct TrackLayoutData {
     TrackLayoutData(
-        int id, const std::string &name, const std::string &description, const std::string &created, const std::string &modified, bool active, int locked
-    ) : id{id}, name{name}, description{description}, created{created}, modified{modified}, active{active}, locked{locked} {
+        int id, std::string name, std::string description, std::string created, std::string modified, bool active, int locked
+    ) : id{id}, name{std::move(name)}, description{std::move(description)}, created{std::move(created)}, modified{std::move(modified)}, active{active}, locked{locked} {
 
     }
 
     TrackLayoutData(
-        const std::string &name, const std::string &description, bool active
-    ) : name{name}, description{description}, active{active} {
+        std::string name, std::string description, bool active
+    ) : name{std::move(name)}, description{std::move(description)}, active{active} {
 
     }
 
-    explicit TrackLayoutData(const nlohmann::json &d) {
+    TrackLayoutData(const nlohmann::json &d) {
         id = d["id"].get<int>();
         name = d["name"].get<std::string>();
         description = d["description"].get<std::string>();
@@ -195,8 +196,8 @@ struct ContactTriggerData {
 };
 
 struct BlockContactData {
-    template <typename T>
-    explicit BlockContactData(const nlohmann::json &d):
+
+    BlockContactData(const nlohmann::json &d):
     brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
         if(!d["trainId"].is_null()) {
             trainId = d["trainId"].get<int>();
@@ -221,7 +222,7 @@ struct SwitchStandData {
         id = d["id"].get<int>();
         switchStand = moba::stringToSwitchStandEnum(d["switchStand"].get<std::string>());
     }
-    moba::SwitchStand switchStand;
+    moba::SwitchStand switchStand{};
     int id{};
 };
 
@@ -240,10 +241,9 @@ struct BrakeVectorContact {
 
 struct SwitchingOutput {
     SwitchingOutput(std::uint32_t localId, bool differ): localId{localId}, differ{differ} {
-        
     }
 
-    explicit SwitchingOutput(const nlohmann::json &d) {
+    SwitchingOutput(const nlohmann::json &d) {
         localId = d["localId"].get<int>();
         differ = d["differ"].get<bool>();
     }

@@ -26,6 +26,8 @@
 #include <moba-common/exception.h>
 #include <moba-common/drivingdirection.h>
 
+#include "nlohmann/json.hpp"
+
 struct Train {
 
     Train(
@@ -33,11 +35,10 @@ struct Train {
     id{id}, address {address}, speed{speed}, direction{direction} {
     }
 
-    template <typename T>
-    Train(const T &d) {
-        address = d["address"].GetInt();
-        speed   = d["speed"].GetInt();
-        id      = d["id"].GetInt();
+    Train(const nlohmann::json &d) {
+        address = d["address"].get<int>();
+        speed   = d["speed"].get<int>();
+        id      = d["id"].get<int>();
         direction.setDrivingDirection(d["drivingDirection"].get<std::string>());
     }
 
