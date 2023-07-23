@@ -61,6 +61,8 @@ core
 # misc
 .deps/
 .dirstamp
+
+*.o
 *~
 !.gitkeep
 .cache
