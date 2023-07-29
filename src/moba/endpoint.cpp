@@ -60,7 +60,7 @@ long Endpoint::registerApp() {
     }
 
     if(msg.groupId != Message::CLIENT || msg.messageId != ClientMessage::CLIENT_CONNECTED) {
-        throw SocketException{"did not recieve CLIENT_CONNECTED"};
+        throw SocketException{"did not receive CLIENT_CONNECTED"};
     }
 
     return appId = msg.data.get<int>();
@@ -79,7 +79,7 @@ RawMessage Endpoint::receiveMsg(time_t timeoutSec) {
     timeout.tv_usec = MSG_HANDLER_TIME_OUT_USEC;
 
     if(::select(sd + 1, &read_sock, nullptr, nullptr, &timeout) == -1) {
-        throw SocketException{"select-error occured!"};
+        throw SocketException{"select-error occurred!"};
     }
 
     if(!FD_ISSET(sd, &read_sock)) {
@@ -100,7 +100,7 @@ RawMessage Endpoint::waitForNewMsg() {
     }
 
     if(rev < static_cast<ssize_t>(sizeof(d))) {
-        throw SocketException{"recv header failed"};
+        throw SocketException{"receive header failed"};
     }
 
     for(unsigned int &i : d) {
@@ -115,7 +115,7 @@ std::string Endpoint::waitForNewMsgAsString() {
     std::uint32_t d[3];
 
     if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
-        throw SocketException{"recv header failed"};
+        throw SocketException{"receive header failed"};
     }
 
     for(unsigned int &i : d) {

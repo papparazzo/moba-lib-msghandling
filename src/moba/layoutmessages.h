@@ -87,47 +87,47 @@ struct LayoutDeleteLayout: public LayoutMessage {
 struct LayoutCreateLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_CREATE_LAYOUT;
 
-    explicit LayoutCreateLayout(TrackLayoutData tracklayout): tracklayout{std::move(tracklayout)} {
+    explicit LayoutCreateLayout(TrackLayoutData trackLayout): trackLayout{std::move(trackLayout)} {
     }
 
     LayoutCreateLayout(const std::string &name, const std::string &description, bool active):
-    tracklayout{name, description, active} {
+            trackLayout{name, description, active} {
     }
 
-    explicit LayoutCreateLayout(const nlohmann::json &d): tracklayout{d} {
+    explicit LayoutCreateLayout(const nlohmann::json &d): trackLayout{d} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
 
-        d["name"] = tracklayout.name;
-        d["description"] = tracklayout.description;
-        d["active"] = tracklayout.active;
+        d["name"] = trackLayout.name;
+        d["description"] = trackLayout.description;
+        d["active"] = trackLayout.active;
         return d;
     }
 
-    TrackLayoutData tracklayout;
+    TrackLayoutData trackLayout;
 };
 
 struct LayoutUpdateLayout: public LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_UPDATE_LAYOUT;
 
-    explicit LayoutUpdateLayout(TrackLayoutData tracklayout): tracklayout{std::move(tracklayout)} {
+    explicit LayoutUpdateLayout(TrackLayoutData trackLayout): trackLayout{std::move(trackLayout)} {
     }
 
-    explicit LayoutUpdateLayout(const nlohmann::json &d): tracklayout{d} {
+    explicit LayoutUpdateLayout(const nlohmann::json &d): trackLayout{d} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
 
-        d["id"] = tracklayout.id;
-        d["name"] = tracklayout.name;
-        d["description"] = tracklayout.description;
+        d["id"] = trackLayout.id;
+        d["name"] = trackLayout.name;
+        d["description"] = trackLayout.description;
         return d;
     }
 
-    TrackLayoutData tracklayout;
+    TrackLayoutData trackLayout;
 };
 
 struct LayoutUnlockLayout: public LayoutMessage {

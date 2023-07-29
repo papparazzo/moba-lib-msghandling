@@ -50,7 +50,7 @@ void Socket::init() {
         close(socket);
     }
 
-    struct in6_addr serveraddr;
+    struct in6_addr serverAddr;
     struct addrinfo hints;
     struct addrinfo *result = nullptr;
 
@@ -59,10 +59,10 @@ void Socket::init() {
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
-    if(inet_pton(AF_INET, host.c_str(), &serveraddr) == 1) {
+    if(inet_pton(AF_INET, host.c_str(), &serverAddr) == 1) {
         hints.ai_family = AF_INET;
         hints.ai_flags |= AI_NUMERICHOST;
-    } else if(inet_pton(AF_INET6, host.c_str(), &serveraddr) == 1) {
+    } else if(inet_pton(AF_INET6, host.c_str(), &serverAddr) == 1) {
         hints.ai_family = AF_INET6;
         hints.ai_flags |= AI_NUMERICHOST;
     }
