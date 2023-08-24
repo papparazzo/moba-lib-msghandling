@@ -82,13 +82,13 @@ struct ClientError: public ClientMessage {
     explicit ClientError(const nlohmann::json &d) {
         auto s = d["errorId"].get<std::string>();
         errorId = stringToErrorIdEnum(s);
-        additionalMsg = d["additonalMsg"].get<std::string>();
+        additionalMsg = d["additionalMsg"].get<std::string>();
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
         d["errorId"] = errorIdEnumToString(errorId);
-        d["additonalMsg"] = additionalMsg;
+        d["additionalMsg"] = additionalMsg;
         return d;
     }
     
