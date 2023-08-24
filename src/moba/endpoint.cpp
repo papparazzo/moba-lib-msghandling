@@ -128,27 +128,20 @@ std::string Endpoint::waitForNewMsgAsString() {
     auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
 
     if(bytes_received < 0) {
-        return "";
+        return RawMessage{};
     }
 
-    std::stringstream ss;
-    ss << "{\"groupId\":" << d[0] << ", \"messageId\":" << d[1] << ", \"data\":" << output << "}";
-
-    return ss.str();
+    return RawMessage{d[0], d[1], nlohmann::json::parse(output)};
 }
 
 void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const nlohmann::json &data) {
     std::lock_guard<std::mutex> l{m};
-
-    //rapidjson::StringBuffer buffer;
-    //rapidjson::Writer writer{buffer};
-    //data.Accept(writer);
-
-    //size_t bufferSize = buffer.GetSize();
-    //sendMsg(grpId, msgId, buffer.GetString(), bufferSize);
+    sendMsg(grpId, msgId, data.dump());
 }
 
-void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const char *buffer, std::size_t bufferSize) {
+void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const std::string &data) {
+    auto bufferSize = data.length();
+
     std::uint32_t d[] = {
         ::htonl(grpId),
         ::htonl(msgId),
@@ -159,7 +152,7 @@ void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const char *buf
         throw SocketException{"sending header failed"};
     }
 
-    if(::send(socket->getSocket(), buffer, bufferSize, MSG_NOSIGNAL) < static_cast<ssize_t>(bufferSize)) {
+    if(::send(socket->getSocket(), data.c_str(), bufferSize, MSG_NOSIGNAL) < static_cast<ssize_t>(bufferSize)) {
         throw SocketException{"sending body failed"};
     }
 }
