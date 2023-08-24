@@ -92,7 +92,7 @@ RawMessage Endpoint::waitForNewMsg() {
     std::uint32_t d[3];
 
     ssize_t rev;
-     // Try again on interrupted function call
+    // Try again on interrupted function call
     while((rev = ::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL)) == -1) {
         if(errno != EINTR) {
             throw SocketException{std::strerror(errno)};
@@ -126,6 +126,7 @@ std::string Endpoint::waitForNewMsgAsString() {
     output.resize(d[2]);
 
     auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
+
     if(bytes_received < 0) {
         return "";
     }

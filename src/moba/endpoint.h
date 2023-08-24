@@ -43,7 +43,6 @@ public:
     [[nodiscard]] long getAppId() const;
 
     auto receiveMsg(time_t timeoutSec = 0) -> RawMessage;
-
     auto waitForNewMsg() -> RawMessage;
 
     template<typename T>
