@@ -45,7 +45,6 @@ public:
     auto receiveMsg(time_t timeoutSec = 0) -> RawMessage;
 
     auto waitForNewMsg() -> RawMessage;
-    std::string waitForNewMsgAsString();
 
     template<typename T>
     void sendMsg(const T &msg) {

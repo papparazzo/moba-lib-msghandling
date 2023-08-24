@@ -100,7 +100,7 @@ RawMessage Endpoint::waitForNewMsg() {
     }
 
     if(rev < static_cast<ssize_t>(sizeof(d))) {
-        throw SocketException{"receive header failed"};
+        throw SocketException{"recv header failed"};
     }
 
     for(unsigned int &i : d) {
@@ -115,7 +115,7 @@ std::string Endpoint::waitForNewMsgAsString() {
     std::uint32_t d[3];
 
     if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
-        throw SocketException{"receive header failed"};
+        throw SocketException{"recv header failed"};
     }
 
     for(unsigned int &i : d) {
