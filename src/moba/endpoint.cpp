@@ -21,7 +21,6 @@
 #include <string>
 #include <sstream>
 #include <memory>
-#include <cerrno>
 
 #include <sys/types.h>
 #include <sys/socket.h>
