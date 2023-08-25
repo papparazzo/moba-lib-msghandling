@@ -52,11 +52,7 @@ public:
 
     void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const nlohmann::json &data);
 
-    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const std::string &data) {
-        sendMsg(grpId, msgId, data.c_str(), data.length());
-    }
-
-    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const char *buffer, std::size_t bufferSize);
+    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const std::string &data);
 
 protected:
     SocketPtr socket;
