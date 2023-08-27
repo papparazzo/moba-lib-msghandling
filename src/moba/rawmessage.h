@@ -27,9 +27,9 @@
 
 struct RawMessage {
 
-    template<typename InputStream>
-    RawMessage(std::uint32_t grpId, std::uint32_t msgId, InputStream &s) : groupId{grpId}, messageId{msgId} {
-        //data.ParseStream(s);
+    // Avoid using {} in data(std::move(data). Further information could be found here:
+    // https://json.nlohmann.me/home/faq/#brace-initialization-yields-arrays
+    RawMessage(std::uint32_t grpId, std::uint32_t msgId, nlohmann::json data) : groupId{grpId}, messageId{msgId}, data(std::move(data)) {
     }
 
     explicit RawMessage(std::uint32_t grpId = 0, std::uint32_t msgId = 0) : groupId{grpId}, messageId{msgId} {
@@ -42,12 +42,6 @@ struct RawMessage {
             return false;
         }
         return true;
-    }
-
-    template<typename OutputStream>
-    void Accept(OutputStream &s) const {
-       // rapidjson::Writer<OutputStream> w{s};
-     //   data.Accept(w);
     }
 
     nlohmann::json data;
