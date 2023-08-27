@@ -117,8 +117,8 @@ std::string Endpoint::waitForNewMsgAsString() {
         throw SocketException{"recv header failed"};
     }
 
-    for(unsigned int &i : d) {
-        i = ::ntohl(i);
+    for(int i = 0; i < 3; ++i) {
+        d[i] = ::ntohl(d[i]);
     }
 
     std::string output;
