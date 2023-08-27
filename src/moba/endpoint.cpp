@@ -105,9 +105,17 @@ RawMessage Endpoint::waitForNewMsg() {
     for(unsigned int &i : d) {
         i = ::ntohl(i);
     }
-  //  rapidjson::SocketReadStream srs{socket->getSocket(), d[2]};
-  //  return RawMessage{d[0], d[1], srs};
-  return RawMessage{};
+
+    std::string output;
+    output.resize(d[2]);
+
+    auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
+
+    if(bytes_received < 0) {
+        return RawMessage{};
+    }
+
+    return RawMessage{d[0], d[1], nlohmann::json::parse(output)};
 }
 
 std::string Endpoint::waitForNewMsgAsString() {
@@ -125,12 +133,14 @@ std::string Endpoint::waitForNewMsgAsString() {
     output.resize(d[2]);
 
     auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
-
     if(bytes_received < 0) {
-        return RawMessage{};
+        return "";
     }
 
-    return RawMessage{d[0], d[1], nlohmann::json::parse(output)};
+    std::stringstream ss;
+    ss << "{\"groupId\":" << d[0] << ", \"messageId\":" << d[1] << ", \"data\":" << output << "}";
+
+    return ss.str();
 }
 
 void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const nlohmann::json &data) {
