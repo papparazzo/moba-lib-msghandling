@@ -99,7 +99,7 @@ RawMessage Endpoint::waitForNewMsg() {
     }
 
     if(rev < static_cast<ssize_t>(sizeof(d))) {
-        throw SocketException{"recv header failed"};
+        throw SocketException{"receive header failed"};
     }
 
     for(unsigned int &i : d) {
