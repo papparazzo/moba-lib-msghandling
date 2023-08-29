@@ -41,13 +41,13 @@ struct AppData {
     AppData() = default;
 
     AppData(
-        std::string appName, const moba::Version &version, MessageGroups groups
+            std::string appName, const moba::Version &version, MessageGroups groups
     ) : appName{std::move(appName)}, version{version}, groups{std::move(groups)} {
     }
 
     explicit AppData(const nlohmann::json &d) {
-        version = d["version"].get<std::string>();  
-        for(auto &v : d["msgGroups"]) {
+        version = d["version"].get<std::string>();
+        for (auto &v: d["msgGroups"]) {
             groups.insert(static_cast<Message::MessageGroup>(v.get<int>()));
         }
         appName = d["appName"].get<std::string>();
@@ -60,7 +60,7 @@ struct AppData {
 
 struct EndpointData {
     EndpointData(
-        AppData appInfo, long appId, std::string startTime, std::string addr, long port
+            AppData appInfo, long appId, std::string startTime, std::string addr, long port
     ) : appInfo{std::move(appInfo)}, appId{appId}, startTime{std::move(startTime)}, addr{std::move(addr)}, port{port} {
     }
 
@@ -72,22 +72,25 @@ struct EndpointData {
         appInfo = AppData{d["appInfo"]};
     }
 
-    AppData     appInfo;
-    long        appId;
+    AppData appInfo;
+    long appId;
     std::string startTime;
     std::string addr;
-    long        port;
+    long port;
 };
 
 struct TrackLayoutData {
     TrackLayoutData(
-        int id, std::string name, std::string description, std::string created, std::string modified, bool active, int locked
-    ) : id{id}, name{std::move(name)}, description{std::move(description)}, created{std::move(created)}, modified{std::move(modified)}, active{active}, locked{locked} {
+            int id, std::string name, std::string description, std::string created, std::string modified, bool active,
+            int locked
+    )
+            : id{id}, name{std::move(name)}, description{std::move(description)}, created{std::move(created)},
+              modified{std::move(modified)}, active{active}, locked{locked} {
 
     }
 
     TrackLayoutData(
-        std::string name, std::string description, bool active
+            std::string name, std::string description, bool active
     ) : name{std::move(name)}, description{std::move(description)}, active{active} {
 
     }
@@ -102,7 +105,7 @@ struct TrackLayoutData {
         locked = d["locked"].get<int>();
     }
 
-	int id{};
+    int id{};
     std::string name;
     std::string description;
     std::string created;
@@ -114,10 +117,10 @@ struct TrackLayoutData {
 struct TrackLayoutSymbol {
     TrackLayoutSymbol() = default;
 
-    explicit TrackLayoutSymbol(int symbol): id{0}, symbol{symbol} {
+    explicit TrackLayoutSymbol(int symbol) : id{0}, symbol{symbol} {
     }
 
-    TrackLayoutSymbol(int id, int symbol): id{id}, symbol{symbol} {
+    TrackLayoutSymbol(int id, int symbol) : id{id}, symbol{symbol} {
     }
 
     int id{};
@@ -127,7 +130,7 @@ struct TrackLayoutSymbol {
 // Thanks to https://stackoverflow.com/a/45395204
 using IntPair = std::pair<int, int>;
 
-using Symbols    = std::map<IntPair, TrackLayoutSymbol>;
+using Symbols = std::map<IntPair, TrackLayoutSymbol>;
 using SymbolsPtr = std::shared_ptr<Symbols>;
 
 struct SpecificLayoutData {
@@ -139,13 +142,13 @@ struct SpecificLayoutData {
         symbols = std::make_shared<Symbols>();
         id = d["id"].get<int>();
 
-        for(auto &iter : d["symbols"]) {
+        for (auto &iter: d["symbols"]) {
             (*symbols)[{
-                iter["xPos"].get<int>(),
-                iter["yPos"].get<int>()
+                    iter["xPos"].get<int>(),
+                    iter["yPos"].get<int>()
             }] = TrackLayoutSymbol(
-                iter["id"].get<int>(),
-                iter["symbol"].get<int>()
+                    iter["id"].get<int>(),
+                    iter["symbol"].get<int>()
             );
         }
     }
@@ -155,8 +158,8 @@ struct SpecificLayoutData {
 };
 
 struct ContactData {
-    explicit ContactData(std::uint16_t modulAddr = 0, std::uint16_t contactNb = 0):
-    modulAddr{modulAddr}, contactNb{contactNb} {
+    explicit ContactData(std::uint16_t modulAddr = 0, std::uint16_t contactNb = 0) :
+            modulAddr{modulAddr}, contactNb{contactNb} {
     }
 
     explicit ContactData(const nlohmann::json &d) {
@@ -165,10 +168,10 @@ struct ContactData {
     }
 
     friend bool operator<(const ContactData &l, const ContactData &r) {
-        if(l.modulAddr < r.modulAddr) {
+        if (l.modulAddr < r.modulAddr) {
             return true;
         }
-        if(l.modulAddr == r.modulAddr && l.contactNb < r.contactNb) {
+        if (l.modulAddr == r.modulAddr && l.contactNb < r.contactNb) {
             return true;
         }
         return false;
@@ -180,36 +183,36 @@ struct ContactData {
 
 struct ContactTriggerData {
     ContactTriggerData(
-        std::uint16_t modulAddr, std::uint16_t contactNb, bool state, int time
+            std::uint16_t modulAddr, std::uint16_t contactNb, bool state, int time
     ) : contactData{modulAddr, contactNb}, state{state}, time{time} {
 
     }
 
-    explicit ContactTriggerData(const nlohmann::json &d): contactData{d["contact"]} {
+    explicit ContactTriggerData(const nlohmann::json &d) : contactData{d["contact"]} {
         state = d["state"].get<bool>();
         time = d["time"].get<int>();
     }
 
     ContactData contactData;
-	bool        state;
-	int         time;
+    bool state;
+    int time;
 };
 
 struct BlockContactData {
 
-    BlockContactData(const nlohmann::json &d):
-    brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
-        if(!d["trainId"].is_null()) {
+    BlockContactData(const nlohmann::json &d) :
+            brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
+        if (!d["trainId"].is_null()) {
             trainId = d["trainId"].get<int>();
         }
-        
+
         id = d["id"].get<int>();
     }
 
     ContactData brakeTriggerContact;
     ContactData blockContact;
     int trainId;
-    
+
     // ToDo Consider to make trainId optional
     //std::optional<int> trainId;
     int id;
@@ -222,6 +225,7 @@ struct SwitchStandData {
         id = d["id"].get<int>();
         switchStand = moba::stringToSwitchStandEnum(d["switchStand"].get<std::string>());
     }
+
     moba::SwitchStand switchStand{};
     int id{};
 };
@@ -240,14 +244,14 @@ struct BrakeVectorContact {
 };
 
 struct SwitchingOutput {
-    SwitchingOutput(std::uint32_t localId, bool differ): localId{localId}, differ{differ} {
+    SwitchingOutput(std::uint32_t localId, bool differ) : localId{localId}, differ{differ} {
     }
 
     SwitchingOutput(const nlohmann::json &d) {
         localId = d["localId"].get<int>();
         differ = d["differ"].get<bool>();
     }
-    
+
     std::uint32_t localId;
     bool differ;
 };
