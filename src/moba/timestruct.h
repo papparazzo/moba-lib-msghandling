@@ -29,6 +29,8 @@ struct Time final {
     explicit Time(const std::string &time);
     Time(const Time& t) = default;
 
+    virtual ~Time() noexcept = default;
+
     [[nodiscard]] unsigned int getHours() const;
     [[nodiscard]] unsigned int getMinutes() const;
     [[nodiscard]] unsigned int getTime() const;
