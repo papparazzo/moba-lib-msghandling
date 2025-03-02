@@ -21,7 +21,6 @@
 #pragma once
 
 #include "message.h"
-#include "shared.h"
 #include "train.h"
 
 #include <moba-common/drivingdirection.h>
@@ -52,7 +51,7 @@ struct ControlMessage: Message {
 struct ControlGetBlockListReq final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_BLOCK_LIST_REQ;
 
-    ControlGetBlockListReq(int layoutId = 0): layoutId{layoutId} {
+    explicit ControlGetBlockListReq(const int layoutId = 0): layoutId{layoutId} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -69,7 +68,7 @@ struct ControlGetBlockListReq final : ControlMessage {
 struct ControlGetSwitchStateListReq final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_SWITCH_STAND_LIST_REQ;
 
-    ControlGetSwitchStateListReq(int layoutId = 0): layoutId{layoutId} {
+    explicit ControlGetSwitchStateListReq(const int layoutId = 0): layoutId{layoutId} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -86,7 +85,7 @@ struct ControlGetSwitchStateListReq final : ControlMessage {
 struct ControlGetTrainListReq final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_REQ;
 
-    ControlGetTrainListReq(int layoutId = 0): layoutId{layoutId} {
+    explicit ControlGetTrainListReq(const int layoutId = 0): layoutId{layoutId} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -103,7 +102,7 @@ struct ControlGetTrainListReq final : ControlMessage {
 struct ControlGetTrainListRes final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_RES;
 
-    ControlGetTrainListRes(const nlohmann::json &d) {
+    explicit ControlGetTrainListRes(const nlohmann::json &d) {
         trainList = std::make_shared<std::map<int, std::shared_ptr<Train>>>();
 
         for(auto &iter: d) {
@@ -120,7 +119,7 @@ struct ControlLock: ControlMessage {
         blockVec.push_back(b2);
     }
 
-    ControlLock(const nlohmann::json &d) {
+    explicit ControlLock(const nlohmann::json &d) {
         for(auto &iter: d){
             blockVec.push_back(iter.get<unsigned int>());
         }
@@ -162,11 +161,15 @@ struct ControlBlockLockingFailed final : ControlLock {
 struct ControlPushTrain final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_PUSH_TRAIN;
 
-    ControlPushTrain(std::uint32_t trainId, std::uint32_t fromBlock, std::uint32_t toBlock, moba::DrivingDirection direction):
-    trainId{trainId}, fromBlock{fromBlock}, toBlock{toBlock}, direction{direction} {
+    ControlPushTrain(
+        const std::uint32_t trainId,
+        const std::uint32_t fromBlock,
+        const std::uint32_t toBlock,
+        const moba::DrivingDirection direction
+    ): trainId{trainId}, fromBlock{fromBlock}, toBlock{toBlock}, direction{direction} {
     }
 
-    ControlPushTrain(const nlohmann::json &d) {
+    explicit ControlPushTrain(const nlohmann::json &d) {
         trainId = d["trainId"].get<unsigned int>();
         fromBlock = d["fromBlock"].get<unsigned int>();
         toBlock = d["toBlock"].get<unsigned int>();
