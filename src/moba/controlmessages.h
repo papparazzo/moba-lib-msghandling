@@ -27,7 +27,7 @@
 #include <moba-common/drivingdirection.h>
 #include <map>
 
-struct ControlMessage: public Message {
+struct ControlMessage: Message {
     enum MessageName {
         CONTROL_GET_BLOCK_LIST_REQ        = 1,
         CONTROL_GET_BLOCK_LIST_RES        = 2,
@@ -49,7 +49,7 @@ struct ControlMessage: public Message {
     static constexpr std::uint32_t GROUP_ID = CONTROL;
 };
 
-struct ControlGetBlockListReq: public ControlMessage {
+struct ControlGetBlockListReq final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_BLOCK_LIST_REQ;
 
     ControlGetBlockListReq(int layoutId = 0): layoutId{layoutId} {
@@ -66,7 +66,7 @@ struct ControlGetBlockListReq: public ControlMessage {
     int layoutId;
 };
 
-struct ControlGetSwitchStateListReq: public ControlMessage {
+struct ControlGetSwitchStateListReq final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_SWITCH_STAND_LIST_REQ;
 
     ControlGetSwitchStateListReq(int layoutId = 0): layoutId{layoutId} {
@@ -83,7 +83,7 @@ struct ControlGetSwitchStateListReq: public ControlMessage {
     int layoutId;
 };
 
-struct ControlGetTrainListReq: public ControlMessage {
+struct ControlGetTrainListReq final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_REQ;
 
     ControlGetTrainListReq(int layoutId = 0): layoutId{layoutId} {
@@ -100,7 +100,7 @@ struct ControlGetTrainListReq: public ControlMessage {
     int layoutId;
 };
 
-struct ControlGetTrainListRes: public ControlMessage {
+struct ControlGetTrainListRes final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_GET_TRAIN_LIST_RES;
 
     ControlGetTrainListRes(const nlohmann::json &d) {
@@ -114,8 +114,8 @@ struct ControlGetTrainListRes: public ControlMessage {
     TrainListPtr trainList;
 };
 
-struct ControlLock: public ControlMessage {
-    ControlLock(std::uint32_t b1, std::uint32_t b2) {
+struct ControlLock: ControlMessage {
+    ControlLock(const std::uint32_t b1, const std::uint32_t b2) {
         blockVec.push_back(b1);
         blockVec.push_back(b2);
     }
@@ -134,32 +134,32 @@ struct ControlLock: public ControlMessage {
     std::vector<std::uint32_t> blockVec;
 };
 
-struct ControlLockBlock: public ControlLock {
+struct ControlLockBlock final : ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_LOCK_BLOCK;
     using ControlLock::ControlLock;
 };
 
-struct ControlLockBlockWaiting: public ControlLock {
+struct ControlLockBlockWaiting final : ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_LOCK_BLOCK_WAITING;
     using ControlLock::ControlLock;
 };
 
-struct ControlUnlockBlock: public ControlLock {
+struct ControlUnlockBlock final : ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_UNLOCK_BLOCK;
     using ControlLock::ControlLock;
 };
 
-struct ControlBlockLocked: public ControlLock {
+struct ControlBlockLocked final : ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_BLOCK_LOCKED;
     using ControlLock::ControlLock;
 };
 
-struct ControlBlockLockingFailed: public ControlLock {
+struct ControlBlockLockingFailed final : ControlLock {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_BLOCK_LOCKING_FAILED;
     using ControlLock::ControlLock;
 };
 
-struct ControlPushTrain: public ControlMessage {
+struct ControlPushTrain final : ControlMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTROL_PUSH_TRAIN;
 
     ControlPushTrain(std::uint32_t trainId, std::uint32_t fromBlock, std::uint32_t toBlock, moba::DrivingDirection direction):
