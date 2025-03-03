@@ -52,7 +52,7 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
         ERROR
     };
 
-    InterfaceConnectivityStateChanged(Connectivity connectivity): connectivity{connectivity} {
+    explicit InterfaceConnectivityStateChanged(Connectivity connectivity): connectivity{connectivity} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -77,10 +77,10 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
 struct InterfaceContactTriggered: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
-    InterfaceContactTriggered(const nlohmann::json &d): contactTrigger{d} {
+    explicit InterfaceContactTriggered(const nlohmann::json &d): contactTrigger{d} {
     }
 
-    InterfaceContactTriggered(const ContactTriggerData &contactTrigger): contactTrigger{contactTrigger} {
+    explicit InterfaceContactTriggered(const ContactTriggerData &contactTrigger): contactTrigger{contactTrigger} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -104,7 +104,7 @@ struct InterfaceContactTriggered: public InterfaceMessage {
 struct InterfaceSetBrakeVector: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
 
-    InterfaceSetBrakeVector(const nlohmann::json &d) {
+    explicit InterfaceSetBrakeVector(const nlohmann::json &d) {
         for(auto &iter: d) {
             items.push_back(BrakeVectorContact{iter});
         }
@@ -116,7 +116,7 @@ struct InterfaceSetBrakeVector: public InterfaceMessage {
 struct InterfaceResetBrakeVector: public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = RESET_BRAKE_VECTOR;
 
-    InterfaceResetBrakeVector(const nlohmann::json &d) {
+    explicit InterfaceResetBrakeVector(const nlohmann::json &d) {
         for(auto &iter: d) {
             items.push_back(BrakeVectorContact{iter});
         }

@@ -20,11 +20,6 @@
 
 #pragma once
 
-#include <string>
-#include <cstddef>
-#include <cstdint>
-#include <iostream>
-
 #include "nlohmann/json.hpp"
 
 struct Message {
@@ -47,35 +42,3 @@ struct Message {
         return nlohmann::json{};
     }
 };
-
-/* TODO ...
-struct GetByOptionalId {
-    GetByOptionalId(int id = 0) : id{id} {
-    }
-
-  [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        rapidjson::Document d;
-        if(id) {
-            d.SetInt(id);
-        } else {
-            d.SetNull();
-        }
-        return d;
-    }
-
-    int id;
-};
-
-struct GetById {
-    GetById(int id) : id{id} {
-    }
-
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetInt(id);
-        return d;
-    }
-
-    int id;
-};
-*/
