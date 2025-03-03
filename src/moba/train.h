@@ -31,11 +31,14 @@
 struct Train {
 
     Train(
-    std::uint32_t id, std::uint32_t address, std::uint32_t speed, moba::DrivingDirection direction):
-    id{id}, address {address}, speed{speed}, direction{direction} {
+        const std::uint32_t id,
+        const std::uint32_t address,
+        const std::uint32_t speed,
+        const moba::DrivingDirection direction
+    ): id{id}, address {address}, speed{speed}, direction{direction} {
     }
 
-    Train(const nlohmann::json &d) {
+    explicit Train(const nlohmann::json &d) {
         address = d["address"].get<int>();
         speed   = d["speed"].get<int>();
         id      = d["id"].get<int>();

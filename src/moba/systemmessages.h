@@ -42,11 +42,11 @@ struct SystemMessage: public Message {
 struct SystemSetAutomaticMode: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_AUTOMATIC_MODE;
 
-    SystemSetAutomaticMode(const nlohmann::json &d) {
+    explicit SystemSetAutomaticMode(const nlohmann::json &d) {
         automaticActive = d.get<bool>();
     }
 
-    SystemSetAutomaticMode(bool automaticActive) : automaticActive{automaticActive} {
+    explicit SystemSetAutomaticMode(const bool automaticActive) : automaticActive{automaticActive} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -70,8 +70,8 @@ struct SystemTriggerEmergencyStop: public SystemMessage {
         SELF_ACTING_BY_EXTERN_SWITCHING
     };
 
-    SystemTriggerEmergencyStop(
-        EmergencyTriggerReason emergencyTriggerReason = EmergencyTriggerReason::SOFTWARE_MANUELL
+    explicit SystemTriggerEmergencyStop(
+        const EmergencyTriggerReason emergencyTriggerReason = EmergencyTriggerReason::SOFTWARE_MANUELL
     ) : emergencyTriggerReason{emergencyTriggerReason} {
     }
 
@@ -108,7 +108,7 @@ struct SystemReleaseEmergencyStop: public SystemMessage {
 struct SystemSetStandbyMode: public SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_STANDBY_MODE;
 
-    SystemSetStandbyMode(bool standbyActive) : standbyActive{standbyActive} {
+    explicit SystemSetStandbyMode(const bool standbyActive) : standbyActive{standbyActive} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
