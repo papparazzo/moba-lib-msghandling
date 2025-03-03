@@ -29,10 +29,17 @@ struct RawMessage {
 
     // Avoid using {} in data(std::move(data). Further information could be found here:
     // https://json.nlohmann.me/home/faq/#brace-initialization-yields-arrays
-    RawMessage(std::uint32_t grpId, std::uint32_t msgId, nlohmann::json data) : groupId{grpId}, messageId{msgId}, data(std::move(data)) {
+    RawMessage(
+        const std::uint32_t grpId,
+        const std::uint32_t msgId,
+        nlohmann::json data
+    ) : groupId{grpId}, messageId{msgId}, data(std::move(data)) {
     }
 
-    explicit RawMessage(std::uint32_t grpId = 0, std::uint32_t msgId = 0) : groupId{grpId}, messageId{msgId} {
+    explicit RawMessage(
+        const std::uint32_t grpId = 0,
+        const std::uint32_t msgId = 0
+    ) : groupId{grpId}, messageId{msgId} {
     }
 
     virtual ~RawMessage() noexcept = default;
@@ -44,7 +51,7 @@ struct RawMessage {
         return true;
     }
 
-    nlohmann::json data;
     std::uint32_t  groupId;
     std::uint32_t  messageId;
+    nlohmann::json data;
 };
