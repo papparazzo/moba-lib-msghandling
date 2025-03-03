@@ -56,10 +56,10 @@ struct ControlGetBlockListReq final : ControlMessage {
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
-        if(layoutId) {
+        if(layoutId == 0) {
             return nlohmann::json{};
         }
-        return nlohmann::json{layoutId};
+        return layoutId;
     }
 
     int layoutId;
@@ -73,10 +73,10 @@ struct ControlGetSwitchStateListReq final : ControlMessage {
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
-        if(layoutId) {
+        if(layoutId == 0) {
             return nlohmann::json{};
         }
-        return nlohmann::json{layoutId};
+        return layoutId;
     }
 
     int layoutId;
@@ -90,10 +90,10 @@ struct ControlGetTrainListReq final : ControlMessage {
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
-        if(layoutId) {
+        if(layoutId == 0) {
             return nlohmann::json{};
         }
-        return nlohmann::json{layoutId};
+        return layoutId;
     }
 
     int layoutId;
