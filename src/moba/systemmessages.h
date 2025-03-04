@@ -139,8 +139,8 @@ struct SystemHardwareStateChanged: public SystemMessage {
         AUTOMATIC
     };
 
-    SystemHardwareStateChanged(const nlohmann::json &d) {
-        std::string status = d.get<std::string>();
+    explicit SystemHardwareStateChanged(const nlohmann::json &d) {
+        auto status = d.get<std::string>();
         if(status == "ERROR") {
             hardwareState = HardwareState::ERROR;
         } else if(status == "EMERGENCY_STOP") {

@@ -44,7 +44,7 @@ struct ServerMessage : public Message {
 struct ServerNewClientStarted : public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_NEW_CLIENT_STARTED;
 
-    ServerNewClientStarted(const nlohmann::json &d) : endpoint{d} {
+    explicit ServerNewClientStarted(const nlohmann::json &d) : endpoint{d} {
     }
 
     EndpointData endpoint;
