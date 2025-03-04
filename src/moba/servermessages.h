@@ -21,7 +21,6 @@
 #pragma once
 
 #include <string>
-#include <memory>
 
 #include "message.h"
 #include "shared.h"
@@ -53,7 +52,7 @@ struct ServerNewClientStarted : public ServerMessage {
 struct ServerClientClosed : public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_CLIENT_CLOSED;
 
-    ServerClientClosed(const nlohmann::json &d) {
+    explicit ServerClientClosed(const nlohmann::json &d) {
         clientId = d.get<long>();
     }
 
@@ -63,7 +62,7 @@ struct ServerClientClosed : public ServerMessage {
 struct ServerResetClient : public ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_RESET_CLIENT;
 
-    ServerResetClient(long appId) : appId{appId} {
+    explicit ServerResetClient(long appId) : appId{appId} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
