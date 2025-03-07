@@ -30,13 +30,13 @@
 
 #include "nlohmann/json.hpp"
 
-class Endpoint {
+class Endpoint final {
 public:
     Endpoint(SocketPtr socket, const std::string &appName, moba::Version version, const MessageGroups &groups);
 
     Endpoint(SocketPtr socket, const std::string &appName, moba::Version version);
 
-    virtual ~Endpoint() noexcept = default;
+    ~Endpoint() noexcept = default;
     
     long connect();
 
