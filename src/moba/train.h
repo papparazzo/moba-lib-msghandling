@@ -28,7 +28,7 @@
 
 #include "nlohmann/json.hpp"
 
-struct Train {
+struct Train final {
 
     Train(
         const std::uint32_t id,
@@ -45,7 +45,7 @@ struct Train {
         direction.setDrivingDirection(d["drivingDirection"].get<std::string>());
     }
 
-    virtual ~Train() noexcept = default;
+    ~Train() noexcept = default;
 
     std::uint32_t id;
     std::uint32_t address;
