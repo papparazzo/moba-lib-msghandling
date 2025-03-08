@@ -20,6 +20,10 @@
  
 #pragma once
 
+#include <string>
+
+#include <moba-common/exception.h>
+
 enum class ErrorId {
     UNKNOWN_ERROR,
     UNKNOWN_GROUP_ID,
