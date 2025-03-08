@@ -255,7 +255,7 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
     throw moba::UnsupportedOperationException{"ControllableFunction: invalid value given"};
 }
 
-inline std::string controllableFunctionEnumToString(Function s) {
+inline std::string controllableFunctionEnumToString(const Function s) {
     switch(s) {
         case Function::HEADLIGHTS:
             return "HEADLIGHTS";
@@ -430,7 +430,7 @@ inline std::string controllableFunctionEnumToString(Function s) {
     }
 }
 
-inline Function getAlternativeFunction(Function s) {
+inline Function getAlternativeFunction(const Function s) {
     switch(s) {
 /*
         case Function::HORN:
@@ -555,7 +555,7 @@ inline Function getAlternativeFunction(Function s) {
     }
 }
 
-inline Function getFollowupFunction(Function f) {
+inline Function getFollowupFunction(const Function f) {
     switch(f) {
         case Function::CONDUCTOR_WHISTLE:
             return Function::DOORS_CLOSING;
