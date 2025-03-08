@@ -74,7 +74,7 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
     Connectivity connectivity;
 };
 
-struct InterfaceContactTriggered: public InterfaceMessage {
+struct InterfaceContactTriggered final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
     explicit InterfaceContactTriggered(const nlohmann::json &d): contactTrigger{d} {
@@ -101,7 +101,7 @@ struct InterfaceContactTriggered: public InterfaceMessage {
     ContactTriggerData contactTrigger;
 };
 
-struct InterfaceSetBrakeVector: public InterfaceMessage {
+struct InterfaceSetBrakeVector final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
 
     explicit InterfaceSetBrakeVector(const nlohmann::json &d) {
