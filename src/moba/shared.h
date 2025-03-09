@@ -95,7 +95,7 @@ struct TrackLayoutData {
 
     }
 
-    TrackLayoutData(const nlohmann::json &d) {
+    explicit TrackLayoutData(const nlohmann::json &d) {
         id = d["id"].get<int>();
         name = d["name"].get<std::string>();
         description = d["description"].get<std::string>();
@@ -200,7 +200,7 @@ struct ContactTriggerData {
 
 struct BlockContactData {
 
-    BlockContactData(const nlohmann::json &d) :
+    explicit BlockContactData(const nlohmann::json &d) :
             brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
         if (!d["trainId"].is_null()) {
             trainId = d["trainId"].get<int>();
