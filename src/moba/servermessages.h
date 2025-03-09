@@ -25,7 +25,7 @@
 #include "message.h"
 #include "shared.h"
 
-struct ServerMessage : public Message {
+struct ServerMessage : Message {
     enum MessageName {
         SERVER_NEW_CLIENT_STARTED = 1,
         SERVER_CLIENT_CLOSED = 2,
@@ -40,7 +40,7 @@ struct ServerMessage : public Message {
     static constexpr std::uint32_t GROUP_ID = SERVER;
 };
 
-struct ServerNewClientStarted : public ServerMessage {
+struct ServerNewClientStarted final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_NEW_CLIENT_STARTED;
 
     explicit ServerNewClientStarted(const nlohmann::json &d) : endpoint{d} {
@@ -49,7 +49,7 @@ struct ServerNewClientStarted : public ServerMessage {
     EndpointData endpoint;
 };
 
-struct ServerClientClosed : public ServerMessage {
+struct ServerClientClosed final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_CLIENT_CLOSED;
 
     explicit ServerClientClosed(const nlohmann::json &d) {
@@ -59,10 +59,10 @@ struct ServerClientClosed : public ServerMessage {
     long clientId;
 };
 
-struct ServerResetClient : public ServerMessage {
+struct ServerResetClient final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_RESET_CLIENT;
 
-    explicit ServerResetClient(long appId) : appId{appId} {
+    explicit ServerResetClient(const long appId) : appId{appId} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -72,18 +72,17 @@ struct ServerResetClient : public ServerMessage {
     long appId;
 };
 
-struct ServerInfoReq : public ServerMessage {
+struct ServerInfoReq final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_INFO_REQ;
 
-    ServerInfoReq() {
-    }
+    ServerInfoReq() = default;
 };
 
 
-struct ServerInfoRes : public ServerMessage {
+struct ServerInfoRes final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_INFO_RES;
 
-    ServerInfoRes(const nlohmann::json &d) {
+    explicit ServerInfoRes(const nlohmann::json &d) {
         appName = d["appName"].get<std::string>();
         version = d["version"].get<std::string>();
         buildDate = d["buildDate"].get<std::string>();
@@ -112,17 +111,16 @@ struct ServerInfoRes : public ServerMessage {
 
 };
 
-struct ServerConClientsReq : public ServerMessage {
+struct ServerConClientsReq final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_REQ;
 
-    ServerConClientsReq() {
-    }
+    ServerConClientsReq() = default;
 };
 
-struct ServerConClientsRes : public ServerMessage {
+struct ServerConClientsRes final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_CON_CLIENTS_RES;
 
-    ServerConClientsRes(const nlohmann::json &d) {
+    explicit ServerConClientsRes(const nlohmann::json &d) {
         for (auto &iter: d) {
             endpoints.push_back(EndpointData{iter});
         }
@@ -131,10 +129,10 @@ struct ServerConClientsRes : public ServerMessage {
     std::vector<EndpointData> endpoints;
 };
 
-struct ServerSelfTestingClient : public ServerMessage {
+struct ServerSelfTestingClient final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_SELF_TESTING_CLIENT;
 
-    ServerSelfTestingClient(long appId) : appId{appId} {
+    explicit ServerSelfTestingClient(long appId) : appId{appId} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
