@@ -22,7 +22,7 @@
 
 #include "message.h"
 
-struct SystemMessage: public Message {
+struct SystemMessage: Message {
     enum MessageName {
         SYSTEM_SET_AUTOMATIC_MODE      = 1,
         SYSTEM_TOGGLE_AUTOMATIC_MODE   = 2,
@@ -39,7 +39,7 @@ struct SystemMessage: public Message {
     static constexpr std::uint32_t GROUP_ID = SYSTEM;
 };
 
-struct SystemSetAutomaticMode: public SystemMessage {
+struct SystemSetAutomaticMode final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_AUTOMATIC_MODE;
 
     explicit SystemSetAutomaticMode(const nlohmann::json &d) {
@@ -56,11 +56,11 @@ struct SystemSetAutomaticMode: public SystemMessage {
     bool automaticActive;
 };
 
-struct SystemToggleAutomaticMode: public SystemMessage {
+struct SystemToggleAutomaticMode final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TOGGLE_AUTOMATIC_MODE;
 };
 
-struct SystemTriggerEmergencyStop: public SystemMessage {
+struct SystemTriggerEmergencyStop final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TRIGGER_EMERGENCY_STOP;
 
     enum class EmergencyTriggerReason {
