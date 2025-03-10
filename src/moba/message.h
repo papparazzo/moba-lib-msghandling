@@ -38,7 +38,7 @@ struct Message {
 
     virtual ~Message() noexcept = default;
 
-    virtual nlohmann::json getJsonDocument() const {
+    [[nodiscard]] virtual nlohmann::json getJsonDocument() const {
         return nlohmann::json{};
     }
 };
