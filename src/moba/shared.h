@@ -158,33 +158,33 @@ struct SpecificLayoutData {
 };
 
 struct ContactData {
-    explicit ContactData(std::uint16_t modulAddr = 0, std::uint16_t contactNb = 0) :
-            modulAddr{modulAddr}, contactNb{contactNb} {
+    explicit ContactData(const std::uint16_t moduleAddr = 0, const std::uint16_t contactNb = 0) :
+        moduleAddr{moduleAddr}, contactNb{contactNb} {
     }
 
     explicit ContactData(const nlohmann::json &d) {
-        modulAddr = d["modulAddr"].get<int>();
+        moduleAddr = d["moduleAddr"].get<int>();
         contactNb = d["contactNb"].get<int>();
     }
 
     friend bool operator<(const ContactData &l, const ContactData &r) {
-        if (l.modulAddr < r.modulAddr) {
+        if (l.moduleAddr < r.moduleAddr) {
             return true;
         }
-        if (l.modulAddr == r.modulAddr && l.contactNb < r.contactNb) {
+        if (l.moduleAddr == r.moduleAddr && l.moduleAddr < r.moduleAddr) {
             return true;
         }
         return false;
     }
 
-    std::uint16_t modulAddr;
+    std::uint16_t moduleAddr;
     std::uint16_t contactNb;
 };
 
 struct ContactTriggerData {
     ContactTriggerData(
-            std::uint16_t modulAddr, std::uint16_t contactNb, bool state, int time
-    ) : contactData{modulAddr, contactNb}, state{state}, time{time} {
+        const std::uint16_t moduleAddr, const std::uint16_t contactNb, const bool state, const int time
+    ) : contactData{moduleAddr, contactNb}, state{state}, time{time} {
 
     }
 

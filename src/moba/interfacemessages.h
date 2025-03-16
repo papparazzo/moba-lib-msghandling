@@ -88,7 +88,7 @@ struct InterfaceContactTriggered final: InterfaceMessage {
 
         nlohmann::json v;
 
-        v["modulAddr"] = contactTrigger.contactData.modulAddr;
+        v["moduleAddr"] = contactTrigger.contactData.moduleAddr;
         v["contactNb"] = contactTrigger.contactData.contactNb;
 
         d["contact"] = v;
