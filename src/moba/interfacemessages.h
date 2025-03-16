@@ -29,22 +29,22 @@
 #include "shared.h"
 #include "enumfunction.h"
 
-struct InterfaceMessage: public Message {
+struct InterfaceMessage : public Message {
     enum MessageName {
         CONNECTIVITY_STATE_CHANGED = 1,
-        CONTACT_TRIGGERED          = 2,
-        SET_BRAKE_VECTOR           = 3,
-        RESET_BRAKE_VECTOR         = 4,  
-        SET_LOCO_SPEED             = 5,
-        SET_LOCO_DIRECTION         = 6,
-        SET_LOCO_FUNCTION          = 7,
-        SWITCH_ACCESSORY_DECODERS  = 8
+        CONTACT_TRIGGERED = 2,
+        SET_BRAKE_VECTOR = 3,
+        RESET_BRAKE_VECTOR = 4,
+        SET_LOCO_SPEED = 5,
+        SET_LOCO_DIRECTION = 6,
+        SET_LOCO_FUNCTION = 7,
+        SWITCH_ACCESSORY_DECODERS = 8
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
 };
 
-struct InterfaceConnectivityStateChanged: public InterfaceMessage {
+struct InterfaceConnectivityStateChanged : public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONNECTIVITY_STATE_CHANGED;
 
     enum class Connectivity {
@@ -52,35 +52,32 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
         ERROR
     };
 
-    explicit InterfaceConnectivityStateChanged(Connectivity connectivity): connectivity{connectivity} {
+    explicit InterfaceConnectivityStateChanged(Connectivity connectivity) : connectivity{connectivity} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
 
-        switch(connectivity) {
+        switch (connectivity) {
             case Connectivity::CONNECTED:
-                d = "CONNECTED";
-                break;
+                return nlohmann::json{"CONNECTED"};
 
             case Connectivity::ERROR:
             default:
-                d = "ERROR";
-                break;
+                return nlohmann::json{"ERROR"};
         }
-        return d;
     }
 
     Connectivity connectivity;
 };
 
-struct InterfaceContactTriggered final: InterfaceMessage {
+struct InterfaceContactTriggered final : InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
 
-    explicit InterfaceContactTriggered(const nlohmann::json &d): contactTrigger{d} {
+    explicit InterfaceContactTriggered(const nlohmann::json &d) : contactTrigger{d} {
     }
 
-    explicit InterfaceContactTriggered(const ContactTriggerData &contactTrigger): contactTrigger{contactTrigger} {
+    explicit InterfaceContactTriggered(const ContactTriggerData &contactTrigger) : contactTrigger{contactTrigger} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -89,7 +86,7 @@ struct InterfaceContactTriggered final: InterfaceMessage {
         d["state"] = contactTrigger.state;
         d["time"] = contactTrigger.time;
 
-        nlohmann::json  v;
+        nlohmann::json v;
 
         v["modulAddr"] = contactTrigger.contactData.modulAddr;
         v["contactNb"] = contactTrigger.contactData.contactNb;
@@ -101,11 +98,11 @@ struct InterfaceContactTriggered final: InterfaceMessage {
     ContactTriggerData contactTrigger;
 };
 
-struct InterfaceSetBrakeVector final: InterfaceMessage {
+struct InterfaceSetBrakeVector final : InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_BRAKE_VECTOR;
 
     explicit InterfaceSetBrakeVector(const nlohmann::json &d) {
-        for(auto &iter: d) {
+        for (auto &iter: d) {
             items.push_back(BrakeVectorContact{iter});
         }
     }
@@ -113,11 +110,11 @@ struct InterfaceSetBrakeVector final: InterfaceMessage {
     std::vector<BrakeVectorContact> items;
 };
 
-struct InterfaceResetBrakeVector: public InterfaceMessage {
+struct InterfaceResetBrakeVector : public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = RESET_BRAKE_VECTOR;
 
     explicit InterfaceResetBrakeVector(const nlohmann::json &d) {
-        for(auto &iter: d) {
+        for (auto &iter: d) {
             items.push_back(BrakeVectorContact{iter});
         }
     }
@@ -125,10 +122,10 @@ struct InterfaceResetBrakeVector: public InterfaceMessage {
     std::vector<BrakeVectorContact> items;
 };
 
-struct InterfaceSetLocoSpeed: public InterfaceMessage {
+struct InterfaceSetLocoSpeed : public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_SPEED;
 
-    InterfaceSetLocoSpeed(std::uint32_t localId, std::uint16_t speed): localId{localId}, speed{speed} {
+    InterfaceSetLocoSpeed(std::uint32_t localId, std::uint16_t speed) : localId{localId}, speed{speed} {
     }
 
     InterfaceSetLocoSpeed(const nlohmann::json &d) {
@@ -148,21 +145,22 @@ struct InterfaceSetLocoSpeed: public InterfaceMessage {
     std::uint16_t speed;
 };
 
-struct InterfaceSetLocoDirection: public InterfaceMessage {
+struct InterfaceSetLocoDirection : public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_DIRECTION;
 
-    enum class DrivingDirection	{
-        RETAIN   = 0,
-        FORWARD  = 1,
+    enum class DrivingDirection {
+        RETAIN = 0,
+        FORWARD = 1,
         BACKWARD = 2,
-        TOGGLE   = 3,
+        TOGGLE = 3,
     };
 
-    InterfaceSetLocoDirection(std::uint32_t localId, DrivingDirection direction): localId{localId}, direction{direction} {
+    InterfaceSetLocoDirection(std::uint32_t localId, DrivingDirection direction) : localId{localId},
+                                                                                   direction{direction} {
     }
 
-    InterfaceSetLocoDirection(std::uint32_t localId, std::uint8_t drivingDirection): localId{localId} {
-         direction = static_cast<DrivingDirection>(drivingDirection);
+    InterfaceSetLocoDirection(std::uint32_t localId, std::uint8_t drivingDirection) : localId{localId} {
+        direction = static_cast<DrivingDirection>(drivingDirection);
     }
 
     InterfaceSetLocoDirection(const nlohmann::json &d) {
@@ -175,7 +173,7 @@ struct InterfaceSetLocoDirection: public InterfaceMessage {
         nlohmann::json d;
 
         d["localId"] = localId;
-        switch(direction) {
+        switch (direction) {
             case DrivingDirection::FORWARD:
                 d["direction"] = "FORWARD";
                 break;
@@ -201,13 +199,13 @@ struct InterfaceSetLocoDirection: public InterfaceMessage {
 
 protected:
     DrivingDirection getDirectionFromString(const std::string &s) {
-        if(s == "RETAIN") {
+        if (s == "RETAIN") {
             return DrivingDirection::RETAIN;
-        } else if(s == "FORWARD") {
+        } else if (s == "FORWARD") {
             return DrivingDirection::FORWARD;
-        } else if(s == "BACKWARD") {
+        } else if (s == "BACKWARD") {
             return DrivingDirection::BACKWARD;
-        } else if(s == "TOGGLE") {
+        } else if (s == "TOGGLE") {
             return DrivingDirection::TOGGLE;
         } else {
             throw moba::UnsupportedOperationException{"invalid value given"};
@@ -215,10 +213,12 @@ protected:
     }
 };
 
-struct InterfaceSetLocoFunction: public InterfaceMessage {
+struct InterfaceSetLocoFunction : public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_FUNCTION;
 
-    InterfaceSetLocoFunction(std::uint32_t localId, Function function, bool active): localId{localId}, function{function}, active{active} {
+    InterfaceSetLocoFunction(std::uint32_t localId, Function function, bool active) : localId{localId},
+                                                                                      function{function},
+                                                                                      active{active} {
     }
 
     InterfaceSetLocoFunction(const nlohmann::json &d) {
@@ -242,13 +242,14 @@ struct InterfaceSetLocoFunction: public InterfaceMessage {
     bool active;
 };
 
-struct InterfaceSwitchAccessoryDecoders: public InterfaceMessage {
+struct InterfaceSwitchAccessoryDecoders : public InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SWITCH_ACCESSORY_DECODERS;
 
     InterfaceSwitchAccessoryDecoders(const nlohmann::json &d) {
-        for(auto &iter: d) {
+        for (auto &iter: d) {
             switchingOutputs.push_back(iter);
         }
     }
+
     SwitchingOutputs switchingOutputs;
 };
