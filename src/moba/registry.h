@@ -27,6 +27,7 @@
 #include <utility>
 
 #include "rawmessage.h"
+#include "nlohmann/json.hpp"
 #include "systemmessages.h"
 #include "servermessages.h"
 
@@ -39,22 +40,12 @@ public:
     Registry() {
     }
 
-    Registry(const Registry& orig) = delete;
+    Registry(const Registry &orig) = delete;
 
     virtual ~Registry() noexcept = default;
 
-    // TODO: deprecated! remove this
-    /*
     template<typename T>
-    void registerHandler(std::function<void(const T&)> fn) {
-        handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const nlohmann::json &data) {
-            T m{data};
-            fn(m);
-        };
-    }
-    */
-    template<typename T>
-    void registerHandler(std::function<void(T&&)> fn) {
+    void registerHandler(std::function<void(T &&)> fn) {
         handlers[T::GROUP_ID][T::MESSAGE_ID] = [fn](const nlohmann::json &data) {
             T m{data};
             fn(std::move(m));

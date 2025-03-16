@@ -116,7 +116,7 @@ struct ClientStart: public ClientMessage {
 
 struct ClientConnected: public ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_CONNECTED;
-  
+
     explicit ClientConnected(const nlohmann::json &d) {
         appId = d.get<int>();
     }

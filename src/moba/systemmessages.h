@@ -76,28 +76,22 @@ struct SystemTriggerEmergencyStop final: SystemMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-
         switch(emergencyTriggerReason) {
             case EmergencyTriggerReason::CENTRAL_STATION:
-                d = "CENTRAL_STATION";
-                break;
+                return nlohmann::json{"CENTRAL_STATION"};
 
             case EmergencyTriggerReason::SOFTWARE_MANUELL:
-                d = "SOFTWARE_MANUELL";
-                break;
+                return nlohmann::json{"SOFTWARE_MANUELL"};
 
             case EmergencyTriggerReason::SELF_ACTING_BY_EXTERN_SWITCHING:
-                d = "SELF_ACTING_BY_EXTERN_SWITCHING";
-                break;
+                return nlohmann::json{"SELF_ACTING_BY_EXTERN_SWITCHING"};
 
             default:
             case EmergencyTriggerReason::EXTERN:
-                d = "EXTERN";
-                break;
+                return nlohmann::json{"EXTERN"};
         }
-        return d;
     }
+
     EmergencyTriggerReason emergencyTriggerReason;
 };
 
