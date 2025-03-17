@@ -21,8 +21,6 @@
 #pragma once
 
 #include <moba-common/version.h>
-
-#include <utility>
 #include "message.h"
 #include "shared.h"
 #include "enumerrorid.h"
@@ -86,10 +84,10 @@ struct ClientError: public ClientMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-        d["errorId"] = errorIdEnumToString(errorId);
-        d["additionalMsg"] = additionalMsg;
-        return d;
+        return {
+            {"errorId", errorIdEnumToString(errorId)},
+            {"additonalMsg", additionalMsg},
+        };
     }
     
     ErrorId errorId;
