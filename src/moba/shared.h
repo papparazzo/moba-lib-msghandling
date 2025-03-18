@@ -60,7 +60,7 @@ struct AppData {
 
 struct EndpointData {
     EndpointData(
-            AppData appInfo, long appId, std::string startTime, std::string addr, long port
+        AppData appInfo, long appId, std::string startTime, std::string addr, long port
     ) : appInfo{std::move(appInfo)}, appId{appId}, startTime{std::move(startTime)}, addr{std::move(addr)}, port{port} {
     }
 
@@ -81,17 +81,16 @@ struct EndpointData {
 
 struct TrackLayoutData {
     TrackLayoutData(
-            int id, std::string name, std::string description, std::string created, std::string modified, bool active,
-            int locked
+        int id, std::string name, std::string description, std::string created, std::string modified, bool active,
+        int locked
     )
-            : id{id}, name{std::move(name)}, description{std::move(description)}, created{std::move(created)},
-              modified{std::move(modified)}, active{active}, locked{locked} {
+        : id{id}, name{std::move(name)}, description{std::move(description)}, created{std::move(created)},
+          modified{std::move(modified)}, active{active}, locked{locked} {
 
     }
 
-    TrackLayoutData(
-            std::string name, std::string description, bool active
-    ) : name{std::move(name)}, description{std::move(description)}, active{active} {
+    TrackLayoutData(std::string name, std::string description, bool active) :
+    name{std::move(name)}, description{std::move(description)}, active{active} {
 
     }
 

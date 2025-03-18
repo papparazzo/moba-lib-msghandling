@@ -58,7 +58,7 @@ struct LayoutGetLayoutsRes: public LayoutMessage {
 
     explicit LayoutGetLayoutsRes(const nlohmann::json &d) {
         for(auto &iter: d) {
-            layouts.push_back(iter);
+            layouts.emplace_back(iter);
         }
     }
 
