@@ -78,7 +78,6 @@ struct ServerInfoReq final : ServerMessage {
     ServerInfoReq() = default;
 };
 
-
 struct ServerInfoRes final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_INFO_RES;
 

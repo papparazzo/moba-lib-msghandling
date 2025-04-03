@@ -45,7 +45,7 @@ struct TimerGlobalTimerEvent: public TimerMessage {
 
     TimerGlobalTimerEvent(const nlohmann::json &d) {
         curModelDay = stringToDayEnum(d["day"].get<std::string>());
-        time = Time{d["time"].GetUint()};
+        time = Time{d["time"].get<unsigned int>()};
     }
 
     Time time;
@@ -70,44 +70,29 @@ struct TimerSetGlobalTimer: public TimerMessage {
     }
 
     TimerSetGlobalTimer(const nlohmann::json &d) {
-        auto modelTime = d["modelTime"].GetObject();
+        auto modelTime = d["modelTime"];
         curModelDay = stringToDayEnum(modelTime["day"].get<std::string>());
-        curModelTime = Time{modelTime["time"].GetUint()};
-        multiplicator = d["multiplicator"].GetInt();
+        curModelTime = Time{modelTime["time"].get<unsigned int>()};
+        multiplicator = d["multiplicator"].get<int>();
 
-        nightStartTime = Time{d["nightStartTime"].GetUint()};
-        sunriseStartTime = Time{d["sunriseStartTime"].GetUint()};
-        dayStartTime = Time{d["dayStartTime"].GetUint()};
-        sunsetStartTime = Time{d["sunsetStartTime"].GetUint()};
+        nightStartTime = Time{d["nightStartTime"].get<unsigned int>()};
+        sunriseStartTime = Time{d["sunriseStartTime"].get<unsigned int>()};
+        dayStartTime = Time{d["dayStartTime"].get<unsigned int>()};
+        sunsetStartTime = Time{d["sunsetStartTime"].get<unsigned int>()};
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        rapidjson::Document d;
-        d.SetObject();
+        nlohmann::json v;
+        v["day"] = dayEnumToString(curModelDay);
+        v["time"] = curModelTime.getTime();
 
-        rapidjson::Value v;
-        v.SetObject();
-
-        auto tmp = dayEnumToString(curModelDay);
-        v.AddMember(
-            "day",
-            rapidjson::Value(
-                tmp.c_str(),
-                tmp.length(),
-                d.GetAllocator()
-            ),
-            d.GetAllocator()
-        );
-        
-        v.AddMember("time", curModelTime.getTime(), d.GetAllocator());
-
-        d.AddMember("modelTime", v, d.GetAllocator());
-        d.AddMember("multiplicator", multiplicator, d.GetAllocator());
-        d.AddMember("nightStartTime", nightStartTime.getTime(), d.GetAllocator());
-        d.AddMember("sunriseStartTime", sunriseStartTime.getTime(), d.GetAllocator());
-        d.AddMember("dayStartTime", dayStartTime.getTime(), d.GetAllocator());
-        d.AddMember("sunsetStartTime", sunsetStartTime.getTime(), d.GetAllocator());
-
+        nlohmann::json d;
+        d["modelTime"] = v;
+        d["multiplicator"] = multiplicator;
+        d["nightStartTime"] = nightStartTime.getTime();
+        d["sunriseStartTime"] = sunriseStartTime.getTime();
+        d["dayStartTime"] = dayStartTime.getTime();
+        d["sunsetStartTime"] = sunsetStartTime.getTime();
         return d;
     }
 
