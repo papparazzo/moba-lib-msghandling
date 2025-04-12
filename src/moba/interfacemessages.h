@@ -60,11 +60,11 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
 
         switch(connectivity) {
             case Connectivity::CONNECTED:
-                return nlohmann::json{"CONNECTED"};
+                return "CONNECTED";
 
             case Connectivity::ERROR:
             default:
-                return nlohmann::json{"ERROR"};
+                return "ERROR";
         }
     }
 
