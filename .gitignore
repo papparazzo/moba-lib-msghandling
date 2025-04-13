@@ -63,8 +63,6 @@ core
 .dirstamp
 /src/.libs/libmobacommon.so.0.0.0
 /src/.libs/libmobacommon.so.0
-
-*.o
 *~
 !.gitkeep
 .cache
@@ -81,6 +79,7 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+config.log
 
 **/cmake-build-debug
 **/CMakeCache.txt
@@ -104,17 +103,3 @@ include/*
 lib/*
 bin/*
 test/test_runner
-!.gitkeep
-
-# cmake
-CMakeLists.txt.user
-CMakeCache.txt
-CMakeFiles
-CMakeScripts
-Testing
-Makefile
-cmake_install.cmake
-install_manifest.txt
-compile_commands.json
-CTestTestfile.cmake
-_deps
