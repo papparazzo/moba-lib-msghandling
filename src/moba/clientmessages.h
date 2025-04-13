@@ -53,7 +53,7 @@ struct ClientEchoReq: public ClientMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        return nlohmann::json{payload};
+        return payload;
     }
 
     std::string payload;
