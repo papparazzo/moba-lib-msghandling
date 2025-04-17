@@ -50,7 +50,7 @@ struct SystemSetAutomaticMode final: SystemMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        return nlohmann::json{automaticActive};
+        return automaticActive;
     }
 
     bool automaticActive;
