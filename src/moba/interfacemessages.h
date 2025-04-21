@@ -22,14 +22,13 @@
 
 #include <string>
 #include <vector>
-#include <cstdint>
 #include <moba-common/exception.h>
 
 #include "message.h"
 #include "shared.h"
 #include "enumfunction.h"
 
-struct InterfaceMessage: public Message {
+struct InterfaceMessage: Message {
     enum MessageName {
         CONNECTIVITY_STATE_CHANGED = 1,
         CONTACT_TRIGGERED          = 2,
@@ -197,30 +196,32 @@ struct InterfaceSetLocoDirection: public InterfaceMessage {
     DrivingDirection direction;
 
 protected:
-    DrivingDirection getDirectionFromString(const std::string &s) {
+    static DrivingDirection getDirectionFromString(const std::string &s) {
         if(s == "RETAIN") {
             return DrivingDirection::RETAIN;
-        } else if(s == "FORWARD") {
-            return DrivingDirection::FORWARD;
-        } else if(s == "BACKWARD") {
-            return DrivingDirection::BACKWARD;
-        } else if(s == "TOGGLE") {
-            return DrivingDirection::TOGGLE;
-        } else {
-            throw moba::UnsupportedOperationException{"invalid value given"};
         }
+        if(s == "FORWARD") {
+            return DrivingDirection::FORWARD;
+        }
+        if(s == "BACKWARD") {
+            return DrivingDirection::BACKWARD;
+        }
+        if(s == "TOGGLE") {
+            return DrivingDirection::TOGGLE;
+        }
+        throw moba::UnsupportedOperationException{"invalid value given"};
     }
 };
 
-struct InterfaceSetLocoFunction: public InterfaceMessage {
+struct InterfaceSetLocoFunction final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_FUNCTION;
 
     InterfaceSetLocoFunction(std::uint32_t localId, Function function, bool active): localId{localId}, function{function}, active{active} {
     }
 
-    InterfaceSetLocoFunction(const nlohmann::json &d) {
+    explicit InterfaceSetLocoFunction(const nlohmann::json &d) {
         localId = d["localId"].get<int>();
-        auto s = d["function"].get<std::string>();
+        const auto s = d["function"].get<std::string>();
         function = stringToControllableFunctionEnum(s);
         active = d["active"].get<bool>();
     }
@@ -239,10 +240,10 @@ struct InterfaceSetLocoFunction: public InterfaceMessage {
     bool active;
 };
 
-struct InterfaceSwitchAccessoryDecoders: public InterfaceMessage {
+struct InterfaceSwitchAccessoryDecoders final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SWITCH_ACCESSORY_DECODERS;
 
-    InterfaceSwitchAccessoryDecoders(const nlohmann::json &d) {
+    explicit InterfaceSwitchAccessoryDecoders(const nlohmann::json &d) {
         for(auto &iter: d) {
             switchingOutputs.push_back(iter);
         }

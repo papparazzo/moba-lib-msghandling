@@ -34,20 +34,23 @@ enum class Switch {
 inline Switch stringToSwitchEnum(const std::string &s) {
     if(s == "ON") {
         return Switch::ON;
-    } else if(s == "AUTO") {
-        return Switch::AUTO;
-    } else if(s == "UNSET") {
-        return Switch::UNSET;
-    } else if(s == "TRIGGER") {
-        return Switch::TRIGGER;
-    } else if(s == "OFF") {
-        return Switch::OFF;
-    } else {
-        throw moba::UnsupportedOperationException{"invalid value given"};
     }
+    if(s == "AUTO") {
+        return Switch::AUTO;
+    }
+    if(s == "UNSET") {
+        return Switch::UNSET;
+    }
+    if(s == "TRIGGER") {
+        return Switch::TRIGGER;
+    }
+    if(s == "OFF") {
+        return Switch::OFF;
+    }
+    throw moba::UnsupportedOperationException{"invalid value given"};
 }
 
-inline std::string switchEnumToString(Switch s) {
+inline std::string switchEnumToString(const Switch s) {
     switch(s) {
         case Switch::ON:
             return "ON";

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <moba-common/version.h>
 #include <memory>
 #include <mutex>
@@ -32,9 +33,9 @@
 
 class Endpoint final {
 public:
-    Endpoint(SocketPtr socket, const std::string &appName, moba::Version version, const MessageGroups &groups);
+    Endpoint(const SocketPtr &socket, const std::string &appName, const moba::Version &version, const MessageGroups &groups);
 
-    Endpoint(SocketPtr socket, const std::string &appName, moba::Version version);
+    Endpoint(const SocketPtr &socket, const std::string &appName, const moba::Version &version);
 
     ~Endpoint() noexcept = default;
     
@@ -42,9 +43,9 @@ public:
 
     [[nodiscard]] long getAppId() const;
 
-    auto receiveMsg(time_t timeoutSec = 0) -> RawMessage;
-    auto waitForNewMsg() -> RawMessage;
-    std::string waitForNewMsgAsString();
+    auto receiveMsg(time_t timeoutSec = 0) const -> RawMessage;
+    auto waitForNewMsg() const -> RawMessage;
+    std::string waitForNewMsgAsString() const;
 
     template<typename T>
     void sendMsg(const T &msg) {

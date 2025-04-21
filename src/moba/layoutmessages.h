@@ -29,7 +29,7 @@
 #include "message.h"
 #include "shared.h"
 
-struct LayoutMessage: public Message {
+struct LayoutMessage: Message {
     enum MessageName {
         LAYOUT_GET_LAYOUTS_REQ          = 1,
         LAYOUT_GET_LAYOUTS_RES          = 2,
@@ -49,11 +49,11 @@ struct LayoutMessage: public Message {
     static constexpr std::uint32_t GROUP_ID = LAYOUT;
 };
 
-struct LayoutGetLayoutsReq: public LayoutMessage {
+struct LayoutGetLayoutsReq final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUTS_REQ;
 };
 
-struct LayoutGetLayoutsRes: public LayoutMessage {
+struct LayoutGetLayoutsRes final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUTS_RES;
 
     explicit LayoutGetLayoutsRes(const nlohmann::json &d) {
@@ -65,10 +65,10 @@ struct LayoutGetLayoutsRes: public LayoutMessage {
     std::vector<TrackLayoutData> layouts;
 };
 
-struct LayoutDeleteLayout: public LayoutMessage {
+struct LayoutDeleteLayout final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_DELETE_LAYOUT;
 
-    explicit LayoutDeleteLayout(int layoutId): layoutId{layoutId} {
+    explicit LayoutDeleteLayout(const int layoutId): layoutId{layoutId} {
     }
 
     explicit LayoutDeleteLayout(const nlohmann::json &d) {
@@ -76,21 +76,19 @@ struct LayoutDeleteLayout: public LayoutMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-        d = layoutId;
-        return d;
+        return layoutId;
     }
 
     int layoutId;
 };
 
-struct LayoutCreateLayout: public LayoutMessage {
+struct LayoutCreateLayout final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_CREATE_LAYOUT;
 
     explicit LayoutCreateLayout(TrackLayoutData trackLayout): trackLayout{std::move(trackLayout)} {
     }
 
-    LayoutCreateLayout(const std::string &name, const std::string &description, bool active):
+    LayoutCreateLayout(const std::string &name, const std::string &description, const bool active):
             trackLayout{name, description, active} {
     }
 
@@ -109,7 +107,7 @@ struct LayoutCreateLayout: public LayoutMessage {
     TrackLayoutData trackLayout;
 };
 
-struct LayoutUpdateLayout: public LayoutMessage {
+struct LayoutUpdateLayout final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_UPDATE_LAYOUT;
 
     explicit LayoutUpdateLayout(TrackLayoutData trackLayout): trackLayout{std::move(trackLayout)} {
@@ -130,10 +128,10 @@ struct LayoutUpdateLayout: public LayoutMessage {
     TrackLayoutData trackLayout;
 };
 
-struct LayoutUnlockLayout: public LayoutMessage {
+struct LayoutUnlockLayout final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_UNLOCK_LAYOUT;
 
-    explicit LayoutUnlockLayout(int layoutId): layoutId{layoutId} {
+    explicit LayoutUnlockLayout(const int layoutId): layoutId{layoutId} {
     }
 
     explicit LayoutUnlockLayout(const nlohmann::json &d) {
@@ -141,18 +139,16 @@ struct LayoutUnlockLayout: public LayoutMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-        d = layoutId;
-        return d;
+        return layoutId;
     }
 
     int layoutId;
 };
 
-struct LayoutLockLayout: public LayoutMessage {
+struct LayoutLockLayout final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_LOCK_LAYOUT;
 
-    explicit LayoutLockLayout(int layoutId): layoutId{layoutId} {
+    explicit LayoutLockLayout(const int layoutId): layoutId{layoutId} {
     }
 
     explicit LayoutLockLayout(const nlohmann::json &d) {
@@ -160,19 +156,16 @@ struct LayoutLockLayout: public LayoutMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-        d = layoutId;
-        return d;
+        return layoutId;
     }
 
     int layoutId;
 };
 
-struct LayoutGetLayoutReq: public LayoutMessage {
+struct LayoutGetLayoutReq final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_REQ;
 
-    LayoutGetLayoutReq(): layoutId{} {
-    }
+    LayoutGetLayoutReq() = default;
 
     explicit LayoutGetLayoutReq(int layoutId): layoutId{layoutId} {
     }
@@ -188,11 +181,11 @@ struct LayoutGetLayoutReq: public LayoutMessage {
     std::optional<int> layoutId;
 };
 
-struct LayoutGetLayoutReadOnlyReq : public LayoutMessage {
+struct LayoutGetLayoutReadOnlyReq final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_READ_ONLY_REQ;
 
-    LayoutGetLayoutReadOnlyReq(): layoutId{} {
-    }
+    LayoutGetLayoutReadOnlyReq() = default;
+
     explicit LayoutGetLayoutReadOnlyReq(int layoutId): layoutId{layoutId} {
     }
 
@@ -207,7 +200,7 @@ struct LayoutGetLayoutReadOnlyReq : public LayoutMessage {
     std::optional<int> layoutId;
 };
 
-struct LayoutGetLayoutRes: public LayoutMessage {
+struct LayoutGetLayoutRes final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_GET_LAYOUT_RES;
 
     explicit LayoutGetLayoutRes(const nlohmann::json &d): specificLayoutData{d} {
@@ -216,27 +209,27 @@ struct LayoutGetLayoutRes: public LayoutMessage {
     SpecificLayoutData specificLayoutData;
 };
 
-struct LayoutSaveLayout: public LayoutMessage {
+struct LayoutSaveLayout final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_SAVE_LAYOUT;
 
     LayoutSaveLayout() {
-        specificLayoutData.id = 4;
+        specificLayoutData.id = 4; // TODO: What's that?
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
         auto a = nlohmann::json::array();
 
-        for(auto &iter : *specificLayoutData.symbols) {
+        for(auto &[fst, snd] : *specificLayoutData.symbols) {
             nlohmann::json s;
-            if(iter.second.id == 0) {
+            if(snd.id == 0) {
                 s["id"] = nullptr;
             } else {
-                s["id"] = iter.second.id;
+                s["id"] = snd.id;
             }
-            s["xPos"] = iter.first.first;
-            s["yPos"] = iter.first.second;
-            s["symbol"] = iter.second.symbol;
+            s["xPos"] = fst.first;
+            s["yPos"] = fst.second;
+            s["symbol"] = snd.symbol;
 
             a.push_back(s);
         }
@@ -250,7 +243,7 @@ struct LayoutSaveLayout: public LayoutMessage {
     SpecificLayoutData specificLayoutData;
 };
 
-struct LayoutDefaultLayoutChanged: public LayoutMessage {
+struct LayoutDefaultLayoutChanged final: LayoutMessage {
     static constexpr std::uint32_t MESSAGE_ID = LAYOUT_DEFAULT_LAYOUT_CHANGED;
 
     explicit LayoutDefaultLayoutChanged(const nlohmann::json &d) {

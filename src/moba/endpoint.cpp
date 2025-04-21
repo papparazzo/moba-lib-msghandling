@@ -28,15 +28,16 @@
 
 #include "clientmessages.h"
 #include "endpoint.h"
+
 #include "shared.h"
 
 Endpoint::Endpoint(
-    SocketPtr socket, const std::string &appName, moba::Version version, const MessageGroups &groups
+    const SocketPtr &socket, const std::string &appName, const moba::Version &version, const MessageGroups &groups
 ) : socket{socket}, appName{appName}, version{version}, groups{groups} {
 }
 
 Endpoint::Endpoint(
-    SocketPtr socket, const std::string &appName, moba::Version version
+    const SocketPtr &socket, const std::string &appName, const moba::Version &version
 ) : socket{socket}, appName{appName}, version{version} {
 }
 
@@ -52,7 +53,7 @@ long Endpoint::getAppId() const {
 long Endpoint::registerApp() {
     sendMsg(ClientStart{AppData{appName, version, groups}});
 
-    auto msg = receiveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
+    const auto msg = receiveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
 
     if(!msg.data.is_number()) {
         throw SocketException{"msg data is not an int"};
@@ -65,11 +66,11 @@ long Endpoint::registerApp() {
     return appId = msg.data.get<int>();
 }
 
-RawMessage Endpoint::receiveMsg(time_t timeoutSec) {
-    struct timeval timeout{};
-    fd_set         read_sock;
+RawMessage Endpoint::receiveMsg(const time_t timeoutSec) const {
+    timeval timeout{};
+    fd_set  read_sock;
 
-    int sd = socket->getSocket();
+    const int sd = socket->getSocket();
 
     FD_ZERO(&read_sock);
     FD_SET(sd, &read_sock);
@@ -87,12 +88,12 @@ RawMessage Endpoint::receiveMsg(time_t timeoutSec) {
     return waitForNewMsg();
 }
 
-RawMessage Endpoint::waitForNewMsg() {
+RawMessage Endpoint::waitForNewMsg() const {
     std::uint32_t d[3];
 
     ssize_t rev;
-    // Try again on interrupted function call
-    while((rev = ::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL)) == -1) {
+    // Try again on the interrupted function call
+    while((rev = recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL)) == -1) {
         if(errno != EINTR) {
             throw SocketException{std::strerror(errno)};
         }
@@ -103,37 +104,40 @@ RawMessage Endpoint::waitForNewMsg() {
     }
 
     for(unsigned int &i : d) {
-        i = ::ntohl(i);
+        i = ntohl(i);
     }
 
     std::string output;
     output.resize(d[2]);
 
-    auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
-
-    if(bytes_received < 0) {
+    if(
+        const auto bytes_received = recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
+        bytes_received < 0
+    ) {
         return RawMessage{};
     }
 
     return RawMessage{d[0], d[1], nlohmann::json::parse(output)};
 }
 
-std::string Endpoint::waitForNewMsgAsString() {
+std::string Endpoint::waitForNewMsgAsString() const {
     std::uint32_t d[3];
 
-    if(::recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
+    if(recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
         throw SocketException{"recv header failed"};
     }
 
     for(int i = 0; i < 3; ++i) {
-        d[i] = ::ntohl(d[i]);
+        d[i] = ntohl(d[i]);
     }
 
     std::string output;
     output.resize(d[2]);
 
-    auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
-    if(bytes_received < 0) {
+    if(
+        auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
+        bytes_received < 0
+    ) {
         return "";
     }
 
@@ -143,25 +147,25 @@ std::string Endpoint::waitForNewMsgAsString() {
     return ss.str();
 }
 
-void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const nlohmann::json &data) {
-    std::lock_guard<std::mutex> l{m};
+void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const nlohmann::json &data) {
+    std::lock_guard l{m};
     sendMsg(grpId, msgId, data.dump());
 }
 
-void Endpoint::sendMsg(std::uint32_t grpId, std::uint32_t msgId, const std::string &data) {
-    auto bufferSize = data.length();
+void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) {
+    const auto bufferSize = data.length();
 
     std::uint32_t d[] = {
-        ::htonl(grpId),
-        ::htonl(msgId),
-        ::htonl(bufferSize)
+        htonl(grpId),
+        htonl(msgId),
+        htonl(bufferSize)
     };
 
-    if(::send(socket->getSocket(), d, sizeof(d), MSG_NOSIGNAL) < static_cast<ssize_t>(sizeof(d))) {
+    if(send(socket->getSocket(), d, sizeof(d), MSG_NOSIGNAL) < static_cast<ssize_t>(sizeof(d))) {
         throw SocketException{"sending header failed"};
     }
 
-    if(::send(socket->getSocket(), data.c_str(), bufferSize, MSG_NOSIGNAL) < static_cast<ssize_t>(bufferSize)) {
+    if(send(socket->getSocket(), data.c_str(), bufferSize, MSG_NOSIGNAL) < static_cast<ssize_t>(bufferSize)) {
         throw SocketException{"sending body failed"};
     }
 }

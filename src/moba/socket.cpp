@@ -28,7 +28,7 @@
 #include <netdb.h>
 #include <unistd.h>
 
-Socket::Socket(const std::string &host, int port): socket{-1} {
+Socket::Socket(const std::string &host, const int port): socket{-1} {
     if(host == "" || port > 64738 || port < 1024) {
         throw SocketException{"either host or port is invalid!"};
     }
@@ -47,9 +47,9 @@ void Socket::init() {
         close(socket);
     }
 
-    struct in6_addr serverAddr;
-    struct addrinfo hints;
-    struct addrinfo *result = nullptr;
+    in6_addr serverAddr;
+    addrinfo hints;
+    addrinfo *result = nullptr;
 
     memset(&hints, 0x00, sizeof(hints));
     hints.ai_flags    = AI_NUMERICSERV;
@@ -74,7 +74,7 @@ void Socket::init() {
         throw SocketException{"socket creation failed"};
     }
 
-    if(::connect(socket, result->ai_addr, result->ai_addrlen) == -1) {
+    if(connect(socket, result->ai_addr, result->ai_addrlen) == -1) {
         freeaddrinfo(result);
         throw SocketException{"connection to host failed"};
     }

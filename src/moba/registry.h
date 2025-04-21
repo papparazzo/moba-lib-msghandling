@@ -28,21 +28,18 @@
 
 #include "rawmessage.h"
 #include "nlohmann/json.hpp"
-#include "systemmessages.h"
-#include "servermessages.h"
 
-class Registry {
+class Registry final {
 public:
 
     using HandlerMsgFnWrapper = std::function<void(const nlohmann::json &data)>;
     using HandlerDefFnWrapper = std::function<void(std::uint32_t, std::uint32_t, const nlohmann::json &data)>;
 
-    Registry() {
-    }
+    Registry() = default;
 
     Registry(const Registry &orig) = delete;
 
-    virtual ~Registry() noexcept = default;
+    ~Registry() noexcept = default;
 
     template<typename T>
     void registerHandler(std::function<void(T &&)> fn) {

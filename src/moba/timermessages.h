@@ -23,14 +23,11 @@
 #include <string>
 #include <memory>
 
-#include <moba-common/exception.h>
-
 #include "message.h"
-#include "shared.h"
 #include "day.h"
 #include "timestruct.h"
 
-struct TimerMessage: public Message {
+struct TimerMessage: Message {
     enum MessageName {
         TIMER_GLOBAL_TIMER_EVENT = 1,
         TIMER_GET_GLOBAL_TIMER   = 2,
@@ -40,10 +37,10 @@ struct TimerMessage: public Message {
     static constexpr std::uint32_t GROUP_ID = TIMER;
 };
 
-struct TimerGlobalTimerEvent: public TimerMessage {
+struct TimerGlobalTimerEvent final: TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_GLOBAL_TIMER_EVENT;
 
-    TimerGlobalTimerEvent(const nlohmann::json &d) {
+    explicit TimerGlobalTimerEvent(const nlohmann::json &d) {
         curModelDay = stringToDayEnum(d["day"].get<std::string>());
         time = Time{d["time"].get<unsigned int>()};
     }
@@ -52,16 +49,16 @@ struct TimerGlobalTimerEvent: public TimerMessage {
     Day curModelDay;
 };
 
-struct TimerGetGlobalTimer: public TimerMessage {
+struct TimerGetGlobalTimer final: TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_GET_GLOBAL_TIMER;
 };
 
-struct TimerSetGlobalTimer: public TimerMessage {
+struct TimerSetGlobalTimer final: TimerMessage {
     static constexpr std::uint32_t MESSAGE_ID = TIMER_SET_GLOBAL_TIMER;
 
     TimerSetGlobalTimer(
-        Day curModelDay, Time curModelTime, unsigned int multiplicator,
-        Time sunriseStartTime, Time dayStartTime, Time sunsetStartTime, Time nightStartTime
+        const Day curModelDay, const Time curModelTime, const unsigned int multiplicator,
+        const Time sunriseStartTime, const Time dayStartTime, const Time sunsetStartTime, const Time nightStartTime
     ):
         curModelDay{curModelDay}, curModelTime{curModelTime}, multiplicator{multiplicator},
         nightStartTime{nightStartTime}, sunriseStartTime{sunriseStartTime}, dayStartTime{dayStartTime},
@@ -69,7 +66,7 @@ struct TimerSetGlobalTimer: public TimerMessage {
     {
     }
 
-    TimerSetGlobalTimer(const nlohmann::json &d) {
+    explicit TimerSetGlobalTimer(const nlohmann::json &d) {
         auto modelTime = d["modelTime"];
         curModelDay = stringToDayEnum(modelTime["day"].get<std::string>());
         curModelTime = Time{modelTime["time"].get<unsigned int>()};

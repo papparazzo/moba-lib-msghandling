@@ -95,11 +95,11 @@ struct SystemTriggerEmergencyStop final: SystemMessage {
     EmergencyTriggerReason emergencyTriggerReason;
 };
 
-struct SystemReleaseEmergencyStop: public SystemMessage {
+struct SystemReleaseEmergencyStop final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_RELEASE_EMERGENCY_STOP;
 };
 
-struct SystemSetStandbyMode: public SystemMessage {
+struct SystemSetStandbyMode final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_SET_STANDBY_MODE;
 
     explicit SystemSetStandbyMode(const bool standbyActive) : standbyActive{standbyActive} {
@@ -111,18 +111,17 @@ struct SystemSetStandbyMode: public SystemMessage {
     bool standbyActive;
 };
 
-struct SystemToggleStandbyMode: public SystemMessage {
+struct SystemToggleStandbyMode final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_TOGGLE_STANDBY_MODE;
 };
 
-struct SystemGetHardwareState: public SystemMessage {
+struct SystemGetHardwareState final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_GET_HARDWARE_STATE;
 
-    SystemGetHardwareState() {
-    }
+    SystemGetHardwareState() = default;
 };
 
-struct SystemHardwareStateChanged: public SystemMessage {
+struct SystemHardwareStateChanged final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_STATE_CHANGED;
 
     enum class HardwareState {
@@ -134,8 +133,7 @@ struct SystemHardwareStateChanged: public SystemMessage {
     };
 
     explicit SystemHardwareStateChanged(const nlohmann::json &d) {
-        auto status = d.get<std::string>();
-        if(status == "ERROR") {
+        if(const auto status = d.get<std::string>(); status == "ERROR") {
             hardwareState = HardwareState::ERROR;
         } else if(status == "EMERGENCY_STOP") {
             hardwareState = HardwareState::EMERGENCY_STOP;
@@ -151,10 +149,10 @@ struct SystemHardwareStateChanged: public SystemMessage {
     HardwareState hardwareState;
 };
 
-struct SystemHardwareShutdown: public SystemMessage {
+struct SystemHardwareShutdown final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_SHUTDOWN;
 };
 
-struct SystemHardwareReset: public SystemMessage {
+struct SystemHardwareReset final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_RESET;
 };

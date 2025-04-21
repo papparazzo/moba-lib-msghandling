@@ -25,7 +25,7 @@
 #include <memory>
 #include <utility>
 
-class SocketException: public std::exception {
+class SocketException final: public std::exception {
 
     std::string what_;
     
@@ -40,10 +40,11 @@ public:
     }
 };
 
-class Socket {
+class Socket final {
 public:
     Socket(const std::string &host, int port);
-    virtual ~Socket() noexcept;
+
+    ~Socket() noexcept;
 
     [[nodiscard]] int getSocket() const {
         return socket;

@@ -116,10 +116,10 @@ struct TrackLayoutData {
 struct TrackLayoutSymbol {
     TrackLayoutSymbol() = default;
 
-    explicit TrackLayoutSymbol(int symbol) : id{0}, symbol{symbol} {
+    explicit TrackLayoutSymbol(const int symbol) : symbol{symbol} {
     }
 
-    TrackLayoutSymbol(int id, int symbol) : id{id}, symbol{symbol} {
+    TrackLayoutSymbol(const int id, const int symbol) : id{id}, symbol{symbol} {
     }
 
     int id{};
@@ -230,7 +230,7 @@ struct SwitchStandData {
 };
 
 struct BrakeVectorContact {
-    explicit BrakeVectorContact(ContactData contact, int localId = 0) : contact{contact}, localId{localId} {
+    explicit BrakeVectorContact(const ContactData contact, const int localId = 0) : contact{contact}, localId{localId} {
     }
 
     explicit BrakeVectorContact(const nlohmann::json &d) {
@@ -243,10 +243,10 @@ struct BrakeVectorContact {
 };
 
 struct SwitchingOutput {
-    SwitchingOutput(std::uint32_t localId, bool differ) : localId{localId}, differ{differ} {
+    SwitchingOutput(const std::uint32_t localId, const bool differ) : localId{localId}, differ{differ} {
     }
 
-    SwitchingOutput(const nlohmann::json &d) {
+    explicit SwitchingOutput(const nlohmann::json &d) {
         localId = d["localId"].get<int>();
         differ = d["differ"].get<bool>();
     }

@@ -42,11 +42,11 @@ struct ClientMessage: public Message {
     static constexpr std::uint32_t GROUP_ID = CLIENT;
 };
 
-struct ClientVoid: public ClientMessage {
+struct ClientVoid final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_VOID;
 };
 
-struct ClientEchoReq: public ClientMessage {
+struct ClientEchoReq final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_REQ;
 
     explicit ClientEchoReq(std::string payload): payload{std::move(payload)} {
@@ -59,7 +59,7 @@ struct ClientEchoReq: public ClientMessage {
     std::string payload;
 };
 
-struct ClientEchoRes: public ClientMessage {
+struct ClientEchoRes final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ECHO_RES;
 
     explicit ClientEchoRes(const nlohmann::json &d) {
@@ -69,7 +69,7 @@ struct ClientEchoRes: public ClientMessage {
     std::string payload;
 };
 
-struct ClientError: public ClientMessage {
+struct ClientError final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_ERROR;
    
     ClientError(ErrorId errorId, std::string additionalMsg):

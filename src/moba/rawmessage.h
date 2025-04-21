@@ -25,7 +25,7 @@
 
 #include "nlohmann/json.hpp"
 
-struct RawMessage {
+struct RawMessage final {
 
     // Avoid using {} in data(std::move(data). Further information could be found here:
     // https://json.nlohmann.me/home/faq/#brace-initialization-yields-arrays
@@ -42,7 +42,7 @@ struct RawMessage {
     ) : groupId{grpId}, messageId{msgId} {
     }
 
-    virtual ~RawMessage() noexcept = default;
+    ~RawMessage() noexcept = default;
 
     bool operator!() const {
         if(groupId && messageId) {
