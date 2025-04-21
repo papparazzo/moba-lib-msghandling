@@ -32,7 +32,7 @@ struct Message {
         INTERFACE   = 6,
         SYSTEM      = 7,
         LAYOUT      = 8,
-        GUI         = 9,
+        MESSAGING   = 9,
         CONTROL     = 10,
     };
 
