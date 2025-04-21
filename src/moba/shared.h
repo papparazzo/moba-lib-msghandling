@@ -25,10 +25,8 @@
 #include <utility>
 #include <vector>
 #include <map>
-#include <utility>
 #include <moba-common/exception.h>
 #include <moba-common/version.h>
-#include <moba-common/drivingdirection.h>
 #include <moba-common/enumswitchstand.h>
 
 #include "nlohmann/json.hpp"
@@ -40,9 +38,8 @@ struct AppData {
 
     AppData() = default;
 
-    AppData(
-            std::string appName, const moba::Version &version, MessageGroups groups
-    ) : appName{std::move(appName)}, version{version}, groups{std::move(groups)} {
+    AppData(std::string appName, const moba::Version &version, MessageGroups groups) :
+        appName{std::move(appName)}, version{version}, groups{std::move(groups)} {
     }
 
     explicit AppData(const nlohmann::json &d) {
@@ -60,7 +57,7 @@ struct AppData {
 
 struct EndpointData {
     EndpointData(
-        AppData appInfo, long appId, std::string startTime, std::string addr, long port
+        AppData appInfo, const long appId, std::string startTime, std::string addr, const long port
     ) : appInfo{std::move(appInfo)}, appId{appId}, startTime{std::move(startTime)}, addr{std::move(addr)}, port{port} {
     }
 
@@ -72,6 +69,12 @@ struct EndpointData {
         appInfo = AppData{d["appInfo"]};
     }
 
+    [[nodiscard]] std::string toString() const {
+        std::stringstream ss;
+        ss << appInfo.appName << "#" << appId << " (" << appInfo.version << ") @" << addr << ":" << port;
+        return "";
+    }
+
     AppData appInfo;
     long appId;
     std::string startTime;
@@ -81,15 +84,13 @@ struct EndpointData {
 
 struct TrackLayoutData {
     TrackLayoutData(
-        int id, std::string name, std::string description, std::string created, std::string modified, bool active,
-        int locked
-    )
-        : id{id}, name{std::move(name)}, description{std::move(description)}, created{std::move(created)},
-          modified{std::move(modified)}, active{active}, locked{locked} {
-
+        const int id, std::string name, std::string description, std::string created, std::string modified,
+        const bool active, const int locked
+    ) : id{id}, name{std::move(name)}, description{std::move(description)}, created{std::move(created)},
+        modified{std::move(modified)}, active{active}, locked{locked} {
     }
 
-    TrackLayoutData(std::string name, std::string description, bool active) :
+    TrackLayoutData(std::string name, std::string description, const bool active) :
     name{std::move(name)}, description{std::move(description)}, active{active} {
 
     }

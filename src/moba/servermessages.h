@@ -66,7 +66,7 @@ struct ServerResetClient final : ServerMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        return nlohmann::json{appId};
+        return appId;
     }
 
     long appId;
@@ -121,7 +121,7 @@ struct ServerConClientsRes final : ServerMessage {
 
     explicit ServerConClientsRes(const nlohmann::json &d) {
         for (auto &iter: d) {
-            endpoints.push_back(EndpointData{iter});
+            endpoints.emplace_back(iter);
         }
     }
 
@@ -131,11 +131,11 @@ struct ServerConClientsRes final : ServerMessage {
 struct ServerSelfTestingClient final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_SELF_TESTING_CLIENT;
 
-    explicit ServerSelfTestingClient(long appId) : appId{appId} {
+    explicit ServerSelfTestingClient(const long appId) : appId{appId} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        return nlohmann::json{appId};
+        return appId;
     }
 
     long appId;

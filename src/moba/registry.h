@@ -21,7 +21,6 @@
 #pragma once
 
 #include <unordered_map>
-#include <string>
 #include <functional>
 #include <memory>
 #include <utility>
@@ -76,8 +75,7 @@ public:
         auto iter = handlers.find(msg.groupId);
 
         if(iter != handlers.end()) {
-            auto iter2 = iter->second.find(msg.messageId);
-            if(iter2 != iter->second.end()) {
+            if(auto iter2 = iter->second.find(msg.messageId); iter2 != iter->second.end()) {
                 iter2->second(msg.data);
                 return true;
             }
