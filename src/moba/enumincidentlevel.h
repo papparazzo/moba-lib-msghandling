@@ -25,7 +25,7 @@
 
 enum class IncidentLevel {
     CRITICAL,
-    INFO,
+    NOTICE,
     WARNING,
     ERROR
 };
@@ -34,8 +34,8 @@ inline IncidentLevel stringToIncidentLevelEnum(const std::string &s) {
     if(s == "CRITICAL") {
         return IncidentLevel::CRITICAL;
     }
-    if(s == "INFO") {
-        return IncidentLevel::INFO;
+    if(s == "NOTICE") {
+        return IncidentLevel::NOTICE;
     }
     if(s == "WARNING") {
         return IncidentLevel::WARNING;
@@ -51,8 +51,8 @@ inline std::string incidentLevelEnumToString(const IncidentLevel s) {
         case IncidentLevel::CRITICAL:
             return "CRITICAL";
 
-        case IncidentLevel::INFO:
-            return "INFO";
+        case IncidentLevel::NOTICE:
+            return "NOTICE";
 
         case IncidentLevel::WARNING:
             return "WARNING";

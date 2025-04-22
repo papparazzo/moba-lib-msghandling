@@ -36,8 +36,8 @@ struct IncidentData final {
         std::string  caption,
         std::string  message,
         std::string  source,
-        EndpointData endpoint
-    ) : level{level}, type{type}, caption{std::move(caption)}, message{std::move(message)}, source{std::move(source)}, endpoint{std::move(endpoint)} {
+        EndpointData origin
+    ) : level{level}, type{type}, caption{std::move(caption)}, message{std::move(message)}, source{std::move(source)}, origin{std::move(origin)} {
         auto now = std::chrono::system_clock::now();
         auto time = std::chrono::system_clock::to_time_t(now);
         std::tm tm = *std::localtime(&time);
@@ -47,10 +47,11 @@ struct IncidentData final {
         timeStamp = buffer;
     }
 
-    explicit IncidentData(const nlohmann::json &d): endpoint{d["endpoint"]} {
+    explicit IncidentData(const nlohmann::json &d): origin{d["origin"]} {
         level = stringToIncidentLevelEnum(d["level"].get<std::string>());
         type = stringToIncidentTypeEnum(d["type"].get<std::string>());
         caption = d["caption"].get<std::string>();
+        source = d["source"].get<std::string>();
         message = d["message"].get<std::string>();
         timeStamp = d["timeStamp"].get<std::string>();
     }
@@ -60,6 +61,6 @@ struct IncidentData final {
     std::string	caption;
     std::string	message;
     std::string	source;
-    EndpointData endpoint;
+    EndpointData origin;
     std::string	timeStamp;
 };

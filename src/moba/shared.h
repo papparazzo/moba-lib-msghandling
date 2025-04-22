@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include <iostream>
 #include <memory>
 #include <set>
 #include <utility>
@@ -62,6 +63,9 @@ struct EndpointData {
     }
 
     explicit EndpointData(const nlohmann::json &d) {
+        if (d.is_null()) {
+            return;
+        }
         appId = d["appID"].get<int>();
         addr = d["addr"].get<std::string>();
         port = d["port"].get<int>();
@@ -70,16 +74,19 @@ struct EndpointData {
     }
 
     [[nodiscard]] std::string toString() const {
+        if(appInfo.appName.empty() && appId == 0 && port == 0) {
+            return "null";
+        }
         std::stringstream ss;
-        ss << appInfo.appName << "#" << appId << " (" << appInfo.version << ") @" << addr << ":" << port;
-        return "";
+        ss << appInfo.appName << "#" << appId << "@" << addr << ":" << port;
+        return ss.str();
     }
 
     AppData appInfo;
-    long appId;
+    long appId{0};
     std::string startTime;
     std::string addr;
-    long port;
+    long port{0};
 };
 
 struct TrackLayoutData {

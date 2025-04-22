@@ -45,17 +45,15 @@ struct MessagingSetIncidentList final : MessagingMessages {
     static constexpr std::uint32_t MESSAGE_ID = SET_INCIDENT_LIST;
 
     explicit MessagingSetIncidentList(const nlohmann::json &d) {
-/*
         for(auto &iter: d) {
             incidents.emplace_back(iter);
         }
-        */
     }
     std::vector<IncidentData> incidents;
 };
 
 struct MessagingNotifyIncident final : MessagingMessages {
-    static constexpr std::uint32_t MESSAGE_ID = SET_INCIDENT_LIST;
+    static constexpr std::uint32_t MESSAGE_ID = NOTIFY_INCIDENT;
 
     explicit MessagingNotifyIncident(const nlohmann::json &d): incident{d} {
     }
