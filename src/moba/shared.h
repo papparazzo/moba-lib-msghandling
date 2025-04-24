@@ -57,6 +57,9 @@ struct AppData {
 };
 
 struct EndpointData {
+
+    EndpointData() = default;
+
     EndpointData(
         AppData appInfo, const long appId, std::string startTime, std::string addr, const long port
     ) : appInfo{std::move(appInfo)}, appId{appId}, startTime{std::move(startTime)}, addr{std::move(addr)}, port{port} {

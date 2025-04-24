@@ -55,6 +55,8 @@ struct MessagingSetIncidentList final : MessagingMessages {
 struct MessagingNotifyIncident final : MessagingMessages {
     static constexpr std::uint32_t MESSAGE_ID = NOTIFY_INCIDENT;
 
+    explicit MessagingNotifyIncident(const IncidentData &incident): incident{incident} {}
+
     explicit MessagingNotifyIncident(const nlohmann::json &d): incident{d} {
     }
     IncidentData incident;
