@@ -104,7 +104,7 @@ struct ClientStart: public ClientMessage {
         nlohmann::json d;
 
         d["appName"] = appData.appName;
-        d["version"] = appData.version.getString();
+        d["version"] = appData.version.toString();
         d["msgGroups"] = appData.groups;
         return d;
     }

@@ -43,7 +43,7 @@ struct InterfaceMessage: Message {
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
 };
 
-struct InterfaceConnectivityStateChanged: public InterfaceMessage {
+struct InterfaceConnectivityStateChanged final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONNECTIVITY_STATE_CHANGED;
 
     enum class Connectivity {
@@ -51,7 +51,7 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
         ERROR
     };
 
-    explicit InterfaceConnectivityStateChanged(Connectivity connectivity): connectivity{connectivity} {
+    explicit InterfaceConnectivityStateChanged(const Connectivity connectivity): connectivity{connectivity} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
@@ -107,7 +107,7 @@ struct InterfaceSetBrakeVector final: InterfaceMessage {
     std::vector<BrakeVectorContact> items;
 };
 
-struct InterfaceResetBrakeVector: public InterfaceMessage {
+struct InterfaceResetBrakeVector final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = RESET_BRAKE_VECTOR;
 
     explicit InterfaceResetBrakeVector(const nlohmann::json &d) {
@@ -119,13 +119,13 @@ struct InterfaceResetBrakeVector: public InterfaceMessage {
     std::vector<BrakeVectorContact> items;
 };
 
-struct InterfaceSetLocoSpeed: public InterfaceMessage {
+struct InterfaceSetLocoSpeed final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_SPEED;
 
-    InterfaceSetLocoSpeed(std::uint32_t localId, std::uint16_t speed): localId{localId}, speed{speed} {
+    InterfaceSetLocoSpeed(const std::uint32_t localId, const std::uint16_t speed): localId{localId}, speed{speed} {
     }
 
-    InterfaceSetLocoSpeed(const nlohmann::json &d) {
+    explicit InterfaceSetLocoSpeed(const nlohmann::json &d) {
         localId = d["localId"].get<int>();
         speed = d["speed"].get<int>();
     }
@@ -142,7 +142,7 @@ struct InterfaceSetLocoSpeed: public InterfaceMessage {
     std::uint16_t speed;
 };
 
-struct InterfaceSetLocoDirection: public InterfaceMessage {
+struct InterfaceSetLocoDirection final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_DIRECTION;
 
     enum class DrivingDirection	{
@@ -152,16 +152,17 @@ struct InterfaceSetLocoDirection: public InterfaceMessage {
         TOGGLE   = 3,
     };
 
-    InterfaceSetLocoDirection(std::uint32_t localId, DrivingDirection direction): localId{localId}, direction{direction} {
+    InterfaceSetLocoDirection(const std::uint32_t localId, const DrivingDirection direction):
+    localId{localId}, direction{direction} {
     }
 
-    InterfaceSetLocoDirection(std::uint32_t localId, std::uint8_t drivingDirection): localId{localId} {
+    InterfaceSetLocoDirection(const std::uint32_t localId, std::uint8_t drivingDirection): localId{localId} {
          direction = static_cast<DrivingDirection>(drivingDirection);
     }
 
-    InterfaceSetLocoDirection(const nlohmann::json &d) {
+    explicit InterfaceSetLocoDirection(const nlohmann::json &d) {
         localId = d["localId"].get<int>();
-        auto s = d["direction"].get<std::string>();
+        const auto s = d["direction"].get<std::string>();
         direction = getDirectionFromString(s);
     }
 
@@ -214,7 +215,8 @@ protected:
 struct InterfaceSetLocoFunction final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = SET_LOCO_FUNCTION;
 
-    InterfaceSetLocoFunction(std::uint32_t localId, Function function, bool active): localId{localId}, function{function}, active{active} {
+    InterfaceSetLocoFunction(const std::uint32_t localId, const Function function, const bool active):
+    localId{localId}, function{function}, active{active} {
     }
 
     explicit InterfaceSetLocoFunction(const nlohmann::json &d) {
@@ -243,7 +245,7 @@ struct InterfaceSwitchAccessoryDecoders final: InterfaceMessage {
 
     explicit InterfaceSwitchAccessoryDecoders(const nlohmann::json &d) {
         for(auto &iter: d) {
-            switchingOutputs.push_back(iter);
+            switchingOutputs.emplace_back(iter);
         }
     }
     SwitchingOutputs switchingOutputs;

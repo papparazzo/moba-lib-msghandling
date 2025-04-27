@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include <memory>
+#include <utility>
 
 #include "incident.h"
 #include "message.h"
@@ -55,7 +55,7 @@ struct MessagingSetIncidentList final : MessagingMessages {
 struct MessagingNotifyIncident final : MessagingMessages {
     static constexpr std::uint32_t MESSAGE_ID = NOTIFY_INCIDENT;
 
-    explicit MessagingNotifyIncident(const IncidentData &incident): incident{incident} {}
+    explicit MessagingNotifyIncident(IncidentData incident): incident{std::move(incident)} {}
 
     explicit MessagingNotifyIncident(const nlohmann::json &d): incident{d} {
     }
