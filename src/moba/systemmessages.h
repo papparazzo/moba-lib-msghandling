@@ -106,7 +106,7 @@ struct SystemSetStandbyMode final: SystemMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        return nlohmann::json{standbyActive};
+        return standbyActive;
     }
     bool standbyActive;
 };

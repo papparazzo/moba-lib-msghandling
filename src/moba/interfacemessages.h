@@ -55,8 +55,6 @@ struct InterfaceConnectivityStateChanged: public InterfaceMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-
         switch(connectivity) {
             case Connectivity::CONNECTED:
                 return "CONNECTED";

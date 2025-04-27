@@ -55,7 +55,6 @@ struct ControlGetBlockListReq final : ControlMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
         if(layoutId == 0) {
             return nlohmann::json{};
         }
@@ -72,7 +71,6 @@ struct ControlGetSwitchStateListReq final : ControlMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
         if(layoutId == 0) {
             return nlohmann::json{};
         }
@@ -89,7 +87,6 @@ struct ControlGetTrainListReq final : ControlMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
         if(layoutId == 0) {
             return nlohmann::json{};
         }
@@ -126,8 +123,7 @@ struct ControlLock: ControlMessage {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d = blockVec;
-        return d;
+        return blockVec;
     }
 
     std::vector<std::uint32_t> blockVec;
