@@ -51,6 +51,21 @@ struct AppData {
         appName = d["appName"].get<std::string>();
     }
 
+    [[nodiscard]] nlohmann::json getJsonDocument() const {
+        nlohmann::json d;
+
+        d["appName"] = appName;
+        d["version"] = version.toString();
+
+        nlohmann::json msgGroups = nlohmann::json::array();
+        for(const auto& group : groups) {
+            msgGroups.push_back(group);
+        }
+        d["msgGroups"] = msgGroups;
+
+        return d;
+    }
+    
     std::string appName;
     moba::Version version;
     MessageGroups groups;
@@ -76,6 +91,22 @@ struct EndpointData {
         appInfo = AppData{d["appInfo"]};
     }
 
+    [[nodiscard]] nlohmann::json getJsonDocument() const {
+        nlohmann::json d;
+    
+        if(appInfo.appName.empty() && appId == 0 && port == 0) {
+            return nullptr;
+        }
+    
+        d["appID"] = appId;
+        d["addr"] = addr;
+        d["port"] = port;
+        d["startTime"] = startTime;
+    
+        d["appInfo"] = appInfo.getJsonDocument();
+        return d;
+    }
+    
     [[nodiscard]] std::string toString() const {
         if(appInfo.appName.empty() && appId == 0 && port == 0) {
             return "null";

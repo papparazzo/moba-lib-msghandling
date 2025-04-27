@@ -35,9 +35,8 @@ struct IncidentData final {
         IncidentType type, 
         std::string  caption,
         std::string  message,
-        std::string  source,
-        EndpointData origin
-    ) : level{level}, type{type}, caption{std::move(caption)}, message{std::move(message)}, source{std::move(source)}, origin{std::move(origin)} {
+        std::string  source
+    ) : level{level}, type{type}, caption{std::move(caption)}, message{std::move(message)}, source{std::move(source)} {
         auto now = std::chrono::system_clock::now();
         auto time = std::chrono::system_clock::to_time_t(now);
         std::tm tm = *std::localtime(&time);
@@ -54,6 +53,19 @@ struct IncidentData final {
         source = d["source"].get<std::string>();
         message = d["message"].get<std::string>();
         timeStamp = d["timeStamp"].get<std::string>();
+    }
+
+    [[nodiscard]] nlohmann::json getJsonDocument() const {
+        nlohmann::json d;
+
+        d["caption"] = caption;
+        d["level"] = incidentLevelEnumToString(level);
+        d["type"] = incidentTypeEnumToString(type);
+        d["message"] = message;
+        d["source"] = source;
+        d["origin"] = origin.getJsonDocument();    // origin wird nur vom moba-server gesetzt!
+        d["timeStamp"] = timeStamp;
+        return d;
     }
 
     IncidentLevel level;
