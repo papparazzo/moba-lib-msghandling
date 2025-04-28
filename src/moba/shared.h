@@ -211,7 +211,7 @@ struct ContactData {
         if (l.moduleAddr < r.moduleAddr) {
             return true;
         }
-        if (l.moduleAddr == r.moduleAddr && l.moduleAddr < r.moduleAddr) {
+        if (l.moduleAddr == r.moduleAddr && l.contactNb < r.contactNb) {
             return true;
         }
         return false;
