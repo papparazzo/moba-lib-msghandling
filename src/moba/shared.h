@@ -241,7 +241,8 @@ struct ContactTriggerData {
 struct BlockContactData {
 
     explicit BlockContactData(const nlohmann::json &d) :
-            brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]} {
+        brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]}
+    {
         if (!d["trainId"].is_null()) {
             trainId = d["trainId"].get<int>();
         }
@@ -251,7 +252,7 @@ struct BlockContactData {
 
     ContactData brakeTriggerContact;
     ContactData blockContact;
-    int trainId;
+    int trainId{0};
 
     // ToDo Consider to make trainId optional
     //std::optional<int> trainId;
