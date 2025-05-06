@@ -30,14 +30,15 @@
 
 struct InterfaceMessage: Message {
     enum MessageName {
-        CONNECTIVITY_STATE_CHANGED = 1,
-        CONTACT_TRIGGERED          = 2,
-        SET_BRAKE_VECTOR           = 3,
-        RESET_BRAKE_VECTOR         = 4,
-        SET_LOCO_SPEED             = 5,
-        SET_LOCO_DIRECTION         = 6,
-        SET_LOCO_FUNCTION          = 7,
-        SWITCH_ACCESSORY_DECODERS  = 8
+        CONNECTIVITY_STATE_CHANGED         = 1,
+        CONTACT_TRIGGERED                  = 2,
+        SET_BRAKE_VECTOR                   = 3,
+        RESET_BRAKE_VECTOR                 = 4,
+        SET_LOCO_SPEED                     = 5,
+        SET_LOCO_DIRECTION                 = 6,
+        SET_LOCO_FUNCTION                  = 7,
+        SWITCH_ACCESSORY_DECODERS          = 8,
+        SWITCH_ACCESSORY_DECODERS_COMPLETE = 9
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
@@ -249,4 +250,14 @@ struct InterfaceSwitchAccessoryDecoders final: InterfaceMessage {
         }
     }
     SwitchingOutputs switchingOutputs;
+};
+
+struct InterfaceSwitchAccessoryDecodersComplete final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SWITCH_ACCESSORY_DECODERS_COMPLETE;
+
+    explicit InterfaceSwitchAccessoryDecodersComplete(const nlohmann::json &d) {
+        id = d.get<int>();
+    }
+
+    int id;
 };
