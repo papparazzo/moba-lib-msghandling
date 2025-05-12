@@ -25,7 +25,7 @@
 #include "shared.h"
 #include "enumerrorid.h"
 
-struct ClientMessage: public Message {
+struct ClientMessage: Message {
     enum MessageName {
         CLIENT_VOID         = 1,
         CLIENT_ECHO_REQ     = 2,
@@ -94,7 +94,7 @@ struct ClientError final: ClientMessage {
     std::string additionalMsg;
 };
 
-struct ClientStart: public ClientMessage {
+struct ClientStart final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_START;
 
     explicit ClientStart(AppData appData): appData{std::move(appData)} {
@@ -112,7 +112,7 @@ struct ClientStart: public ClientMessage {
     AppData appData;
 };
 
-struct ClientConnected: public ClientMessage {
+struct ClientConnected final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_CONNECTED;
 
     explicit ClientConnected(const nlohmann::json &d) {
@@ -122,22 +122,22 @@ struct ClientConnected: public ClientMessage {
     long appId;
 };
 
-struct ClientClose: public ClientMessage {
+struct ClientClose final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_CLOSE;
 };
 
-struct ClientShutdown: public ClientMessage {
+struct ClientShutdown final: ClientMessage {
 
     explicit ClientShutdown(const nlohmann::json &) {
     }
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };
 
-struct ClientReset: public ClientMessage {
+struct ClientReset final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_RESET;
 };
 
-struct ClientSelfTesting: public ClientMessage {
+struct ClientSelfTesting final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SELF_TESTING;
 };
 
