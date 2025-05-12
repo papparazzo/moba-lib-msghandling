@@ -27,7 +27,7 @@
 
 struct ClientMessage: Message {
     enum MessageName {
-        CLIENT_VOID         = 1,
+        CLIENT_PING         = 1,
         CLIENT_ECHO_REQ     = 2,
         CLIENT_ECHO_RES     = 3,
         CLIENT_ERROR        = 4,
@@ -43,7 +43,7 @@ struct ClientMessage: Message {
 };
 
 struct ClientVoid final: ClientMessage {
-    static constexpr std::uint32_t MESSAGE_ID = CLIENT_VOID;
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_PING;
 };
 
 struct ClientEchoReq final: ClientMessage {
