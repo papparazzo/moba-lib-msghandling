@@ -29,6 +29,7 @@
 #include <moba-common/version.h>
 #include <moba-common/enumswitchstand.h>
 
+#include <iostream>
 #include "nlohmann/json.hpp"
 #include "message.h"
 
@@ -64,7 +65,7 @@ struct AppData {
 
         return d;
     }
-    
+
     std::string appName;
     moba::Version version;
     MessageGroups groups;
@@ -92,20 +93,20 @@ struct EndpointData {
 
     [[nodiscard]] nlohmann::json getJsonDocument() const {
         nlohmann::json d;
-    
+
         if(appInfo.appName.empty() && appId == 0 && port == 0) {
             return nullptr;
         }
-    
+
         d["appID"] = appId;
         d["addr"] = addr;
         d["port"] = port;
         d["startTime"] = startTime;
-    
+
         d["appInfo"] = appInfo.getJsonDocument();
         return d;
     }
-    
+
     [[nodiscard]] std::string toString() const {
         if(appInfo.appName.empty() && appId == 0 && port == 0) {
             return "null";

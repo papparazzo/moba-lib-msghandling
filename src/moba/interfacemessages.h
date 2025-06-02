@@ -251,3 +251,13 @@ struct InterfaceSwitchAccessoryDecoders final: InterfaceMessage {
     }
     SwitchingOutputs switchingOutputs;
 };
+
+struct InterfaceSwitchAccessoryDecodersComplete final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SWITCH_ACCESSORY_DECODERS_COMPLETE;
+
+    explicit InterfaceSwitchAccessoryDecodersComplete(const nlohmann::json &d) {
+        id = d.get<int>();
+    }
+
+    int id;
+};
