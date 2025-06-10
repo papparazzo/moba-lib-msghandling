@@ -35,21 +35,26 @@ enum class Day {
 inline Day stringToDayEnum(const std::string &s) {
     if(s == "MONDAY") {
         return Day::MONDAY;
-    } else if(s == "TUESDAY") {
-        return Day::TUESDAY;
-    } else if(s == "WEDNESDAY") {
-        return Day::WEDNESDAY;
-    } else if(s == "THURSDAY") {
-        return Day::THURSDAY;
-    } else if(s == "FRIDAY") {
-        return Day::FRIDAY;
-    } else if(s == "SATURDAY") {
-        return Day::SATURDAY;
-    } else if(s == "SUNDAY") {
-        return Day::SUNDAY;
-    } else {
-        throw moba::UnsupportedOperationException{"Day: invalid value given"};
     }
+    if(s == "TUESDAY") {
+        return Day::TUESDAY;
+    }
+    if(s == "WEDNESDAY") {
+        return Day::WEDNESDAY;
+    }
+    if(s == "THURSDAY") {
+        return Day::THURSDAY;
+    }
+    if(s == "FRIDAY") {
+        return Day::FRIDAY;
+    }
+    if(s == "SATURDAY") {
+        return Day::SATURDAY;
+    }
+    if(s == "SUNDAY") {
+        return Day::SUNDAY;
+    }
+    throw moba::UnsupportedOperationException{"Day: invalid value given"};
 }
 
 inline std::string dayEnumToString(Day s) {
