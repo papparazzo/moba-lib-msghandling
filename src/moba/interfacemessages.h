@@ -20,25 +20,20 @@
 
 #pragma once
 
-#include <string>
 #include <vector>
-#include <moba-common/exception.h>
 
 #include "message.h"
 #include "shared.h"
-#include "enumfunction.h"
 
 struct InterfaceMessage: Message {
     enum MessageName {
-        CONNECTIVITY_STATE_CHANGED         = 1,
-        CONTACT_TRIGGERED                  = 2,
-        SET_BRAKE_VECTOR                   = 3,
-        RESET_BRAKE_VECTOR                 = 4,
-        SET_LOCO_SPEED                     = 5,
-        SET_LOCO_DIRECTION                 = 6,
-        SET_LOCO_FUNCTION                  = 7,
-        SWITCH_ACCESSORY_DECODERS          = 8,
-        SWITCH_ACCESSORY_DECODERS_COMPLETE = 9
+        CONNECTIVITY_STATE_CHANGED = 1,
+        SWITCH_ROUTE               = 2,
+        ROUTE_SWITCHED             = 3,
+        ROUTE_RELEASED             = 4,
+        BLOCK_RELEASED             = 5,
+        SET_ACTION_LIST            = 6,
+        DELETE_ACTION_LIST         = 7
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
@@ -69,31 +64,56 @@ struct InterfaceConnectivityStateChanged final: InterfaceMessage {
     Connectivity connectivity;
 };
 
-struct InterfaceContactTriggered final: InterfaceMessage {
-    static constexpr std::uint32_t MESSAGE_ID = CONTACT_TRIGGERED;
+struct InterfaceRouteSwitched final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ROUTE_SWITCHED;
 
-    explicit InterfaceContactTriggered(const nlohmann::json &d): contactTrigger{d} {
-    }
-
-    explicit InterfaceContactTriggered(const ContactTriggerData &contactTrigger): contactTrigger{contactTrigger} {
+    explicit InterfaceRouteSwitched(const long id): id{id} {
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-
-        d["state"] = contactTrigger.state;
-        d["time"] = contactTrigger.time;
-
-        nlohmann::json v;
-
-        v["moduleAddr"] = contactTrigger.contactData.moduleAddr;
-        v["contactNb"] = contactTrigger.contactData.contactNb;
-
-        d["contact"] = v;
-        return d;
+        return id;
     }
 
-    ContactTriggerData contactTrigger;
+    long id;
+};
+
+struct InterfaceSwitchRoute final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SWITCH_ROUTE;
+
+    explicit InterfaceSwitchRoute(const long id): id{id} {
+    }
+
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        return id;
+    }
+
+    long id;
+};
+
+struct InterfaceRouteReleased final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ROUTE_RELEASED;
+
+    explicit InterfaceRouteReleased(const long id): id{id} {
+    }
+
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        return id;
+    }
+
+    long id;
+};
+
+struct InterfaceBlockReleased final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = BLOCK_RELEASED;
+
+    explicit InterfaceBlockReleased(const long id): id{id} {
+    }
+
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        return id;
+    }
+
+    long id;
 };
 
 struct InterfaceSetBrakeVector final: InterfaceMessage {
