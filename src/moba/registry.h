@@ -55,6 +55,10 @@ public:
         };
     }
 
+    void registerHandler(const std::uint32_t grpId, const std::uint32_t msgId, HandlerMsgFnWrapper fn) {
+        handlers[grpId][msgId] = fn;
+    }
+
     void registerDefaultHandler(HandlerDefFnWrapper fn) {
         defHandler = fn;
     }
