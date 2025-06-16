@@ -26,22 +26,20 @@ enum class ActionType {
     VOID,
     DELAY,
 
-    LOCO_EMERGENCY_STOP,
+    LOCO_HALT,
     LOCO_SPEED,
-    LOCO_DIRECTION,
+    LOCO_DIRECTION_BACKWARD,
+    LOCO_DIRECTION_FORWARD,
+
     LOCO_FUNCTION_ON,
     LOCO_FUNCTION_OFF,
-    LOCO_FUNCTION_IMPULSE,
+    SWITCHING_RED,
+    SWITCHING_GREEN,
 
-    SWITCHING_ON,
-    SWITCHING_OFF,
-    SWITCHING_IMPULSE,
-
-    ROUTING_SWITCH_ROUTE,
-    ROUTING_ROUTE_SWITCHED,
-    ROUTING_CLEAR_ROUTE,
-
-    BLOCK_CLEAR_BLOCK
+    SEND_SWITCH_ROUTE,
+    SEND_ROUTE_SWITCHED,
+    SEND_ROUTE_RELEASED,
+    SEND_BLOCK_RELEASED
 };
 
 inline ActionType stringToActionTypeEnum(const std::string &s) {
@@ -51,14 +49,17 @@ inline ActionType stringToActionTypeEnum(const std::string &s) {
     if(s == "DELAY") {
         return ActionType::DELAY;
     }
-    if(s == "LOCO_EMERGENCY_STOP") {
-        return ActionType::LOCO_EMERGENCY_STOP;
+    if(s == "LOCO_HALT") {
+        return ActionType::LOCO_HALT;
     }
     if(s == "LOCO_SPEED") {
         return ActionType::LOCO_SPEED;
     }
-    if(s == "LOCO_DIRECTION") {
-        return ActionType::LOCO_DIRECTION;
+    if(s == "LOCO_DIRECTION_BACKWARD") {
+        return ActionType::LOCO_DIRECTION_BACKWARD;
+    }
+    if(s == "LOCO_DIRECTION_FORWARD") {
+        return ActionType::LOCO_DIRECTION_FORWARD;
     }
     if(s == "LOCO_FUNCTION_ON") {
         return ActionType::LOCO_FUNCTION_ON;
@@ -66,29 +67,23 @@ inline ActionType stringToActionTypeEnum(const std::string &s) {
     if(s == "LOCO_FUNCTION_OFF") {
         return ActionType::LOCO_FUNCTION_OFF;
     }
-    if(s == "LOCO_FUNCTION_IMPULSE") {
-        return ActionType::LOCO_FUNCTION_IMPULSE;
+    if(s == "SWITCHING_RED") {
+        return ActionType::SWITCHING_RED;
     }
-    if(s == "SWITCHING_ON") {
-        return ActionType::SWITCHING_ON;
+    if(s == "SWITCHING_GREEN") {
+        return ActionType::SWITCHING_GREEN;
     }
-    if(s == "SWITCHING_OFF") {
-        return ActionType::SWITCHING_OFF;
+    if(s == "SEND_SWITCH_ROUTE") {
+        return ActionType::SEND_SWITCH_ROUTE;
     }
-    if(s == "SWITCHING_IMPULSE") {
-        return ActionType::SWITCHING_IMPULSE;
+    if(s == "SEND_ROUTE_SWITCHED") {
+        return ActionType::SEND_ROUTE_SWITCHED;
     }
-    if(s == "ROUTING_SWITCH_ROUTE") {
-        return ActionType::ROUTING_SWITCH_ROUTE;
+    if(s == "SEND_ROUTE_RELEASED") {
+        return ActionType::SEND_ROUTE_RELEASED;
     }
-    if(s == "ROUTING_ROUTE_SWITCHED") {
-        return ActionType::ROUTING_ROUTE_SWITCHED;
-    }
-    if(s == "ROUTING_CLEAR_ROUTE") {
-        return ActionType::ROUTING_CLEAR_ROUTE;
-    }
-    if(s == "BLOCK_CLEAR_BLOCK") {
-        return ActionType::BLOCK_CLEAR_BLOCK;
+    if(s == "SEND_BLOCK_RELEASED") {
+        return ActionType::SEND_BLOCK_RELEASED;
     }
     throw moba::UnsupportedOperationException{"ActionType: invalid value given"};
 }
@@ -101,14 +96,17 @@ inline std::string actionTypeEnumToString(ActionType s) {
         case ActionType::DELAY:
             return "DELAY";
 
-        case ActionType::LOCO_EMERGENCY_STOP:
-            return "LOCO_EMERGENCY_STOP";
+        case ActionType::LOCO_HALT:
+            return "LOCO_HALT";
 
         case ActionType::LOCO_SPEED:
             return "LOCO_SPEED";
 
-        case ActionType::LOCO_DIRECTION:
-            return "LOCO_DIRECTION";
+        case ActionType::LOCO_DIRECTION_BACKWARD:
+            return "LOCO_DIRECTION_BACKWARD";
+
+        case ActionType::LOCO_DIRECTION_FORWARD:
+            return "LOCO_DIRECTION_FORWARD";
 
         case ActionType::LOCO_FUNCTION_ON:
             return "LOCO_FUNCTION_ON";
@@ -116,29 +114,23 @@ inline std::string actionTypeEnumToString(ActionType s) {
         case ActionType::LOCO_FUNCTION_OFF:
             return "LOCO_FUNCTION_OFF";
 
-        case ActionType::LOCO_FUNCTION_IMPULSE:
-            return "LOCO_FUNCTION_IMPULSE";
+        case ActionType::SWITCHING_RED:
+            return "SWITCHING_RED";
 
-        case ActionType::SWITCHING_ON:
-            return "SWITCHING_ON";
+        case ActionType::SWITCHING_GREEN:
+            return "SWITCHING_GREEN";
 
-        case ActionType::SWITCHING_OFF:
-            return "SWITCHING_OFF";
+        case ActionType::SEND_SWITCH_ROUTE:
+            return "SEND_SWITCH_ROUTE";
 
-        case ActionType::SWITCHING_IMPULSE:
-            return "SWITCHING_IMPULSE";
+        case ActionType::SEND_ROUTE_SWITCHED:
+            return "SEND_ROUTE_SWITCHED";
 
-        case ActionType::ROUTING_SWITCH_ROUTE:
-            return "ROUTING_SWITCH_ROUTE";
+        case ActionType::SEND_ROUTE_RELEASED:
+            return "SEND_ROUTE_RELEASED";
 
-        case ActionType::ROUTING_ROUTE_SWITCHED:
-            return "ROUTING_ROUTE_SWITCHED";
-
-        case ActionType::ROUTING_CLEAR_ROUTE:
-            return "ROUTING_CLEAR_ROUTE";
-
-        case ActionType::BLOCK_CLEAR_BLOCK:
-            return "BLOCK_CLEAR_BLOCK";
+        case ActionType::SEND_BLOCK_RELEASED:
+            return "SEND_BLOCK_RELEASED";
 
         default:
             throw moba::UnsupportedOperationException{"ActionType: invalid value given"};
