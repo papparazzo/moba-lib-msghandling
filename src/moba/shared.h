@@ -272,13 +272,15 @@ struct SwitchStandData {
     int id{};
 };
 
-struct BrakeVectorContact {
-    explicit BrakeVectorContact(const ContactData contact, const int localId = 0) : contact{contact}, localId{localId} {
+struct ContactTrigger {
+    explicit ContactTrigger(const ContactData contact, const int localId = 0) : contact{contact}, localId{localId} {
     }
 
-    explicit BrakeVectorContact(const nlohmann::json &d) {
+    explicit ContactTrigger(const nlohmann::json &d) {
         contact = ContactData{d["contact"]};
-        localId = d["localId"].get<int>();
+        if (!d["localId"].is_null()) {
+            localId = d["localId"].get<int>();
+        }
     }
 
     ContactData contact;
