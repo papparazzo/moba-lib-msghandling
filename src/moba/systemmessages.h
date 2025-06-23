@@ -66,6 +66,7 @@ struct SystemTriggerEmergencyStop final: SystemMessage {
     enum class EmergencyTriggerReason {
         CENTRAL_STATION,
         EXTERN,
+        SOFTWARE_ERROR,
         SOFTWARE_MANUAL,
         SELF_ACTING_BY_EXTERN_SWITCHING
     };
@@ -79,6 +80,9 @@ struct SystemTriggerEmergencyStop final: SystemMessage {
         switch(emergencyTriggerReason) {
             case EmergencyTriggerReason::CENTRAL_STATION:
                 return "CENTRAL_STATION";
+
+            case EmergencyTriggerReason::SOFTWARE_ERROR:
+                return "SOFTWARE_ERROR";
 
             case EmergencyTriggerReason::SOFTWARE_MANUAL:
                 return "SOFTWARE_MANUAL";
