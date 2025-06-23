@@ -23,6 +23,7 @@
 #include <moba-common/exception.h>
 
 enum class Function {
+    NONE                        = 0,   // keine Funktion
     HEADLIGHTS                  = 1,   // Stirnbeleuchtung
     INTERIOR_LIGHT              = 2,   // Innenbeleuchtung
     EXTERIOR_LIGHT              = 3,   // Rücklicht
@@ -84,6 +85,9 @@ enum class Function {
 };
 
 inline Function stringToControllableFunctionEnum(const std::string &s) {
+    if(s == "NONE") {
+        return Function::NONE;
+    }
     if(s == "HEADLIGHTS") {
         return Function::HEADLIGHTS;
     }
@@ -257,6 +261,9 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
 
 inline std::string controllableFunctionEnumToString(const Function s) {
     switch(s) {
+        case Function::NONE:
+            return "NONE";
+
         case Function::HEADLIGHTS:
             return "HEADLIGHTS";
 
