@@ -23,7 +23,6 @@
 #include <moba-common/exception.h>
 
 enum class ActionType {
-    VOID,
     DELAY,
 
     LOCO_HALT,
@@ -43,9 +42,6 @@ enum class ActionType {
 };
 
 inline ActionType stringToActionTypeEnum(const std::string &s) {
-    if(s == "VOID") {
-        return ActionType::VOID;
-    }
     if(s == "DELAY") {
         return ActionType::DELAY;
     }
@@ -90,9 +86,6 @@ inline ActionType stringToActionTypeEnum(const std::string &s) {
 
 inline std::string actionTypeEnumToString(ActionType s) {
     switch(s) {
-        case ActionType::VOID:
-            return "VOID";
-
         case ActionType::DELAY:
             return "DELAY";
 
