@@ -20,9 +20,6 @@
 
 #pragma once
 
-#include <string>
-#include <cstdint>
-
 #include "nlohmann/json.hpp"
 
 struct RawMessage final {

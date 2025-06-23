@@ -24,7 +24,7 @@
 #include <memory>
 
 #include "message.h"
-#include "day.h"
+#include "enumday.h"
 #include "timestruct.h"
 
 struct TimerMessage: Message {
