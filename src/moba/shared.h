@@ -218,6 +218,10 @@ struct ContactData {
         return false;
     }
 
+    explicit operator std::string() const {
+        return std::to_string(moduleAddr) + ":" + std::to_string(contactNb);
+    }
+
     std::uint16_t moduleAddr;
     std::uint16_t contactNb;
 };
