@@ -30,7 +30,8 @@ struct InterfaceMessage: Message {
         ROUTE_RELEASED             = 4,
         BLOCK_RELEASED             = 5,
         SET_ACTION_LIST            = 6,
-        DELETE_ACTION_LIST         = 7
+        REPLACE_ACTION_LIST        = 7,
+        DELETE_ACTION_LIST         = 8
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
