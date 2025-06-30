@@ -23,13 +23,11 @@
 #include <memory>
 #include <set>
 #include <utility>
-#include <vector>
 #include <map>
 #include <moba-common/exception.h>
 #include <moba-common/version.h>
 #include <moba-common/enumswitchstand.h>
 
-#include <iostream>
 #include "nlohmann/json.hpp"
 #include "message.h"
 
@@ -275,33 +273,3 @@ struct SwitchStandData {
     moba::SwitchStand switchStand{};
     int id{};
 };
-
-struct ContactTrigger {
-    explicit ContactTrigger(const ContactData contact, const int localId = 0) : contact{contact}, localId{localId} {
-    }
-
-    explicit ContactTrigger(const nlohmann::json &d) {
-        contact = ContactData{d["contact"]};
-        if (!d["localId"].is_null()) {
-            localId = d["localId"].get<int>();
-        }
-    }
-
-    ContactData contact;
-    int localId;
-};
-
-struct SwitchingOutput {
-    SwitchingOutput(const std::uint32_t localId, const bool differ) : localId{localId}, differ{differ} {
-    }
-
-    explicit SwitchingOutput(const nlohmann::json &d) {
-        localId = d["localId"].get<int>();
-        differ = d["differ"].get<bool>();
-    }
-
-    std::uint32_t localId;
-    bool differ;
-};
-
-using SwitchingOutputs = std::vector<SwitchingOutput>;
