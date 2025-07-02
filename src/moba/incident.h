@@ -55,7 +55,8 @@ struct IncidentData final {
         timeStamp = d["timeStamp"].get<std::string>();
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const {
         nlohmann::json d;
 
         d["caption"] = caption;

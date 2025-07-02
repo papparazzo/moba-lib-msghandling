@@ -57,6 +57,11 @@ struct MessagingNotifyIncident final : MessagingMessages {
 
     explicit MessagingNotifyIncident(IncidentData incident): incident{std::move(incident)} {}
 
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
+        return incident.getJsonDocument();
+    }
+
     explicit MessagingNotifyIncident(const nlohmann::json &d): incident{d} {
     }
     IncidentData incident;

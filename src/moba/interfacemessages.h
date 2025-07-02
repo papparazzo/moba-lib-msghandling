@@ -48,7 +48,8 @@ struct InterfaceConnectivityStateChanged final: InterfaceMessage {
     explicit InterfaceConnectivityStateChanged(const Connectivity connectivity): connectivity{connectivity} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         switch(connectivity) {
             case Connectivity::CONNECTED:
                 return "CONNECTED";
@@ -68,7 +69,8 @@ struct InterfaceRouteSwitched final: InterfaceMessage {
     explicit InterfaceRouteSwitched(const unsigned long id): id{id} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         return id;
     }
 
@@ -81,7 +83,8 @@ struct InterfaceSwitchRoute final: InterfaceMessage {
     explicit InterfaceSwitchRoute(const unsigned long id): id{id} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         return id;
     }
 
@@ -94,7 +97,8 @@ struct InterfaceRouteReleased final: InterfaceMessage {
     explicit InterfaceRouteReleased(const unsigned long id): id{id} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         return id;
     }
 
@@ -107,7 +111,8 @@ struct InterfaceBlockReleased final: InterfaceMessage {
     explicit InterfaceBlockReleased(const unsigned long id): id{id} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         return id;
     }
 
