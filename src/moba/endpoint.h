@@ -41,7 +41,8 @@ public:
     
     long connect();
 
-    [[nodiscard]] long getAppId() const;
+    [[nodiscard]]
+    long getAppId() const;
 
     auto receiveMsg(time_t timeoutSec = 0) const -> RawMessage;
     auto waitForNewMsg() const -> RawMessage;

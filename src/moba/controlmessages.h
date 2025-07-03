@@ -54,7 +54,8 @@ struct ControlGetBlockListReq final : ControlMessage {
     explicit ControlGetBlockListReq(const int layoutId = 0): layoutId{layoutId} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         if(layoutId == 0) {
             return nlohmann::json{};
         }
@@ -70,7 +71,8 @@ struct ControlGetSwitchStateListReq final : ControlMessage {
     explicit ControlGetSwitchStateListReq(const int layoutId = 0): layoutId{layoutId} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         if(layoutId == 0) {
             return nlohmann::json{};
         }
@@ -86,7 +88,8 @@ struct ControlGetTrainListReq final : ControlMessage {
     explicit ControlGetTrainListReq(const int layoutId = 0): layoutId{layoutId} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         if(layoutId == 0) {
             return nlohmann::json{};
         }
@@ -122,7 +125,8 @@ struct ControlLock: ControlMessage {
         }
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         return blockVec;
     }
 
@@ -172,7 +176,8 @@ struct ControlPushTrain final : ControlMessage {
         direction.setDrivingDirection(d["direction"].get<std::string>());
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
 
         d["trainId"] = trainId;

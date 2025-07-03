@@ -69,7 +69,8 @@ struct TimerSetGlobalTimer final: TimerMessage {
     explicit TimerSetGlobalTimer(const nlohmann::json &d) {
         auto modelTime = d["modelTime"];
         curModelDay = stringToDayEnum(modelTime["day"].get<std::string>());
-        curModelTime = Time{modelTime["time"].get<unsigned int>()};
+
+        curModelTime = Time{modelTime["time"]["timeInMinutes"].get<unsigned int>()};
         multiplicator = d["multiplicator"].get<int>();
 
         nightStartTime = Time{d["nightStartTime"].get<unsigned int>()};
@@ -78,7 +79,8 @@ struct TimerSetGlobalTimer final: TimerMessage {
         sunsetStartTime = Time{d["sunsetStartTime"].get<unsigned int>()};
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         nlohmann::json v;
         v["day"] = dayEnumToString(curModelDay);
         v["time"] = curModelTime.getTime();

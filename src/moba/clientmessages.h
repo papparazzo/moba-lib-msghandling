@@ -52,7 +52,8 @@ struct ClientEchoReq final: ClientMessage {
     explicit ClientEchoReq(std::string payload): payload{std::move(payload)} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         return payload;
     }
 
@@ -83,7 +84,8 @@ struct ClientError final: ClientMessage {
         additionalMsg = d["additionalMsg"].get<std::string>();
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         return {
             {"errorId", errorIdEnumToString(errorId)},
             {"additonalMsg", additionalMsg},
@@ -100,7 +102,8 @@ struct ClientStart final: ClientMessage {
     explicit ClientStart(AppData appData): appData{std::move(appData)} {
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
 
         d["appName"] = appData.appName;
