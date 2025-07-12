@@ -101,7 +101,6 @@ struct ServerInfoRes final : ServerMessage {
     std::string startTime;
     int maxClients;
     int connectedClients;
-    std::vector<std::string> supportedMessages;
     std::string osArch;
     std::string osName;
     std::string osVersion;
