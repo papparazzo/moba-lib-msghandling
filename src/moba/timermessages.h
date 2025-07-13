@@ -42,7 +42,7 @@ struct TimerGlobalTimerEvent final: TimerMessage {
 
     explicit TimerGlobalTimerEvent(const nlohmann::json &d) {
         curModelDay = stringToDayEnum(d["day"].get<std::string>());
-        time = Time{d["time"].get<unsigned int>()};
+        time = Time{d["time"].get<std::string>()};
     }
 
     Time time;
@@ -70,7 +70,7 @@ struct TimerSetGlobalTimer final: TimerMessage {
         auto modelTime = d["modelTime"];
         curModelDay = stringToDayEnum(modelTime["day"].get<std::string>());
 
-        curModelTime = Time{modelTime["time"]["timeInMinutes"].get<unsigned int>()};
+        curModelTime = Time{modelTime["time"].get<std::string>()};
         multiplicator = d["multiplicator"].get<int>();
 
         nightStartTime = Time{d["nightStartTime"].get<unsigned int>()};
