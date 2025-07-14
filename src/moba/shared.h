@@ -220,6 +220,11 @@ struct ContactData {
         return std::to_string(moduleAddr) + ":" + std::to_string(contactNb);
     }
 
+    friend std::ostream& operator<<(std::ostream& stream, const ContactData& contact) {
+        stream << std::to_string(contact.moduleAddr) + ":" + std::to_string(contact.contactNb);
+        return stream;
+    }
+
     std::uint16_t moduleAddr;
     std::uint16_t contactNb;
 };
