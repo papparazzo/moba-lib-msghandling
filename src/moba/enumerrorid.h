@@ -45,6 +45,7 @@ enum class ErrorId {
 
     SAME_ORIGIN_NEEDED,
 
+    OPERATION_NOT_ALLOWED,
     SETTING_NOT_ALLOWED,
     INVALID_VALUE_GIVEN,
 };
@@ -88,6 +89,9 @@ inline ErrorId stringToErrorIdEnum(const std::string &s) {
     }
     if(s == "SAME_ORIGIN_NEEDED") {
         return ErrorId::SAME_ORIGIN_NEEDED;
+    }
+    if(s == "OPERATION_NOT_ALLOWED") {
+        return ErrorId::OPERATION_NOT_ALLOWED;
     }
     if(s == "SETTING_NOT_ALLOWED") {
         return ErrorId::SETTING_NOT_ALLOWED;
