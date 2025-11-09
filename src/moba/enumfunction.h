@@ -32,42 +32,42 @@ enum class Function {
     PANTO                       = 6,   // Pantograf
     SMOKE_UNIT                  = 7,   // Rauchgenerator
     SWITCHING_RANGE_ON          = 8,   // Rangiergang
-    TELEX                       = 9,   // Telexkupplung beidseitig
+    TELEX                       = 9,   // Telex-Kupplung beidseitig
     HORN                        = 10,  // Horn
     CONDUCTOR_WHISTLE           = 11,  // Schaffnerpfiff
     WHISTLE_LONG                = 12,  // Lockpfeife lang
     BELL                        = 13,  // Glocke
     ABV_OFF                     = 18,  // ABV aus
-    AIRPUMP                     = 19,  // Luftpumpe
+    AIR_PUMP                    = 19,  // Luftpumpe
     BRAKE_SQUEALING             = 20,  // Bremsen quietschen (aus)
     GRATE_SHAKING               = 21,  // Schüttelrost, wie 36
     GENERATOR                   = 22,  // Generator
-    OPERATION_SOUNDS            = 23,  // Betriebsgeräusch
+    OPERATING_SOUNDS            = 23,  // Betriebsgeräusch
     SHOVELING_COAL              = 26,  // Kohle schaufeln, wie 31
     DOORS_CLOSING               = 28,  // Türen schließen, wie 156
     BLOWERS                     = 29,  // Lüfter
-    SHOVELING_COAL_2            = 31,  // Brennergeräusch, wie 26
+    SHOVELING_COAL_2            = 31,  // Brennergeräusche, wie 26
     CEILING_LIGHT               = 32,  // Deckenlicht
     TABLE_LIGHT_2               = 34,  // Tischlicht 2
     GRATE_SHAKING_2             = 36,  // Schüttelrost, wie 21
     RAIL_JOINTS                 = 37,  // Schienenstoß
     REAR_LIGHT                  = 41,  // Führerstand hinten
     FRONT_LIGHT                 = 42,  // Führerstand vorne
-    COUPLING_UNCOUPLING_SOUND   = 43,  // An-/Abkuppelngeräusch, wie 171
-    SPEECHOUTPUT                = 45,  // Umgebungsgeräusch: Bahnhof
+    COUPLING_UNCOUPLING_SOUND   = 43,  // An-/Abkuppelgeräusch, wie 171
+    SPEECH_OUTPUT               = 45,  // Umgebungsgeräusch: Bahnhof
     CAB_LIGHT                   = 48,  // Führerstandsbeleuchtung
     INJECTOR                    = 49,  // Injektor
-    REAR_TELEX                  = 82,  // Telexkupplung hinten
-    FRONT_TELEX                 = 83,  // Telexkupplung vorne
+    REAR_TELEX                  = 82,  // Telex-Kupplung hinten
+    FRONT_TELEX                 = 83,  // Telex-Kupplung vorne
     REAR_PANTO                  = 84,  // Pantograf hinten
     FRONT_PANTO                 = 85,  // Pantograf vorne
-    RUNNING_GEARLIGHT           = 90,  // Triebwerksbeleuchtung
-    PANTO_SOUND_UP_DOWN         = 101, // Pantograph-Geräusch (hoch/nieder)
+    RUNNING_GEAR_LIGHT          = 90,  // Triebwerksbeleuchtung
+    PANTO_SOUND_UP_DOWN         = 101, // Pantograf-Geräusch (hoch/nieder)
     STATION_ANNOUNCEMENT        = 107, // Bahnhofsdurchsage, wie 153
     FEED_WATER_PUMP             = 111, // Wasserpumpe
     COMPRESSED_AIR              = 116, // Luftpresser
     // = 133,// Überdruckventil kein eigens Piktogramm!
-    RELAYSTEPS                  = 133, // Schaltstufen kein eigens Piktogramm!
+    RELAY_STEPS                 = 133, // Schaltstufen kein eigens Piktogramm!
     // = 137,// Kupplungswalzer
     HORN_SHORT                  = 138, // Rangierhorn kurz
     WHISTLE_SHORT               = 140, // Rangierpfiff kurz
@@ -75,9 +75,9 @@ enum class Function {
     DOORS_CLOSING_2             = 156, // Türenschließen, wie 28
     COUPLING_UNCOUPLING_SOUND_2 = 171, // An-/Abkuppelngeräusch, wie 43
     BUFFERS_STRIKING            = 172, // Pufferstoß
-    SPEECHOUTPUT_2              = 173, // Sprachausgabe
+    SPEECH_OUTPUT_2             = 173, // Sprachausgabe
     CYLINDER_STEAM              = 219, // Zylinder / Dampf
-    COMPRESSED_AIR_2            = 220, // Pressluft ablasssen
+    COMPRESSED_AIR_2            = 220, // Pressluft ablassen
     RADIO_DIALOG                = 231, // Funkgespräch
     PLATFORM_ANNOUNCEMENT       = 232, // Bahnsteigdurchsage
     CAB_CONVERSATION            = 235, // Führerstandsgespräch
@@ -130,8 +130,8 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
     if(s == "ABV_OFF") {
         return Function::ABV_OFF;
     }
-    if(s == "AIRPUMP") {
-        return Function::AIRPUMP;
+    if(s == "AIR_PUMP") {
+        return Function::AIR_PUMP;
     }
     if(s == "BRAKE_SQUEALING") {
         return Function::BRAKE_SQUEALING;
@@ -142,8 +142,8 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
     if(s == "GENERATOR") {
         return Function::GENERATOR;
     }
-    if(s == "OPERATION_SOUNDS") {
-        return Function::OPERATION_SOUNDS;
+    if(s == "OPERATING_SOUNDS") {
+        return Function::OPERATING_SOUNDS;
     }
     if(s == "SHOVELING_COAL") {
         return Function::SHOVELING_COAL;
@@ -178,8 +178,8 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
     if(s == "COUPLING_UNCOUPLING_SOUND") {
         return Function::COUPLING_UNCOUPLING_SOUND;
     }
-    if(s == "SPEECHOUTPUT") {
-        return Function::SPEECHOUTPUT;
+    if(s == "SPEECH_OUTPUT") {
+        return Function::SPEECH_OUTPUT;
     }
     if(s == "CAB_LIGHT") {
         return Function::CAB_LIGHT;
@@ -199,8 +199,8 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
     if(s == "FRONT_PANTO") {
         return Function::FRONT_PANTO;
     }
-    if(s == "RUNNING_GEARLIGHT") {
-        return Function::RUNNING_GEARLIGHT;
+    if(s == "RUNNING_GEAR_LIGHT") {
+        return Function::RUNNING_GEAR_LIGHT;
     }
     if(s == "PANTO_SOUND_UP_DOWN") {
         return Function::PANTO_SOUND_UP_DOWN;
@@ -214,8 +214,8 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
     if(s == "COMPRESSED_AIR") {
         return Function::COMPRESSED_AIR;
     }
-    if(s == "RELAYSTEPS") {
-        return Function::RELAYSTEPS;
+    if(s == "RELAY_STEPS") {
+        return Function::RELAY_STEPS;
     }
     if(s == "HORN_SHORT") {
         return Function::HORN_SHORT;
@@ -235,8 +235,8 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
     if(s == "BUFFERS_STRIKING") {
         return Function::BUFFERS_STRIKING;
     }
-    if(s == "SPEECHOUTPUT_2") {
-        return Function::SPEECHOUTPUT_2;
+    if(s == "SPEECH_OUTPUT_2") {
+        return Function::SPEECH_OUTPUT_2;
     }
     if(s == "CYLINDER_STEAM") {
         return Function::CYLINDER_STEAM;
@@ -306,8 +306,8 @@ inline std::string controllableFunctionEnumToString(const Function s) {
         case Function::ABV_OFF:
             return "ABV_OFF";
 
-        case Function::AIRPUMP:
-            return "AIRPUMP";
+        case Function::AIR_PUMP:
+            return "AIR_PUMP";
 
         case Function::BRAKE_SQUEALING:
             return "BRAKE_SQUEALING";
@@ -318,8 +318,8 @@ inline std::string controllableFunctionEnumToString(const Function s) {
         case Function::GENERATOR:
             return "GENERATOR";
 
-        case Function::OPERATION_SOUNDS:
-            return "OPERATION_SOUNDS";
+        case Function::OPERATING_SOUNDS:
+            return "OPERATING_SOUNDS";
 
         case Function::SHOVELING_COAL:
             return "SHOVELING_COAL";
@@ -354,8 +354,8 @@ inline std::string controllableFunctionEnumToString(const Function s) {
         case Function::COUPLING_UNCOUPLING_SOUND:
             return "COUPLING_UNCOUPLING_SOUND";
 
-        case Function::SPEECHOUTPUT:
-            return "SPEECHOUTPUT";
+        case Function::SPEECH_OUTPUT:
+            return "SPEECH_OUTPUT";
 
         case Function::CAB_LIGHT:
             return "CAB_LIGHT";
@@ -375,8 +375,8 @@ inline std::string controllableFunctionEnumToString(const Function s) {
         case Function::FRONT_PANTO:
             return "FRONT_PANTO";
 
-        case Function::RUNNING_GEARLIGHT:
-            return "RUNNING_GEARLIGHT";
+        case Function::RUNNING_GEAR_LIGHT:
+            return "RUNNING_GEAR_LIGHT";
 
         case Function::PANTO_SOUND_UP_DOWN:
             return "PANTO_SOUND_UP_DOWN";
@@ -390,8 +390,8 @@ inline std::string controllableFunctionEnumToString(const Function s) {
         case Function::COMPRESSED_AIR:
             return "COMPRESSED_AIR";
 
-        case Function::RELAYSTEPS:
-            return "RELAYSTEPS";
+        case Function::RELAY_STEPS:
+            return "RELAY_STEPS";
 
         case Function::HORN_SHORT:
             return "HORN_SHORT";
@@ -411,8 +411,8 @@ inline std::string controllableFunctionEnumToString(const Function s) {
         case Function::BUFFERS_STRIKING:
             return "BUFFERS_STRIKING";
 
-        case Function::SPEECHOUTPUT_2:
-            return "SPEECHOUTPUT_2";
+        case Function::SPEECH_OUTPUT_2:
+            return "SPEECH_OUTPUT_2";
 
         case Function::CYLINDER_STEAM:
             return "CYLINDER_STEAM";
