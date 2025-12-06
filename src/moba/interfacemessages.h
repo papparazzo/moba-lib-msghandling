@@ -25,7 +25,7 @@
 struct InterfaceMessage: Message {
     enum MessageName {
         CONNECTIVITY_STATE_CHANGED = 1,
-        SWITCH_ROUTE               = 2,
+        PUSH_TRAIN                 = 2,
         ROUTE_SWITCHED             = 3,
         ROUTE_RELEASED             = 4,
         BLOCK_RELEASED             = 5,
@@ -63,24 +63,29 @@ struct InterfaceConnectivityStateChanged final: InterfaceMessage {
     Connectivity connectivity;
 };
 
+struct InterfacePushTrain final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = PUSH_TRAIN;
+
+    InterfacePushTrain(const unsigned long trainId, const unsigned long toBlockId): trainId{trainId}, blockId {toBlockId} {}
+
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+
+        d["trainId"] = trainId;
+        d["blockId"] = blockId;
+
+        return d;
+    }
+
+    unsigned long trainId;
+    unsigned long blockId;
+};
+
 struct InterfaceRouteSwitched final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = ROUTE_SWITCHED;
 
     explicit InterfaceRouteSwitched(const unsigned long id): id{id} {
-    }
-
-    [[nodiscard]]
-    nlohmann::json getJsonDocument() const override {
-        return id;
-    }
-
-    unsigned long id;
-};
-
-struct InterfaceSwitchRoute final: InterfaceMessage {
-    static constexpr std::uint32_t MESSAGE_ID = SWITCH_ROUTE;
-
-    explicit InterfaceSwitchRoute(const unsigned long id): id{id} {
     }
 
     [[nodiscard]]
