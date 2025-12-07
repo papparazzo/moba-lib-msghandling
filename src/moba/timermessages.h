@@ -73,10 +73,10 @@ struct TimerSetGlobalTimer final: TimerMessage {
         curModelTime = Time{modelTime["time"].get<std::string>()};
         multiplicator = d["multiplicator"].get<int>();
 
-        nightStartTime = Time{d["nightStartTime"].get<unsigned int>()};
-        sunriseStartTime = Time{d["sunriseStartTime"].get<unsigned int>()};
-        dayStartTime = Time{d["dayStartTime"].get<unsigned int>()};
-        sunsetStartTime = Time{d["sunsetStartTime"].get<unsigned int>()};
+        nightStartTime = Time{d["nightStartTime"].get<std::string>()};
+        sunriseStartTime = Time{d["sunriseStartTime"].get<std::string>()};
+        dayStartTime = Time{d["dayStartTime"].get<std::string>()};
+        sunsetStartTime = Time{d["sunsetStartTime"].get<std::string>()};
     }
 
     [[nodiscard]]
