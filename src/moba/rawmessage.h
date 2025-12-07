@@ -24,7 +24,7 @@
 
 struct RawMessage final {
 
-    // Avoid using {} in data(std::move(data). Further information could be found here:
+    // Avoid using {} in data(std::move(data). Further information can be found here:
     // https://json.nlohmann.me/home/faq/#brace-initialization-yields-arrays
     RawMessage(
         const std::uint32_t grpId,

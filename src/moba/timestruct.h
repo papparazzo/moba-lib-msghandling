@@ -26,7 +26,7 @@ struct Time final {
     Time();
     Time(unsigned int hours, unsigned int minutes);
     explicit Time(unsigned int time);
-    explicit Time(const std::string &time);
+    explicit Time(const std::string &str);
     Time(const Time& t) = default;
 
     ~Time() noexcept = default;

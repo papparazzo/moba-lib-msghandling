@@ -24,11 +24,11 @@
 Time::Time(): time{0} {
 }
 
-Time::Time(unsigned int hours, unsigned int minutes) {
+Time::Time(const unsigned int hours, const unsigned int minutes) {
     time = hours * 60 + minutes;
 }
 
-Time::Time(unsigned int time): time{time} {
+Time::Time(const unsigned int time): time{time} {
 }
 
 Time::Time(const std::string &str) {
@@ -54,8 +54,8 @@ unsigned int Time::getTime() const {
 
 std::string Time::getTimeAsString() const {
 
-    auto h = getHours();
-    auto m = getMinutes();
+    const auto h = getHours();
+    const auto m = getMinutes();
 
     std::stringstream ss;
 
