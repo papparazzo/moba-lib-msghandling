@@ -74,47 +74,53 @@ struct EndpointData {
     EndpointData() = default;
 
     EndpointData(
-        AppData appInfo, const long appId, std::string startTime, std::string addr, const long port
-    ) : appInfo{std::move(appInfo)}, appId{appId}, startTime{std::move(startTime)}, addr{std::move(addr)}, port{port} {
+        AppData appData, const long appId, std::string startTime, std::string addr, const long port
+    ) : appData{std::move(appData)}, appId{appId}, startTime{std::move(startTime)}, addr{std::move(addr)}, port{port} {
     }
 
     explicit EndpointData(const nlohmann::json &d) {
         if (d.is_null()) {
             return;
         }
-        appId = d["appID"].get<int>();
-        addr = d["addr"].get<std::string>();
-        port = d["port"].get<int>();
+        appId = d["appId"].get<int>();
+        addr = d["socket"]["addr"].get<std::string>();
+        port = d["socket"]["port"].get<int>();
         startTime = d["startTime"].get<std::string>();
-        appInfo = AppData{d["appInfo"]};
+
+        appData = AppData{d["appData"]};
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const {
         nlohmann::json d;
 
-        if(appInfo.appName.empty() && appId == 0 && port == 0) {
+        if(appData.appName.empty() && appId == 0 && port == 0) {
             return nullptr;
         }
 
-        d["appID"] = appId;
-        d["addr"] = addr;
-        d["port"] = port;
+        d["appId"] = appId;
+
+        nlohmann::json s;
+        s["addr"] = addr;
+        s["port"] = port;
+
+        d["socket"] = s;
+
         d["startTime"] = startTime;
 
-        d["appInfo"] = appInfo.getJsonDocument();
+        d["appData"] = appData.getJsonDocument();
         return d;
     }
 
     [[nodiscard]] std::string toString() const {
-        if(appInfo.appName.empty() && appId == 0 && port == 0) {
+        if(appData.appName.empty() && appId == 0 && port == 0) {
             return "null";
         }
         std::stringstream ss;
-        ss << appInfo.appName << "#" << appId << "@" << addr << ":" << port;
+        ss << appData.appName << "#" << appId << "@" << addr << ":" << port;
         return ss.str();
     }
 
-    AppData appInfo;
+    AppData appData;
     long appId{0};
     std::string startTime;
     std::string addr;
