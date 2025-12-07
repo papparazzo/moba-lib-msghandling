@@ -36,7 +36,8 @@ struct ClientMessage: Message {
         CLIENT_CLOSE        = 7,
         CLIENT_SHUTDOWN     = 8,
         CLIENT_RESET        = 9,
-        CLIENT_SELF_TESTING = 10
+        CLIENT_SELF_TESTING = 10,
+        CLIENT_CLOSING      = 11
     };
 
     static constexpr std::uint32_t GROUP_ID = CLIENT;
@@ -144,3 +145,6 @@ struct ClientSelfTesting final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_SELF_TESTING;
 };
 
+struct ClientClosing final: ClientMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_CLOSING;
+};
