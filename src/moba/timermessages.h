@@ -83,15 +83,15 @@ struct TimerSetGlobalTimer final: TimerMessage {
     nlohmann::json getJsonDocument() const override {
         nlohmann::json v;
         v["day"] = dayEnumToString(curModelDay);
-        v["time"] = curModelTime.getTime();
+        v["time"] = curModelTime.getTimeAsString();
 
         nlohmann::json d;
         d["modelTime"] = v;
         d["multiplicator"] = multiplicator;
-        d["nightStartTime"] = nightStartTime.getTime();
-        d["sunriseStartTime"] = sunriseStartTime.getTime();
-        d["dayStartTime"] = dayStartTime.getTime();
-        d["sunsetStartTime"] = sunsetStartTime.getTime();
+        d["nightStartTime"] = nightStartTime.getTimeAsString();
+        d["sunriseStartTime"] = sunriseStartTime.getTimeAsString();
+        d["dayStartTime"] = dayStartTime.getTimeAsString();
+        d["sunsetStartTime"] = sunsetStartTime.getTimeAsString();
         return d;
     }
 
