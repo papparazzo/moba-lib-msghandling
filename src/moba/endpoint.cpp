@@ -53,7 +53,7 @@ long Endpoint::getAppId() const {
 long Endpoint::registerApp() {
     sendMsg(ClientStart{AppData{appName, description, version, groups}});
 
-    const auto msg = receiveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
+    const auto msg = receiveMsg(MSG_HANDLER_TIME_OUT_SEC);
 
     if(!msg.data.is_number()) {
         throw SocketException{"msg data is not an int"};
@@ -152,7 +152,7 @@ void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, con
     sendMsg(grpId, msgId, data.dump());
 }
 
-void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) {
+void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) const {
     const auto bufferSize = data.length();
 
     std::uint32_t d[] = {
