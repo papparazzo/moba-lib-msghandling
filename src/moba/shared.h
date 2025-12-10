@@ -30,6 +30,7 @@
 
 #include "nlohmann/json.hpp"
 #include "message.h"
+#include "enumfunctionstate.h"
 
 using MessageGroups = std::set<Message::MessageGroup>;
 
@@ -37,8 +38,8 @@ struct AppData {
 
     AppData() = default;
 
-    AppData(std::string appName, const moba::Version &version, MessageGroups groups) :
-        appName{std::move(appName)}, version{version}, groups{std::move(groups)} {
+    AppData(std::string name, std::string description, const moba::Version &version, MessageGroups groups) :
+        name{std::move(name)}, description{std::move(description)}, version{version}, groups{std::move(groups)} {
     }
 
     explicit AppData(const nlohmann::json &d) {
@@ -46,13 +47,14 @@ struct AppData {
         for (auto &v: d["msgGroups"]) {
             groups.insert(static_cast<Message::MessageGroup>(v.get<int>()));
         }
-        appName = d["appName"].get<std::string>();
+        name = d["name"].get<std::string>();
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const {
         nlohmann::json d;
 
-        d["appName"] = appName;
+        d["name"] = name;
+        d["description"] = description;
         d["version"] = version.toString();
 
         nlohmann::json msgGroups = nlohmann::json::array();
@@ -64,7 +66,8 @@ struct AppData {
         return d;
     }
 
-    std::string appName;
+    std::string name;
+    std::string description;
     moba::Version version;
     MessageGroups groups;
 };
@@ -283,4 +286,44 @@ struct SwitchStandData {
 
     moba::SwitchStand switchStand{};
     int id{};
+};
+
+struct PortAddressData {
+    PortAddressData() = default;
+    PortAddressData(const std::uint16_t controller, const std::uint16_t port) : controller{controller}, port{port} {
+    }
+
+    explicit PortAddressData(const nlohmann::json &d) {
+        controller = d["controller"].get<std::uint16_t>();
+        port = d["port"].get<std::uint16_t>();
+    }
+
+    std::uint16_t controller{};
+    std::uint16_t port{};
+};
+
+struct GlobalPortAddressData {
+    GlobalPortAddressData() = default;
+    GlobalPortAddressData(const std::uint16_t deviceId, const PortAddressData address) : deviceId{deviceId}, address{address} {}
+
+    explicit GlobalPortAddressData(const nlohmann::json &d) {
+        deviceId = d["deviceId"].get<int>();
+        address = PortAddressData(d["address"]);
+    }
+
+    std::uint16_t   deviceId{};
+    PortAddressData address{};
+};
+
+struct FunctionStateData {
+    FunctionStateData() = default;
+    FunctionStateData(const GlobalPortAddressData address, const FunctionState functionState): address{address}, functionState{functionState} {}
+
+    explicit FunctionStateData(const nlohmann::json &d) {
+        address = GlobalPortAddressData(d["address"]);
+        functionState = stringToFunctionStateEnum(d["state"].get<std::string>());
+    }
+
+    GlobalPortAddressData address;
+    FunctionState functionState{FunctionState::OFF};
 };

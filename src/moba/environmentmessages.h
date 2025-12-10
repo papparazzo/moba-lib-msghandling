@@ -20,102 +20,41 @@
 
 #pragma once
 
-#include <string>
 #include <memory>
 #include "message.h"
 #include "shared.h"
-#include "enumtogglestate.h"
-#include "enumswitch.h"
 
 struct EnvironmentMessage: Message {
     enum MessageName {
-        ENVIRONMENT_GET_ENVIRONMENT     = 1,
-        ENVIRONMENT_SET_ENVIRONMENT     = 2,
-        ENVIRONMENT_SET_AMBIENCE        = 3,
-        ENVIRONMENT_SET_AMBIENT_LIGHT   = 4
+        ENVIRONMENT_GET_FUNCTION_LIST      = 1,
+        ENVIRONMENT_SET_FUNCTION_LIST      = 2,
+        ENVIRONMENT_SET_FUNCTIONS          = 3,
+        ENVIRONMENT_FUNCTION_STATE_CHANGED = 4
     };
 
     static constexpr std::uint32_t GROUP_ID = ENVIRONMENT;
 };
 
-struct EnvironmentGetEnvironment final : EnvironmentMessage {
-    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_ENVIRONMENT;
+struct EnvironmentGetEnvironment final: EnvironmentMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_GET_FUNCTION_LIST;
 };
 
-struct EnvironmentSetEnvironment final : EnvironmentMessage {
-    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_ENVIRONMENT;
+struct EnvironmentSetFunctions final: EnvironmentMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_FUNCTIONS;
 
-    EnvironmentSetEnvironment(
-        const Switch thunder,
-        const Switch wind,
-        const Switch rain,
-        const Switch environmentSound,
-        const Switch aux1,
-        const Switch aux2,
-        const Switch aux3
-    ) : thunder{thunder}, wind{wind}, rain{rain}, environmentSound{environmentSound}, aux1{aux1}, aux2{aux2}, aux3{aux3} {
+    EnvironmentSetFunctions() = default;
+
+    explicit EnvironmentSetFunctions(const nlohmann::json &d) {
+        for(auto &iter: d) {
+            functions.emplace_back(iter);
+        }
     }
-
-    explicit EnvironmentSetEnvironment(const nlohmann::json &d) {
-        thunder = stringToSwitchEnum(d["thunderStorm"].get<std::string>());
-        wind = stringToSwitchEnum(d["wind"].get<std::string>());
-        rain = stringToSwitchEnum(d["rain"].get<std::string>());
-        environmentSound = stringToSwitchEnum(d["environmentSound"].get<std::string>());
-        aux1 = stringToSwitchEnum(d["aux1"].get<std::string>());
-        aux2 = stringToSwitchEnum(d["aux2"].get<std::string>());
-        aux3 = stringToSwitchEnum(d["aux3"].get<std::string>());
-    }
-
-
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-
-        d["thunderStorm"] = switchEnumToString(thunder);
-        d["wind"] = switchEnumToString(wind);
-        d["rain"] = switchEnumToString(rain);
-        d["environmentSound"] = switchEnumToString(environmentSound);
-        d["aux01"] = switchEnumToString(aux1);
-        d["aux02"] = switchEnumToString(aux2);
-        d["aux03"] = switchEnumToString(aux3);
-
-        return d;
-    }
-
-    Switch thunder;
-    Switch wind;
-    Switch rain;
-    Switch environmentSound;
-    Switch aux1;
-    Switch aux2;
-    Switch aux3;
+    std::vector<FunctionStateData> functions;
 };
 
-struct EnvironmentSetAmbience final : EnvironmentMessage {
-    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENCE;
 
-    EnvironmentSetAmbience(const ToggleState curtainUp, const ToggleState mainLightOn):
-    curtainUp{curtainUp}, mainLightOn{mainLightOn} {
-    }
-
-    explicit EnvironmentSetAmbience(const nlohmann::json &d) {
-        curtainUp = stringToToggleStateEnum(d["curtainUp"].get<std::string>());
-        mainLightOn = stringToToggleStateEnum(d["mainLightOn"].get<std::string>());
-    }
-
-    [[nodiscard]] nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-
-        d["curtainUp"] = toggleStateEnumToString(curtainUp);
-        d["mainLightOn"] = toggleStateEnumToString(mainLightOn);
-
-        return d;
-    }
-
-    ToggleState curtainUp;
-    ToggleState mainLightOn;
-};
-
-struct EnvironmentSetAmbientLight final : EnvironmentMessage {
+/*
+struct EnvironmentSetAmbientLight final: EnvironmentMessage {
     static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENT_LIGHT;
 
     EnvironmentSetAmbientLight(const int red, const int blue, const int green, const int white):
@@ -133,9 +72,9 @@ struct EnvironmentSetAmbientLight final : EnvironmentMessage {
         nlohmann::json d;
 
         d["red"] = red;
-        d["blue"] =  blue;
-        d["green"] =  green;
-        d["white"] =  white;
+        d["blue"] = blue;
+        d["green"] = green;
+        d["white"] = white;
 
         return d;
     }
@@ -145,3 +84,4 @@ struct EnvironmentSetAmbientLight final : EnvironmentMessage {
     int green;
     int white;
 };
+*/
