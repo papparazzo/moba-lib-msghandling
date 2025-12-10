@@ -32,13 +32,13 @@
 #include "shared.h"
 
 Endpoint::Endpoint(
-    const SocketPtr &socket, const std::string &appName, const moba::Version &version, const MessageGroups &groups
-) : socket{socket}, appName{appName}, version{version}, groups{groups} {
+    const SocketPtr &socket, const std::string &name, const std::string &description, const moba::Version &version, const MessageGroups &groups
+) : socket{socket}, name{name}, description{description}, version{version}, groups{groups} {
 }
 
 Endpoint::Endpoint(
-    const SocketPtr &socket, const std::string &appName, const moba::Version &version
-) : socket{socket}, appName{appName}, version{version} {
+    const SocketPtr &socket, const std::string &name, const std::string &description, const moba::Version &version
+) : socket{socket}, name{name}, description{description}, version{version} {
 }
 
 long Endpoint::connect() {
@@ -51,7 +51,7 @@ long Endpoint::getAppId() const {
 }
 
 long Endpoint::registerApp() {
-    sendMsg(ClientStart{AppData{appName, version, groups}});
+    sendMsg(ClientStart{AppData{appName, description, version, groups}});
 
     const auto msg = receiveMsg(Endpoint::MSG_HANDLER_TIME_OUT_SEC);
 

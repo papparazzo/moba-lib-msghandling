@@ -33,9 +33,9 @@
 
 class Endpoint final {
 public:
-    Endpoint(const SocketPtr &socket, const std::string &appName, const moba::Version &version, const MessageGroups &groups);
+    Endpoint(const SocketPtr &socket, const std::string &name, const std::string &description, const moba::Version &version, const MessageGroups &groups);
 
-    Endpoint(const SocketPtr &socket, const std::string &appName, const moba::Version &version);
+    Endpoint(const SocketPtr &socket, const std::string &name, const std::string &description, const moba::Version &version);
 
     ~Endpoint() noexcept = default;
     
@@ -64,7 +64,8 @@ protected:
 
     long appId{0};
 
-    std::string appName;
+    std::string name;
+    std::string description;
     moba::Version version;
     MessageGroups groups;
 
