@@ -1,73 +1,55 @@
 /*
  *  Project:    moba-lib-msghandling
- * 
- *  Copyright (C) 2023 Stefan Paproth <pappi-@gmx.de>
- * 
+ *
+ *  Copyright (C) 2022 Stefan Paproth <pappi-@gmx.de>
+ *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Affero General Public License as
  *  published by the Free Software Foundation, either version 3 of the
  *  License, or (at your option) any later version.
- * 
+ *
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  *  GNU Affero General Public License for more details.
- * 
+ *
  *  You should have received a copy of the GNU Affero General Public License
  *  along with this program. If not, see <https://www.gnu.org/licenses/agpl.txt>.
- * 
+ *
  */
- 
+
 #pragma once
 
-#include <string>
 #include <moba-common/exception.h>
 
-enum class Switch {
+enum class FunctionState {
     ON,
-    AUTO,
-    UNSET,
-    TRIGGER,
-    OFF
+    OFF,
+    TRIGGER
 };
 
-inline Switch stringToSwitchEnum(const std::string &s) {
+inline FunctionState stringToFunctionStateEnum(const std::string &s) {
     if(s == "ON") {
-        return Switch::ON;
-    }
-    if(s == "AUTO") {
-        return Switch::AUTO;
-    }
-    if(s == "UNSET") {
-        return Switch::UNSET;
-    }
-    if(s == "TRIGGER") {
-        return Switch::TRIGGER;
+        return FunctionState::ON;
     }
     if(s == "OFF") {
-        return Switch::OFF;
+        return FunctionState::OFF;
     }
-    throw moba::UnsupportedOperationException{"invalid value given"};
+    if(s == "TRIGGER") {
+        return FunctionState::TRIGGER;
+    }
+    throw moba::UnsupportedOperationException{"FunctionState: invalid value <" + s + "> given"};
 }
 
-inline std::string switchEnumToString(const Switch s) {
+inline std::string functionStateEnumToString(const FunctionState s) {
     switch(s) {
-        case Switch::ON:
+        case FunctionState::ON:
             return "ON";
-
-        case Switch::OFF:
+        case FunctionState::OFF:
             return "OFF";
-
-        case Switch::AUTO:
-            return "AUTO";
-
-        case Switch::UNSET:
-            return "UNSET";
-
-        case Switch::TRIGGER:
+        case FunctionState::TRIGGER:
             return "TRIGGER";
-
         default:
-            throw moba::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"Day: invalid value given"};
     }
 }
