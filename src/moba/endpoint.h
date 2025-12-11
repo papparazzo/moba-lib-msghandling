@@ -55,7 +55,7 @@ public:
 
     void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const nlohmann::json &data);
 
-    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const std::string &data) const;
+    void sendMsg(std::uint32_t grpId, std::uint32_t msgId, const std::string &data);
 
 protected:
     SocketPtr socket;

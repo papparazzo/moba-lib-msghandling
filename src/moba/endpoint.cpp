@@ -152,7 +152,7 @@ void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, con
     sendMsg(grpId, msgId, data.dump());
 }
 
-void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) const {
+void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) {
     const auto bufferSize = data.length();
 
     std::uint32_t d[] = {
