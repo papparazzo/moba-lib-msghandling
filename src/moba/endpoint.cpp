@@ -78,7 +78,7 @@ RawMessage Endpoint::receiveMsg(const time_t timeoutSec) const {
     timeout.tv_sec = timeoutSec;
     timeout.tv_usec = MSG_HANDLER_TIME_OUT_USEC;
 
-    if(::select(sd + 1, &read_sock, nullptr, nullptr, &timeout) == -1) {
+    if(select(sd + 1, &read_sock, nullptr, nullptr, &timeout) == -1) {
         throw SocketException{"select-error occurred!"};
     }
 
