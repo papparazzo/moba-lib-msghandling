@@ -107,7 +107,7 @@ struct ClientStart final: ClientMessage {
     nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
 
-        d["appName"] = appData.appName;
+        d["name"] = appData.name;
         d["version"] = appData.version.toString();
         d["msgGroups"] = appData.groups;
         return d;

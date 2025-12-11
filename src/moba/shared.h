@@ -96,7 +96,7 @@ struct EndpointData {
     [[nodiscard]] nlohmann::json getJsonDocument() const {
         nlohmann::json d;
 
-        if(appData.appName.empty() && appId == 0 && port == 0) {
+        if(appData.name.empty() && appId == 0 && port == 0) {
             return nullptr;
         }
 
@@ -115,11 +115,11 @@ struct EndpointData {
     }
 
     [[nodiscard]] std::string toString() const {
-        if(appData.appName.empty() && appId == 0 && port == 0) {
+        if(appData.name.empty() && appId == 0 && port == 0) {
             return "null";
         }
         std::stringstream ss;
-        ss << appData.appName << "#" << appId << "@" << addr << ":" << port;
+        ss << appData.name << "#" << appId << "@" << addr << ":" << port;
         return ss.str();
     }
 

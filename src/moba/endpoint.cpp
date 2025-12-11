@@ -51,7 +51,7 @@ long Endpoint::getAppId() const {
 }
 
 long Endpoint::registerApp() {
-    sendMsg(ClientStart{AppData{appName, description, version, groups}});
+    sendMsg(ClientStart{AppData{name, description, version, groups}});
 
     const auto msg = receiveMsg(MSG_HANDLER_TIME_OUT_SEC);
 
