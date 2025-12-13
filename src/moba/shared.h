@@ -47,6 +47,7 @@ struct AppData {
         for (auto &v: d["msgGroups"]) {
             groups.insert(static_cast<Message::MessageGroup>(v.get<int>()));
         }
+        description = d["description"].get<std::string>();
         name = d["name"].get<std::string>();
     }
 

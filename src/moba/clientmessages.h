@@ -108,6 +108,7 @@ struct ClientStart final: ClientMessage {
         nlohmann::json d;
 
         d["name"] = appData.name;
+        d["description"] = appData.description;
         d["version"] = appData.version.toString();
         d["msgGroups"] = appData.groups;
         return d;
