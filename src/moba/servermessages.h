@@ -30,11 +30,15 @@ struct ServerMessage : Message {
         SERVER_NEW_CLIENT_STARTED = 1,
         SERVER_CLIENT_CLOSED = 2,
         SERVER_RESET_CLIENT = 3,
-        SERVER_INFO_REQ = 4,
-        SERVER_INFO_RES = 5,
-        SERVER_CON_CLIENTS_REQ = 6,
-        SERVER_CON_CLIENTS_RES = 7,
-        SERVER_SELF_TESTING_CLIENT = 8
+        SERVER_RESET_CLIENT_HARDWARE = 4,
+        SERVER_INFO_REQ = 5,
+        SERVER_INFO_RES = 6,
+        SERVER_CON_CLIENTS_REQ = 7,
+        SERVER_CON_CLIENTS_RES = 8,
+        SERVER_SELF_TESTING_CLIENT = 9,
+        ADD_ALLOWED_IP = 10,
+        GET_ALLOWED_IP_LIST = 11,
+        SET_ALLOWED_IP_LIST = 12
     };
 
     static constexpr std::uint32_t GROUP_ID = SERVER;

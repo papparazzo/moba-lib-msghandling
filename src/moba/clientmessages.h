@@ -33,11 +33,10 @@ struct ClientMessage: Message {
         CLIENT_ERROR        = 4,
         CLIENT_START        = 5,
         CLIENT_CONNECTED    = 6,
-        CLIENT_CLOSE        = 7,
-        CLIENT_SHUTDOWN     = 8,
-        CLIENT_RESET        = 9,
-        CLIENT_SELF_TESTING = 10,
-        CLIENT_CLOSING      = 11
+        CLIENT_SHUTDOWN     = 7,
+        CLIENT_RESET        = 8,
+        CLIENT_SELF_TESTING = 9,
+        CLIENT_CLOSING      = 10
     };
 
     static constexpr std::uint32_t GROUP_ID = CLIENT;

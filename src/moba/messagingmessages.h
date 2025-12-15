@@ -27,22 +27,23 @@
 
 struct MessagingMessages: Message {
     enum MessageName {
-        GET_INCIDENT_LIST = 1,
-        SET_INCIDENT_LIST = 2,
-        NOTIFY_INCIDENT   = 3,
+        MESSAGING_GET_INCIDENT_LIST   = 1,
+        MESSAGING_SET_INCIDENT_LIST   = 2,
+        MESSAGING_CLEAR_INCIDENT_LIST = 3,
+        MESSAGING_NOTIFY_INCIDENT     = 4,
     };
 
     static constexpr std::uint32_t GROUP_ID = MESSAGING;
 };
 
 struct MessagingGetIncidentList final : MessagingMessages {
-    static constexpr std::uint32_t MESSAGE_ID = GET_INCIDENT_LIST;
+    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_GET_INCIDENT_LIST;
 
     MessagingGetIncidentList() = default;
 };
 
 struct MessagingSetIncidentList final : MessagingMessages {
-    static constexpr std::uint32_t MESSAGE_ID = SET_INCIDENT_LIST;
+    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_SET_INCIDENT_LIST;
 
     explicit MessagingSetIncidentList(const nlohmann::json &d) {
         for(auto &iter: d) {
@@ -53,7 +54,7 @@ struct MessagingSetIncidentList final : MessagingMessages {
 };
 
 struct MessagingNotifyIncident final : MessagingMessages {
-    static constexpr std::uint32_t MESSAGE_ID = NOTIFY_INCIDENT;
+    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_NOTIFY_INCIDENT;
 
     explicit MessagingNotifyIncident(IncidentData &&incident): incident{std::move(incident)} {}
 
