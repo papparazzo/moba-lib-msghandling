@@ -42,7 +42,7 @@ inline ThreeState stringToThreeStateEnum(const std::string &s) {
     if(s == "UNSET") {
         return ThreeState::UNSET;
     }
-    throw moba::UnsupportedOperationException{"ThreeState: invalid value given"};
+    throw moba::UnsupportedOperationException{"ThreeState: invalid value <" + s + "> given"};
 }
 
 inline std::string threeStateEnumToString(ThreeState s) {

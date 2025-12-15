@@ -54,7 +54,7 @@ inline Day stringToDayEnum(const std::string &s) {
     if(s == "SUNDAY") {
         return Day::SUNDAY;
     }
-    throw moba::UnsupportedOperationException{"Day: invalid value given"};
+    throw moba::UnsupportedOperationException{"Day: invalid value <" + s + "> given"};
 }
 
 inline std::string dayEnumToString(Day s) {

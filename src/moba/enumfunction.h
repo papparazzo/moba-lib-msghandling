@@ -256,7 +256,7 @@ inline Function stringToControllableFunctionEnum(const std::string &s) {
     if(s == "SANDING") {
         return Function::SANDING;
     }
-    throw moba::UnsupportedOperationException{"ControllableFunction: invalid value given"};
+    throw moba::UnsupportedOperationException{"ControllableFunction: invalid value <" + s + "> given"};
 }
 
 inline std::string controllableFunctionEnumToString(const Function s) {

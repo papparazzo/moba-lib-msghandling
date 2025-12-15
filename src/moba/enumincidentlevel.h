@@ -43,7 +43,7 @@ inline IncidentLevel stringToIncidentLevelEnum(const std::string &s) {
     if(s == "ERROR") {
         return IncidentLevel::ERROR;
     }
-    throw moba::UnsupportedOperationException{"invalid value given"};
+    throw moba::UnsupportedOperationException{"IncidentLevel: invalid value <" + s + "> given"};
 }
 
 inline std::string incidentLevelEnumToString(const IncidentLevel s) {
@@ -61,6 +61,6 @@ inline std::string incidentLevelEnumToString(const IncidentLevel s) {
             return "ERROR";
 
         default:
-            throw moba::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"IncidentLevel: invalid value given"};
     }
 }

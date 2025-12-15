@@ -99,7 +99,7 @@ inline ErrorId stringToErrorIdEnum(const std::string &s) {
     if(s == "INVALID_VALUE_GIVEN") {
         return ErrorId::INVALID_VALUE_GIVEN;
     }
-    throw moba::UnsupportedOperationException{"ErrorId: invalid value given"};
+    throw moba::UnsupportedOperationException{"ErrorId: invalid value <" + s + "> given"};
 }
 
 inline std::string errorIdEnumToString(ErrorId s) {

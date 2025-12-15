@@ -81,7 +81,7 @@ inline ActionType stringToActionTypeEnum(const std::string &s) {
     if(s == "SEND_BLOCK_RELEASED") {
         return ActionType::SEND_BLOCK_RELEASED;
     }
-    throw moba::UnsupportedOperationException{"ActionType: invalid value given"};
+    throw moba::UnsupportedOperationException{"ActionType: invalid value <" + s + "> given"};
 }
 
 inline std::string actionTypeEnumToString(ActionType s) {

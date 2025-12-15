@@ -50,6 +50,6 @@ inline std::string functionStateEnumToString(const FunctionState s) {
         case FunctionState::TRIGGER:
             return "TRIGGER";
         default:
-            throw moba::UnsupportedOperationException{"Day: invalid value given"};
+            throw moba::UnsupportedOperationException{"FunctionState: invalid value given"};
     }
 }

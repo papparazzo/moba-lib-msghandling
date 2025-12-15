@@ -47,7 +47,7 @@ inline IncidentType stringToIncidentTypeEnum(const std::string &s) {
     if(s == "SERVER_NOTICE") {
         return IncidentType::SERVER_NOTICE;
     }
-    throw moba::UnsupportedOperationException{"invalid value given"};
+    throw moba::UnsupportedOperationException{"IncidentType: invalid value <" + s + "> given"};
 }
 
 inline std::string incidentTypeEnumToString(const IncidentType s) {
@@ -68,6 +68,6 @@ inline std::string incidentTypeEnumToString(const IncidentType s) {
             return "SERVER_NOTICE";
 
         default:
-            throw moba::UnsupportedOperationException{"invalid value given"};
+            throw moba::UnsupportedOperationException{"IncidentType: invalid value given"};
     }
 }

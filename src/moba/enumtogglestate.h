@@ -38,7 +38,7 @@ inline ToggleState stringToToggleStateEnum(const std::string &s) {
     if(s == "UNSET") {
         return ToggleState::UNSET;
     }
-    throw moba::UnsupportedOperationException{"ToggleState: invalid value given"};
+    throw moba::UnsupportedOperationException{"ToggleState: invalid value <" + s + "> given"};
 }
 
 inline std::string toggleStateEnumToString(ToggleState s) {
