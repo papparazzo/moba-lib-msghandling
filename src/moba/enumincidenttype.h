@@ -26,7 +26,7 @@
 enum class IncidentType {
     EXCEPTION,
     STATUS_CHANGED,
-    NOTICE,
+    CLIENT_NOTICE,
     CLIENT_ERROR,
     SERVER_NOTICE
 };
@@ -38,8 +38,8 @@ inline IncidentType stringToIncidentTypeEnum(const std::string &s) {
     if(s == "STATUS_CHANGED") {
         return IncidentType::STATUS_CHANGED;
     }
-    if(s == "NOTICE") {
-        return IncidentType::NOTICE;
+    if(s == "CLIENT_NOTICE") {
+        return IncidentType::CLIENT_NOTICE;
     }
     if(s == "CLIENT_ERROR") {
         return IncidentType::CLIENT_ERROR;
@@ -58,8 +58,8 @@ inline std::string incidentTypeEnumToString(const IncidentType s) {
         case IncidentType::STATUS_CHANGED:
             return "STATUS_CHANGED";
 
-        case IncidentType::NOTICE:
-            return "NOTICE";
+        case IncidentType::CLIENT_NOTICE:
+            return "CLIENT_NOTICE";
 
         case IncidentType::CLIENT_ERROR:
             return "CLIENT_ERROR";
