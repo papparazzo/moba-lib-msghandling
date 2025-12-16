@@ -126,19 +126,20 @@ struct ClientConnected final: ClientMessage {
     long appId;
 };
 
-struct ClientClose final: ClientMessage {
-    static constexpr std::uint32_t MESSAGE_ID = CLIENT_CLOSE;
-};
-
 struct ClientShutdown final: ClientMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 
     explicit ClientShutdown(const nlohmann::json &) {
     }
-    static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
 };
 
 struct ClientReset final: ClientMessage {
     static constexpr std::uint32_t MESSAGE_ID = CLIENT_RESET;
+
+    explicit ClientReset(const nlohmann::json &d) {
+        hardware = d.get<bool>();
+    }
+    bool hardware{false};
 };
 
 struct ClientSelfTesting final: ClientMessage {
