@@ -76,6 +76,19 @@ struct ServerResetClient final : ServerMessage {
     long appId;
 };
 
+struct ServerResetClientHardware final : ServerMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SERVER_RESET_CLIENT_HARDWARE;
+
+    explicit ServerResetClientHardware(const long appId) : appId{appId} {
+    }
+
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        return appId;
+    }
+
+    long appId;
+};
+
 struct ServerInfoReq final : ServerMessage {
     static constexpr std::uint32_t MESSAGE_ID = SERVER_INFO_REQ;
 

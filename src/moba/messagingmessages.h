@@ -53,6 +53,12 @@ struct MessagingSetIncidentList final : MessagingMessages {
     std::vector<IncidentData> incidents;
 };
 
+struct MessagingClearIncidentList final : MessagingMessages {
+    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_CLEAR_INCIDENT_LIST;
+
+    MessagingClearIncidentList() = default;
+};
+
 struct MessagingNotifyIncident final : MessagingMessages {
     static constexpr std::uint32_t MESSAGE_ID = MESSAGING_NOTIFY_INCIDENT;
 
