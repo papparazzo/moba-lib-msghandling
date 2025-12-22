@@ -24,24 +24,27 @@
 
 enum class ActionType {
     DELAY,
+    FUNCTION,
 
-    LOCO_HALT,
-    LOCO_SPEED,
     LOCO_DIRECTION,
-
     LOCO_FUNCTION,
     LOCO_FUNCTION_TRIGGER,
-    SWITCHING,
+    LOCO_HALT,
+    LOCO_SPEED,
 
-    //SEND_PUSH_TRAIN,
     SEND_ROUTE_SWITCHED,
     SEND_ROUTE_RELEASED,
-    SEND_BLOCK_RELEASED
+    SEND_BLOCK_RELEASED,
+
+    SWITCHING,
 };
 
 inline ActionType stringToActionTypeEnum(const std::string &s) {
     if(s == "DELAY") {
         return ActionType::DELAY;
+    }
+    if(s == "FUNCTION") {
+        return ActionType::FUNCTION;
     }
     if(s == "LOCO_HALT") {
         return ActionType::LOCO_HALT;
@@ -73,10 +76,13 @@ inline ActionType stringToActionTypeEnum(const std::string &s) {
     throw moba::UnsupportedOperationException{"ActionType: invalid value <" + s + "> given"};
 }
 
-inline std::string actionTypeEnumToString(ActionType s) {
+inline std::string actionTypeEnumToString(const ActionType s) {
     switch(s) {
         case ActionType::DELAY:
             return "DELAY";
+
+        case ActionType::FUNCTION:
+            return "FUNCTION";
 
         case ActionType::LOCO_HALT:
             return "LOCO_HALT";

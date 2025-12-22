@@ -20,7 +20,6 @@
 
 #pragma once
 
-#include <iostream>
 #include <moba-common/version.h>
 #include <memory>
 #include <mutex>
@@ -44,8 +43,13 @@ public:
     [[nodiscard]]
     long getAppId() const;
 
+    [[nodiscard]]
     auto receiveMsg(time_t timeoutSec = 0) const -> RawMessage;
+
+    [[nodiscard]]
     auto waitForNewMsg() const -> RawMessage;
+
+    [[nodiscard]]
     std::string waitForNewMsgAsString() const;
 
     template<typename T>

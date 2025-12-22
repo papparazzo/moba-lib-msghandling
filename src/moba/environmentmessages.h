@@ -23,13 +23,15 @@
 #include <memory>
 #include "message.h"
 #include "shared.h"
+#include "enumtogglestate.h"
 
 struct EnvironmentMessage: Message {
     enum MessageName {
         ENVIRONMENT_GET_FUNCTION_LIST      = 1,
         ENVIRONMENT_SET_FUNCTION_LIST      = 2,
         ENVIRONMENT_SET_FUNCTIONS          = 3,
-        ENVIRONMENT_FUNCTION_STATE_CHANGED = 4
+        ENVIRONMENT_FUNCTION_STATE_CHANGED = 4,
+        ENVIRONMENT_SET_AMBIENCE           = 5
     };
 
     static constexpr std::uint32_t GROUP_ID = ENVIRONMENT;
@@ -44,6 +46,10 @@ struct EnvironmentSetFunctions final: EnvironmentMessage {
 
     EnvironmentSetFunctions() = default;
 
+    explicit EnvironmentSetFunctions(FunctionStateData function) {
+        functions.emplace_back(function);
+    }
+
     explicit EnvironmentSetFunctions(const nlohmann::json &d) {
         for(auto &iter: d) {
             functions.emplace_back(iter);
@@ -52,36 +58,27 @@ struct EnvironmentSetFunctions final: EnvironmentMessage {
     std::vector<FunctionStateData> functions;
 };
 
+struct EnvironmentSetAmbience final : EnvironmentMessage {
+    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENCE;
 
-/*
-struct EnvironmentSetAmbientLight final: EnvironmentMessage {
-    static constexpr std::uint32_t MESSAGE_ID = ENVIRONMENT_SET_AMBIENT_LIGHT;
-
-    EnvironmentSetAmbientLight(const int red, const int blue, const int green, const int white):
-    red{red}, blue{blue}, green{green}, white{white} {
+    EnvironmentSetAmbience(const ToggleState curtainUp, const ToggleState mainLightOn):
+    curtainUp{curtainUp}, mainLightOn{mainLightOn} {
     }
 
-    explicit EnvironmentSetAmbientLight(const nlohmann::json &d) {
-        red = d["red"].get<int>();
-        blue = d["blue"].get<int>();
-        green = d["green"].get<int>();
-        white = d["white"].get<int>();
+    explicit EnvironmentSetAmbience(const nlohmann::json &d) {
+        curtainUp = stringToToggleStateEnum(d["curtainUp"].get<std::string>());
+        mainLightOn = stringToToggleStateEnum(d["mainLightOn"].get<std::string>());
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
         nlohmann::json d;
 
-        d["red"] = red;
-        d["blue"] = blue;
-        d["green"] = green;
-        d["white"] = white;
+        d["curtainUp"] = toggleStateEnumToString(curtainUp);
+        d["mainLightOn"] = toggleStateEnumToString(mainLightOn);
 
         return d;
     }
 
-    int red;
-    int blue;
-    int green;
-    int white;
+    ToggleState curtainUp;
+    ToggleState mainLightOn;
 };
-*/
