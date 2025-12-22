@@ -24,7 +24,6 @@
 
 struct InterfaceMessage: Message {
     enum MessageName {
-        CONNECTIVITY_STATE_CHANGED = 1,
         PUSH_TRAIN                 = 2,
         ROUTE_SWITCHED             = 3,
         ROUTE_RELEASED             = 4,
@@ -35,32 +34,6 @@ struct InterfaceMessage: Message {
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
-};
-
-struct InterfaceConnectivityStateChanged final: InterfaceMessage {
-    static constexpr std::uint32_t MESSAGE_ID = CONNECTIVITY_STATE_CHANGED;
-
-    enum class Connectivity {
-        CONNECTED,
-        ERROR
-    };
-
-    explicit InterfaceConnectivityStateChanged(const Connectivity connectivity): connectivity{connectivity} {
-    }
-
-    [[nodiscard]]
-    nlohmann::json getJsonDocument() const override {
-        switch(connectivity) {
-            case Connectivity::CONNECTED:
-                return "CONNECTED";
-
-            case Connectivity::ERROR:
-            default:
-                return "ERROR";
-        }
-    }
-
-    Connectivity connectivity;
 };
 
 struct InterfacePushTrain final: InterfaceMessage {

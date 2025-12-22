@@ -33,9 +33,10 @@ struct ClientMessage: Message {
         CLIENT_ERROR        = 4,
         CLIENT_START        = 5,
         CLIENT_CONNECTED    = 6,
-        CLIENT_RESET        = 7,
-        CLIENT_SELF_TESTING = 8,
-        CLIENT_CLOSING      = 9
+        CLIENT_SHUTDOWN     = 7,
+        CLIENT_RESET        = 8,
+        CLIENT_SELF_TESTING = 9,
+        CLIENT_CLOSING      = 10
     };
 
     static constexpr std::uint32_t GROUP_ID = CLIENT;
@@ -123,6 +124,13 @@ struct ClientConnected final: ClientMessage {
     }
 
     long appId;
+};
+
+struct ClientShutdown final: ClientMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CLIENT_SHUTDOWN;
+
+    explicit ClientShutdown(const nlohmann::json &) {
+    }
 };
 
 struct ClientReset final: ClientMessage {

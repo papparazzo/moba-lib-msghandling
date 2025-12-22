@@ -24,15 +24,16 @@
 
 struct SystemMessage: Message {
     enum MessageName {
-        SYSTEM_SET_AUTOMATIC_MODE      = 1,
-        SYSTEM_TRIGGER_EMERGENCY_STOP  = 2,
-        SYSTEM_RELEASE_EMERGENCY_STOP  = 3,
-        SYSTEM_SET_STANDBY_MODE        = 4,
-        SYSTEM_TOGGLE_STANDBY_MODE     = 5,
-        SYSTEM_GET_HARDWARE_STATE      = 6,
-        SYSTEM_HARDWARE_STATE_CHANGED  = 7,
-        SYSTEM_HARDWARE_SHUTDOWN       = 8,
-        SYSTEM_HARDWARE_RESET          = 9
+        SYSTEM_SET_AUTOMATIC_MODE       = 1,
+        SYSTEM_READY_FOR_AUTOMATIC_MODE = 2,
+        SYSTEM_TRIGGER_EMERGENCY_STOP   = 3,
+        SYSTEM_RELEASE_EMERGENCY_STOP   = 4,
+        SYSTEM_SET_STANDBY_MODE         = 5,
+        SYSTEM_TOGGLE_STANDBY_MODE      = 6,
+        SYSTEM_GET_HARDWARE_STATE       = 7,
+        SYSTEM_HARDWARE_STATE_CHANGED   = 8,
+        SYSTEM_HARDWARE_SHUTDOWN        = 9,
+        SYSTEM_HARDWARE_RESET           = 10
     };
 
     static constexpr std::uint32_t GROUP_ID = SYSTEM;
@@ -53,6 +54,19 @@ struct SystemSetAutomaticMode final: SystemMessage {
     }
 
     bool automaticActive;
+};
+
+struct SystemReadyForAutomaticMode final: SystemMessage {
+    static constexpr std::uint32_t MESSAGE_ID = SYSTEM_READY_FOR_AUTOMATIC_MODE;
+
+    explicit SystemReadyForAutomaticMode(const bool readyForAutomaticMode) : readyForAutomaticMode{readyForAutomaticMode} {
+    }
+
+    [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        return readyForAutomaticMode;
+    }
+
+    bool readyForAutomaticMode;
 };
 
 struct SystemTriggerEmergencyStop final: SystemMessage {
@@ -124,24 +138,27 @@ struct SystemHardwareStateChanged final: SystemMessage {
     static constexpr std::uint32_t MESSAGE_ID = SYSTEM_HARDWARE_STATE_CHANGED;
 
     enum class HardwareState {
-        ERROR,
+        INCIDENT,
         STANDBY,
-        EMERGENCY_STOP,
-        MANUEL,
-        AUTOMATIC
+        MANUAL,
+        READY,
+        AUTOMATIC,
+        SHUTDOWN
     };
 
     explicit SystemHardwareStateChanged(const nlohmann::json &d) {
-        if(const auto status = d.get<std::string>(); status == "ERROR") {
-            hardwareState = HardwareState::ERROR;
-        } else if(status == "EMERGENCY_STOP") {
-            hardwareState = HardwareState::EMERGENCY_STOP;
+        if(const auto status = d.get<std::string>(); status == "INCIDENT") {
+            hardwareState = HardwareState::INCIDENT;
         } else if(status == "STANDBY") {
             hardwareState = HardwareState::STANDBY;
-        } else if(status == "MANUEL") {
-            hardwareState = HardwareState::MANUEL;
+        } else if(status == "MANUAL") {
+            hardwareState = HardwareState::MANUAL;
+        } else if(status == "READY") {
+            hardwareState = HardwareState::READY;
         } else if(status == "AUTOMATIC") {
             hardwareState = HardwareState::AUTOMATIC;
+        } else if(status == "SHUTDOWN") {
+            hardwareState = HardwareState::SHUTDOWN;
         }
     }
 

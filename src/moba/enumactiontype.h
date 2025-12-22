@@ -27,15 +27,13 @@ enum class ActionType {
 
     LOCO_HALT,
     LOCO_SPEED,
-    LOCO_DIRECTION_BACKWARD,
-    LOCO_DIRECTION_FORWARD,
+    LOCO_DIRECTION,
 
-    LOCO_FUNCTION_ON,
-    LOCO_FUNCTION_OFF,
-    SWITCHING_RED,
-    SWITCHING_GREEN,
+    LOCO_FUNCTION,
+    LOCO_FUNCTION_TRIGGER,
+    SWITCHING,
 
-    SEND_PUSH_TRAIN,
+    //SEND_PUSH_TRAIN,
     SEND_ROUTE_SWITCHED,
     SEND_ROUTE_RELEASED,
     SEND_BLOCK_RELEASED
@@ -51,26 +49,17 @@ inline ActionType stringToActionTypeEnum(const std::string &s) {
     if(s == "LOCO_SPEED") {
         return ActionType::LOCO_SPEED;
     }
-    if(s == "LOCO_DIRECTION_BACKWARD") {
-        return ActionType::LOCO_DIRECTION_BACKWARD;
+    if(s == "LOCO_DIRECTION") {
+        return ActionType::LOCO_DIRECTION;
     }
-    if(s == "LOCO_DIRECTION_FORWARD") {
-        return ActionType::LOCO_DIRECTION_FORWARD;
+    if(s == "LOCO_FUNCTION") {
+        return ActionType::LOCO_FUNCTION;
     }
-    if(s == "LOCO_FUNCTION_ON") {
-        return ActionType::LOCO_FUNCTION_ON;
+    if(s == "LOCO_FUNCTION_TRIGGER") {
+        return ActionType::LOCO_FUNCTION_TRIGGER;
     }
-    if(s == "LOCO_FUNCTION_OFF") {
-        return ActionType::LOCO_FUNCTION_OFF;
-    }
-    if(s == "SWITCHING_RED") {
-        return ActionType::SWITCHING_RED;
-    }
-    if(s == "SWITCHING_GREEN") {
-        return ActionType::SWITCHING_GREEN;
-    }
-    if(s == "SEND_SWITCH_ROUTE") {
-        return ActionType::SEND_SWITCH_ROUTE;
+    if(s == "SWITCHING") {
+        return ActionType::SWITCHING;
     }
     if(s == "SEND_ROUTE_SWITCHED") {
         return ActionType::SEND_ROUTE_SWITCHED;
@@ -95,26 +84,14 @@ inline std::string actionTypeEnumToString(ActionType s) {
         case ActionType::LOCO_SPEED:
             return "LOCO_SPEED";
 
-        case ActionType::LOCO_DIRECTION_BACKWARD:
-            return "LOCO_DIRECTION_BACKWARD";
+        case ActionType::LOCO_DIRECTION:
+            return "LOCO_DIRECTION";
 
-        case ActionType::LOCO_DIRECTION_FORWARD:
-            return "LOCO_DIRECTION_FORWARD";
+        case ActionType::LOCO_FUNCTION:
+            return "LOCO_FUNCTION";
 
-        case ActionType::LOCO_FUNCTION_ON:
-            return "LOCO_FUNCTION_ON";
-
-        case ActionType::LOCO_FUNCTION_OFF:
-            return "LOCO_FUNCTION_OFF";
-
-        case ActionType::SWITCHING_RED:
-            return "SWITCHING_RED";
-
-        case ActionType::SWITCHING_GREEN:
-            return "SWITCHING_GREEN";
-
-        case ActionType::SEND_SWITCH_ROUTE:
-            return "SEND_SWITCH_ROUTE";
+        case ActionType::SWITCHING:
+            return "SWITCHING";
 
         case ActionType::SEND_ROUTE_SWITCHED:
             return "SEND_ROUTE_SWITCHED";
