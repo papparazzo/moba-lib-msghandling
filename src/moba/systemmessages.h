@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <moba-common/exception.h>
+
 #include "message.h"
 
 struct SystemMessage: Message {
@@ -99,10 +101,10 @@ struct SystemTriggerEmergencyStop final: SystemMessage {
             case EmergencyTriggerReason::SELF_ACTING_BY_EXTERN_SWITCHING:
                 return "SELF_ACTING_BY_EXTERN_SWITCHING";
 
-            default:
             case EmergencyTriggerReason::EXTERN:
                 return "EXTERN";
         }
+        throw moba::UnsupportedOperationException{"EmergencyTriggerReason: invalid value given"};
     }
 
     EmergencyTriggerReason emergencyTriggerReason;
@@ -139,6 +141,7 @@ struct SystemHardwareStateChanged final: SystemMessage {
 
     enum class HardwareState {
         INCIDENT,
+        NO_CONNECTION,
         STANDBY,
         MANUAL,
         READY,
@@ -149,6 +152,8 @@ struct SystemHardwareStateChanged final: SystemMessage {
     explicit SystemHardwareStateChanged(const nlohmann::json &d) {
         if(const auto status = d.get<std::string>(); status == "INCIDENT") {
             hardwareState = HardwareState::INCIDENT;
+        } else if(status == "NO_CONNECTION") {
+            hardwareState = HardwareState::NO_CONNECTION;
         } else if(status == "STANDBY") {
             hardwareState = HardwareState::STANDBY;
         } else if(status == "MANUAL") {

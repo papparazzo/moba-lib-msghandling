@@ -24,16 +24,36 @@
 
 struct InterfaceMessage: Message {
     enum MessageName {
-        PUSH_TRAIN                 = 2,
-        ROUTE_SWITCHED             = 3,
-        ROUTE_RELEASED             = 4,
-        BLOCK_RELEASED             = 5,
-        SET_ACTION_LIST            = 6,
-        REPLACE_ACTION_LIST        = 7,
-        DELETE_ACTION_LIST         = 8
+        CONNECTED           = 1,
+        CONNECTION_LOST     = 2,
+        SET_ACTION_LIST     = 3,
+        REPLACE_ACTION_LIST = 4,
+        DELETE_ACTION_LIST  = 5,
+        ROUTE_SWITCHED      = 6,
+        ROUTE_RELEASED      = 7,
+        BLOCK_RELEASED      = 8,
+        PUSH_TRAIN          = 9
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
+};
+
+struct InterfaceConnected final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONNECTED;
+
+    explicit InterfaceConnected(const bool onInitialize): onInitialize {onInitialize} {
+    }
+
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const override {
+        return onInitialize;
+    }
+
+    bool onInitialize;
+};
+
+struct InterfaceConnectionLost final: InterfaceMessage {
+    static constexpr std::uint32_t MESSAGE_ID = CONNECTION_LOST;
 };
 
 struct InterfacePushTrain final: InterfaceMessage {
