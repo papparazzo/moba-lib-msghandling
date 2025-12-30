@@ -22,6 +22,8 @@
 
 #include <moba-common/exception.h>
 
+#include <utility>
+
 #include "message.h"
 
 struct SystemMessage: Message {
@@ -77,17 +79,29 @@ struct SystemTriggerEmergencyStop final: SystemMessage {
     enum class EmergencyTriggerReason {
         CENTRAL_STATION,
         EXTERN,
-        SOFTWARE_ERROR,
+        CONNECTION_LOST,
+        RECONNECTED,
         SOFTWARE_MANUAL,
-        SELF_ACTING_BY_EXTERN_SWITCHING
+        SELF_ACTING_BY_EXTERN_SWITCHING,
+        SOFTWARE_ERROR,
     };
 
     explicit SystemTriggerEmergencyStop(
-        const EmergencyTriggerReason emergencyTriggerReason = EmergencyTriggerReason::SOFTWARE_MANUAL
-    ) : emergencyTriggerReason{emergencyTriggerReason} {
+        const EmergencyTriggerReason emergencyTriggerReason = EmergencyTriggerReason::SOFTWARE_MANUAL,
+        std::string message = ""
+    ) : emergencyTriggerReason{emergencyTriggerReason}, message {std::move(message)}{
     }
 
     [[nodiscard]] nlohmann::json getJsonDocument() const override {
+        nlohmann::json d;
+        d["reason"] = getEmergencyTriggerReasonAsString();
+        d["message"] = message;
+        return d;
+    }
+
+private:
+    [[nodiscard]]
+    std::string getEmergencyTriggerReasonAsString() const {
         switch(emergencyTriggerReason) {
             case EmergencyTriggerReason::CENTRAL_STATION:
                 return "CENTRAL_STATION";
@@ -103,11 +117,20 @@ struct SystemTriggerEmergencyStop final: SystemMessage {
 
             case EmergencyTriggerReason::EXTERN:
                 return "EXTERN";
+
+            case EmergencyTriggerReason::CONNECTION_LOST:
+                return "CONNECTION_LOST";
+
+            case EmergencyTriggerReason::RECONNECTED:
+                return "RECONNECTED";
+
+            default:
+                throw moba::UnsupportedOperationException{"EmergencyTriggerReason: invalid value given"};
         }
-        throw moba::UnsupportedOperationException{"EmergencyTriggerReason: invalid value given"};
     }
 
     EmergencyTriggerReason emergencyTriggerReason;
+    std::string message;
 };
 
 struct SystemReleaseEmergencyStop final: SystemMessage {
