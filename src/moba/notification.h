@@ -1,5 +1,5 @@
 /*
-*  Project:    moba-lib-msghandling
+ *  Project:    moba-lib-msghandling
  *
  *  Copyright (C) 2019 Stefan Paproth <pappi-@gmx.de>
  *
@@ -25,30 +25,30 @@
 #include <ctime>
 #include <utility>
 
-#include "enumincidentlevel.h"
-#include "enumincidenttype.h"
+#include "enumnotificationlevel.h"
+#include "enumnotificationtype.h"
 #include "shared.h"
 
-struct IncidentData final {
-    IncidentData(
-        IncidentLevel level, 
-        IncidentType  type, 
+struct NotificationData final {
+    NotificationData(
+        const NotificationLevel level,
+        const NotificationType  type,
         std::string   caption,
         std::string   message,
         std::string   source
     ) : level{level}, type{type}, caption{std::move(caption)}, message{std::move(message)}, source{std::move(source)} {
-        auto now = std::chrono::system_clock::now();
-        auto time = std::chrono::system_clock::to_time_t(now);
-        std::tm tm = *std::localtime(&time);
+        const auto now = std::chrono::system_clock::now();
+        const auto time = std::chrono::system_clock::to_time_t(now);
+        const std::tm tm = *std::localtime(&time);
 
         char buffer[20];
         std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &tm);
         timeStamp = buffer;
     }
 
-    explicit IncidentData(const nlohmann::json &d): origin{d["origin"]} {
-        level = stringToIncidentLevelEnum(d["level"].get<std::string>());
-        type = stringToIncidentTypeEnum(d["type"].get<std::string>());
+    explicit NotificationData(const nlohmann::json &d): origin{d["origin"]} {
+        level = stringToNotificationLevelEnum(d["level"].get<std::string>());
+        type = stringToNotificationTypeEnum(d["type"].get<std::string>());
         caption = d["caption"].get<std::string>();
         source = d["source"].get<std::string>();
         message = d["message"].get<std::string>();
@@ -69,8 +69,8 @@ struct IncidentData final {
         return d;
     }
 
-    IncidentLevel level;
-    IncidentType type;
+    NotificationLevel level;
+    NotificationType type;
     std::string	caption;
     std::string	message;
     std::string	source;

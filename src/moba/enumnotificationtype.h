@@ -23,7 +23,7 @@
 #include <string>
 #include <moba-common/exception.h>
 
-enum class IncidentType {
+enum class NotificationType {
     EXCEPTION,
     STATUS_CHANGED,
     CLIENT_NOTICE,
@@ -31,43 +31,43 @@ enum class IncidentType {
     SERVER_NOTICE
 };
 
-inline IncidentType stringToIncidentTypeEnum(const std::string &s) {
+inline NotificationType stringToNotificationTypeEnum(const std::string &s) {
     if(s == "EXCEPTION") {
-        return IncidentType::EXCEPTION;
+        return NotificationType::EXCEPTION;
     }
     if(s == "STATUS_CHANGED") {
-        return IncidentType::STATUS_CHANGED;
+        return NotificationType::STATUS_CHANGED;
     }
     if(s == "CLIENT_NOTICE") {
-        return IncidentType::CLIENT_NOTICE;
+        return NotificationType::CLIENT_NOTICE;
     }
     if(s == "CLIENT_ERROR") {
-        return IncidentType::CLIENT_ERROR;
+        return NotificationType::CLIENT_ERROR;
     }
     if(s == "SERVER_NOTICE") {
-        return IncidentType::SERVER_NOTICE;
+        return NotificationType::SERVER_NOTICE;
     }
-    throw moba::UnsupportedOperationException{"IncidentType: invalid value <" + s + "> given"};
+    throw moba::UnsupportedOperationException{"NotificationType: invalid value <" + s + "> given"};
 }
 
-inline std::string incidentTypeEnumToString(const IncidentType s) {
+inline std::string incidentTypeEnumToString(const NotificationType s) {
     switch(s) {
-        case IncidentType::EXCEPTION:
+        case NotificationType::EXCEPTION:
             return "EXCEPTION";
 
-        case IncidentType::STATUS_CHANGED:
+        case NotificationType::STATUS_CHANGED:
             return "STATUS_CHANGED";
 
-        case IncidentType::CLIENT_NOTICE:
+        case NotificationType::CLIENT_NOTICE:
             return "CLIENT_NOTICE";
 
-        case IncidentType::CLIENT_ERROR:
+        case NotificationType::CLIENT_ERROR:
             return "CLIENT_ERROR";
 
-        case IncidentType::SERVER_NOTICE:
+        case NotificationType::SERVER_NOTICE:
             return "SERVER_NOTICE";
 
         default:
-            throw moba::UnsupportedOperationException{"IncidentType: invalid value given"};
+            throw moba::UnsupportedOperationException{"NotificationType: invalid value given"};
     }
 }

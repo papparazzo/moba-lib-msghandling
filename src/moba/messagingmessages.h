@@ -1,5 +1,5 @@
 /*
-*  Project:    moba-lib-msghandling
+ *  Project:    moba-lib-msghandling
  *
  *  Copyright (C) 2019 Stefan Paproth <pappi-@gmx.de>
  *
@@ -22,55 +22,55 @@
 
 #include <utility>
 
-#include "incident.h"
+#include "notification.h"
 #include "message.h"
 
 struct MessagingMessages: Message {
     enum MessageName {
-        MESSAGING_GET_INCIDENT_LIST   = 1,
-        MESSAGING_SET_INCIDENT_LIST   = 2,
-        MESSAGING_CLEAR_INCIDENT_LIST = 3,
-        MESSAGING_NOTIFY_INCIDENT     = 4,
+        MESSAGING_GET_NOTIFICATION_LIST   = 1,
+        MESSAGING_SET_NOTIFICATION_LIST   = 2,
+        MESSAGING_CLEAR_NOTIFICATION_LIST = 3,
+        MESSAGING_SEND_NOTIFICATION       = 4,
     };
 
     static constexpr std::uint32_t GROUP_ID = MESSAGING;
 };
 
-struct MessagingGetIncidentList final : MessagingMessages {
-    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_GET_INCIDENT_LIST;
+struct MessagingGetNotificationList final : MessagingMessages {
+    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_GET_NOTIFICATION_LIST;
 
-    MessagingGetIncidentList() = default;
+    MessagingGetNotificationList() = default;
 };
 
-struct MessagingSetIncidentList final : MessagingMessages {
-    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_SET_INCIDENT_LIST;
+struct MessagingSetNotificationList final : MessagingMessages {
+    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_SET_NOTIFICATION_LIST;
 
-    explicit MessagingSetIncidentList(const nlohmann::json &d) {
+    explicit MessagingSetNotificationList(const nlohmann::json &d) {
         for(auto &iter: d) {
             incidents.emplace_back(iter);
         }
     }
-    std::vector<IncidentData> incidents;
+    std::vector<NotificationData> incidents;
 };
 
-struct MessagingClearIncidentList final : MessagingMessages {
-    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_CLEAR_INCIDENT_LIST;
+struct MessagingClearNotificationList final : MessagingMessages {
+    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_CLEAR_NOTIFICATION_LIST;
 
-    MessagingClearIncidentList() = default;
+    MessagingClearNotificationList() = default;
 };
 
-struct MessagingNotifyIncident final : MessagingMessages {
-    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_NOTIFY_INCIDENT;
+struct MessagingSendNotification final : MessagingMessages {
+    static constexpr std::uint32_t MESSAGE_ID = MESSAGING_SEND_NOTIFICATION;
 
-    explicit MessagingNotifyIncident(IncidentData &&incident): incident{std::move(incident)} {}
+    explicit MessagingSendNotification(NotificationData &&incident): incident{std::move(incident)} {}
 
     [[nodiscard]]
     nlohmann::json getJsonDocument() const override {
         return incident.getJsonDocument();
     }
 
-    explicit MessagingNotifyIncident(const nlohmann::json &d): incident{d} {
+    explicit MessagingSendNotification(const nlohmann::json &d): incident{d} {
     }
-    IncidentData incident;
+    NotificationData incident;
 };
 

@@ -23,44 +23,44 @@
 #include <string>
 #include <moba-common/exception.h>
 
-enum class IncidentLevel {
+enum class NotificationLevel {
     CRITICAL,
     NOTICE,
     WARNING,
     ERROR
 };
 
-inline IncidentLevel stringToIncidentLevelEnum(const std::string &s) {
+inline NotificationLevel stringToNotificationLevelEnum(const std::string &s) {
     if(s == "CRITICAL") {
-        return IncidentLevel::CRITICAL;
+        return NotificationLevel::CRITICAL;
     }
     if(s == "NOTICE") {
-        return IncidentLevel::NOTICE;
+        return NotificationLevel::NOTICE;
     }
     if(s == "WARNING") {
-        return IncidentLevel::WARNING;
+        return NotificationLevel::WARNING;
     }
     if(s == "ERROR") {
-        return IncidentLevel::ERROR;
+        return NotificationLevel::ERROR;
     }
-    throw moba::UnsupportedOperationException{"IncidentLevel: invalid value <" + s + "> given"};
+    throw moba::UnsupportedOperationException{"NotificationLevel: invalid value <" + s + "> given"};
 }
 
-inline std::string incidentLevelEnumToString(const IncidentLevel s) {
+inline std::string incidentLevelEnumToString(const NotificationLevel s) {
     switch(s) {
-        case IncidentLevel::CRITICAL:
+        case NotificationLevel::CRITICAL:
             return "CRITICAL";
 
-        case IncidentLevel::NOTICE:
+        case NotificationLevel::NOTICE:
             return "NOTICE";
 
-        case IncidentLevel::WARNING:
+        case NotificationLevel::WARNING:
             return "WARNING";
 
-        case IncidentLevel::ERROR:
+        case NotificationLevel::ERROR:
             return "ERROR";
 
         default:
-            throw moba::UnsupportedOperationException{"IncidentLevel: invalid value given"};
+            throw moba::UnsupportedOperationException{"NotificationLevel: invalid value given"};
     }
 }
