@@ -35,7 +35,8 @@ public:
     explicit SocketException(std::string what): what_{std::move(what)} {
     }
 
-    [[nodiscard]] const char* what() const noexcept override {
+    [[nodiscard]]
+    const char* what() const noexcept override {
         return this->what_.c_str();
     }
 };
@@ -46,7 +47,8 @@ public:
 
     ~Socket() noexcept;
 
-    [[nodiscard]] int getSocket() const {
+    [[nodiscard]]
+    int getSocket() const {
         return socket;
     }
     void init();
