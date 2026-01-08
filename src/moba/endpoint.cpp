@@ -135,7 +135,7 @@ std::string Endpoint::waitForNewMsgAsString() const {
     output.resize(d[2]);
 
     if(
-        auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
+        const auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
         bytes_received < 0
     ) {
         return "";
