@@ -24,11 +24,11 @@
 #include <sys/socket.h>
 
 #include <netinet/in.h>
-#include <arpa/inet.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <cerrno>
 
-Socket::Socket(const std::string &host, const int port): socket{-1} {
+Socket::Socket(const std::string_view host, const int port): socket{-1} {
     if(host == "" || port > 64738 || port < 1024) {
         throw SocketException{"either host or port is invalid!"};
     }
@@ -37,46 +37,50 @@ Socket::Socket(const std::string &host, const int port): socket{-1} {
 }
 
 Socket::~Socket() noexcept {
-    if(socket != -1) {
-        close(socket);
-    }
+    close();
 }
 
 void Socket::init() {
-    if(socket != -1) {
-        close(socket);
-    }
+    close();
 
-    in6_addr serverAddr;
-    addrinfo hints;
-    addrinfo *result = nullptr;
+    addrinfo hints{};
+    addrinfo *res = nullptr;
+    const addrinfo *rp = nullptr;
 
-    memset(&hints, 0x00, sizeof(hints));
     hints.ai_flags    = AI_NUMERICSERV;
     hints.ai_family   = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
 
-    if(inet_pton(AF_INET, host.c_str(), &serverAddr) == 1) {
-        hints.ai_family = AF_INET;
-        hints.ai_flags |= AI_NUMERICHOST;
-    } else if(inet_pton(AF_INET6, host.c_str(), &serverAddr) == 1) {
-        hints.ai_family = AF_INET6;
-        hints.ai_flags |= AI_NUMERICHOST;
+    if(
+        const int result = getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &res);
+        result != 0
+    ) {
+        throw SocketException{std::string{"Resolving host failed: "} + gai_strerror(result)};
     }
 
-    if(getaddrinfo(host.c_str(), std::to_string(port).c_str(), &hints, &result) != 0) {
-        throw SocketException{"resolving url failed"};
+    std::unique_ptr<addrinfo, decltype(&freeaddrinfo)> res_guard(res, freeaddrinfo);
+
+    for(rp = res; rp != nullptr; rp = rp->ai_next) {
+        if((socket = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)) == -1) {
+            continue;
+        }
+
+        timeval timeout{.tv_sec = 10, .tv_usec = 0};
+        setsockopt(socket, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+
+        if(connect(socket, rp->ai_addr, rp->ai_addrlen) == 0 || errno == EINPROGRESS) {
+            return;
+        }
     }
 
-    socket = ::socket(result->ai_family, result->ai_socktype, result->ai_protocol);
+    throw SocketException{std::string{"Socket creation failed: "} + strerror(errno)};
+}
+
+void Socket::close() {
     if(socket == -1) {
-        freeaddrinfo(result);
-        throw SocketException{"socket creation failed"};
+        return;
     }
 
-    if(connect(socket, result->ai_addr, result->ai_addrlen) == -1) {
-        freeaddrinfo(result);
-        throw SocketException{"connection to host failed"};
-    }
-    freeaddrinfo(result);
+    ::close(socket);
+    socket = -1;
 }

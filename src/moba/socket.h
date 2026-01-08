@@ -43,17 +43,23 @@ public:
 
 class Socket final {
 public:
-    Socket(const std::string &host, int port);
+    Socket(std::string_view host, int port);
 
     ~Socket() noexcept;
+
+    Socket(const Socket&) = delete;
+    Socket& operator=(const Socket&) = delete;
+    Socket(Socket&&) noexcept = default;
+    Socket& operator=(Socket&&) noexcept = default;
 
     [[nodiscard]]
     int getSocket() const {
         return socket;
     }
     void init();
+    void close();
 
-protected:
+private:
     int socket;
     std::string host;
     int port;
