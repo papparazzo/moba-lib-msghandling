@@ -103,7 +103,7 @@ RawMessage Endpoint::waitForNewMsg() const {
         throw SocketException{"receive header failed"};
     }
 
-    for(unsigned int &i : d) {
+    for(auto &i : d) {
         i = ntohl(i);
     }
 
@@ -135,7 +135,7 @@ std::string Endpoint::waitForNewMsgAsString() const {
     output.resize(d[2]);
 
     if(
-        const auto bytes_received = ::recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
+        const auto bytes_received = recv(socket->getSocket(), &output[0], d[2], MSG_WAITALL);
         bytes_received < 0
     ) {
         return "";
