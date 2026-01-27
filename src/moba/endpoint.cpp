@@ -55,12 +55,16 @@ long Endpoint::registerApp() {
 
     const auto msg = receiveMsg(MSG_HANDLER_TIME_OUT_SEC);
 
-    if(!msg.data.is_number()) {
-        throw SocketException{"msg data is not an int"};
+    // NOLINTNEXTLINE(clang-analyzer-core.)
+    if(msg.groupId != Message::CLIENT || msg.messageId != ClientMessage::CLIENT_CONNECTED) {
+        throw SocketException{
+            "received <" + std::to_string(msg.groupId) + "/" + std::to_string(msg.messageId) +
+                "> instead of <CLIENT/CLIENT_CONNECTED>"
+        };
     }
 
-    if(msg.groupId != Message::CLIENT || msg.messageId != ClientMessage::CLIENT_CONNECTED) {
-        throw SocketException{"did not receive CLIENT_CONNECTED"};
+    if(!msg.data.is_number()) {
+        throw SocketException{"msg data is not an int"};
     }
 
     return appId = msg.data.get<int>();
