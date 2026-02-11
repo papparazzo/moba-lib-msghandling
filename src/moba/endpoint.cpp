@@ -159,7 +159,7 @@ void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, con
 void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) {
     const auto bufferSize = data.length();
 
-    std::uint32_t d[] = {
+    const std::uint32_t d[] = {
         htonl(grpId),
         htonl(msgId),
         htonl(bufferSize)
