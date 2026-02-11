@@ -79,7 +79,7 @@ public:
         auto iter = handlers.find(msg.groupId);
 
         if(iter != handlers.end()) {
-            if(auto iter2 = iter->second.find(msg.messageId); iter2 != iter->second.end()) {
+            if(const auto iter2 = iter->second.find(msg.messageId); iter2 != iter->second.end()) {
                 iter2->second(msg.data);
                 return true;
             }
