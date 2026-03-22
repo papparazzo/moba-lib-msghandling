@@ -71,7 +71,6 @@ long Endpoint::registerApp() {
 }
 
 RawMessage Endpoint::receiveMsg(const time_t timeoutSec) const {
-    timeval timeout{};
     fd_set  read_sock;
 
     const int sd = socket->getSocket();
@@ -79,8 +78,10 @@ RawMessage Endpoint::receiveMsg(const time_t timeoutSec) const {
     FD_ZERO(&read_sock);
     FD_SET(sd, &read_sock);
 
-    timeout.tv_sec = timeoutSec;
-    timeout.tv_usec = MSG_HANDLER_TIME_OUT_USEC;
+    timeval timeout{
+        .tv_sec = timeoutSec,
+        .tv_usec = MSG_HANDLER_TIME_OUT_USEC
+    };
 
     if(select(sd + 1, &read_sock, nullptr, nullptr, &timeout) == -1) {
         throw SocketException{"select-error occurred!"};
@@ -125,6 +126,7 @@ RawMessage Endpoint::waitForNewMsg() const {
 }
 
 std::string Endpoint::waitForNewMsgAsString() const {
+    std::lock_guard l{m};
     std::uint32_t d[3];
 
     if(recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
@@ -152,11 +154,11 @@ std::string Endpoint::waitForNewMsgAsString() const {
 }
 
 void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const nlohmann::json &data) {
-    std::lock_guard l{m};
     sendMsg(grpId, msgId, data.dump());
 }
 
 void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) {
+    std::lock_guard l{m};
     const auto bufferSize = data.length();
 
     const std::uint32_t d[] = {
