@@ -50,7 +50,7 @@ public:
     auto waitForNewMsg() const -> RawMessage;
 
     [[nodiscard]]
-    std::string waitForNewMsgAsString() const;
+    std::string waitForNewMsgAsString();
 
     template<typename T>
     void sendMsg(const T &msg) {

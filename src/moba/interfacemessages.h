@@ -31,8 +31,7 @@ struct InterfaceMessage: Message {
         DELETE_ACTION_LIST  = 5,
         ROUTE_SWITCHED      = 6,
         ROUTE_RELEASED      = 7,
-        BLOCK_RELEASED      = 8,
-        PUSH_TRAIN          = 9
+        BLOCK_RELEASED      = 8
     };
 
     static constexpr std::uint32_t GROUP_ID = INTERFACE;
@@ -54,25 +53,6 @@ struct InterfaceConnected final: InterfaceMessage {
 
 struct InterfaceConnectionLost final: InterfaceMessage {
     static constexpr std::uint32_t MESSAGE_ID = CONNECTION_LOST;
-};
-
-struct InterfacePushTrain final: InterfaceMessage {
-    static constexpr std::uint32_t MESSAGE_ID = PUSH_TRAIN;
-
-    InterfacePushTrain(const unsigned long trainId, const unsigned long toBlockId): trainId{trainId}, blockId {toBlockId} {}
-
-    [[nodiscard]]
-    nlohmann::json getJsonDocument() const override {
-        nlohmann::json d;
-
-        d["trainId"] = trainId;
-        d["blockId"] = blockId;
-
-        return d;
-    }
-
-    unsigned long trainId;
-    unsigned long blockId;
 };
 
 struct InterfaceRouteSwitched final: InterfaceMessage {

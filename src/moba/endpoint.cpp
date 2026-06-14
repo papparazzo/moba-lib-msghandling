@@ -57,10 +57,7 @@ long Endpoint::registerApp() {
 
     // NOLINTNEXTLINE(clang-analyzer-core.)
     if(msg.groupId != Message::CLIENT || msg.messageId != ClientMessage::CLIENT_CONNECTED) {
-        throw SocketException{
-            "received <" + std::to_string(msg.groupId) + "/" + std::to_string(msg.messageId) +
-                "> instead of <CLIENT/CLIENT_CONNECTED>"
-        };
+        throw SocketException{"received <" + std::to_string(msg.groupId) + "/" + std::to_string(msg.messageId) +"> instead of <CLIENT/CLIENT_CONNECTED>"};
     }
 
     if(!msg.data.is_number()) {
@@ -125,7 +122,7 @@ RawMessage Endpoint::waitForNewMsg() const {
     return RawMessage{d[0], d[1], nlohmann::json::parse(output)};
 }
 
-std::string Endpoint::waitForNewMsgAsString() const {
+std::string Endpoint::waitForNewMsgAsString() {
     std::lock_guard l{m};
     std::uint32_t d[3];
 
@@ -159,6 +156,11 @@ void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, con
 
 void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) {
     std::lock_guard l{m};
+
+    if(!socket) {
+        throw std::runtime_error{"Socket not connected, cannot send message"};
+    }
+
     const auto bufferSize = data.length();
 
     const std::uint32_t d[] = {
