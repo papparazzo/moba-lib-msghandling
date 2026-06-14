@@ -206,77 +206,6 @@ struct SpecificLayoutData {
     SymbolsPtr symbols;
 };
 
-struct ContactData {
-    explicit ContactData(const std::uint16_t moduleAddr = 0, const std::uint16_t contactNb = 0) :
-        moduleAddr{moduleAddr}, contactNb{contactNb} {
-    }
-
-    explicit ContactData(const nlohmann::json &d) {
-        moduleAddr = d["moduleAddr"].get<int>();
-        contactNb = d["contactNb"].get<int>();
-    }
-
-    friend bool operator<(const ContactData &l, const ContactData &r) {
-        if (l.moduleAddr < r.moduleAddr) {
-            return true;
-        }
-        if (l.moduleAddr == r.moduleAddr && l.contactNb < r.contactNb) {
-            return true;
-        }
-        return false;
-    }
-
-    explicit operator std::string() const {
-        return std::to_string(moduleAddr) + ":" + std::to_string(contactNb);
-    }
-
-    friend std::ostream& operator<<(std::ostream& stream, const ContactData& contact) {
-        stream << std::to_string(contact.moduleAddr) + ":" + std::to_string(contact.contactNb);
-        return stream;
-    }
-
-    std::uint16_t moduleAddr;
-    std::uint16_t contactNb;
-};
-
-struct ContactTriggerData {
-    ContactTriggerData(
-        const std::uint16_t moduleAddr, const std::uint16_t contactNb, const bool state, const int time
-    ) : contactData{moduleAddr, contactNb}, state{state}, time{time} {
-
-    }
-
-    explicit ContactTriggerData(const nlohmann::json &d) : contactData{d["contact"]} {
-        state = d["state"].get<bool>();
-        time = d["time"].get<int>();
-    }
-
-    ContactData contactData;
-    bool state;
-    int time;
-};
-
-struct BlockContactData {
-
-    explicit BlockContactData(const nlohmann::json &d) :
-        brakeTriggerContact{d["brakeTriggerContact"]}, blockContact{d["blockContact"]}
-    {
-        if (!d["trainId"].is_null()) {
-            trainId = d["trainId"].get<int>();
-        }
-
-        id = d["id"].get<int>();
-    }
-
-    ContactData brakeTriggerContact;
-    ContactData blockContact;
-    int trainId{0};
-
-    // ToDo Consider to make trainId optional
-    //std::optional<int> trainId;
-    int id;
-};
-
 struct SwitchStandData {
     SwitchStandData() = default;
 
@@ -301,6 +230,25 @@ struct PortAddressData {
 
     std::uint16_t controller{};
     std::uint16_t port{};
+
+    friend bool operator<(const PortAddressData &l, const PortAddressData &r) {
+        if (l.controller < r.controller) {
+            return true;
+        }
+        if (l.controller == r.controller && l.port < r.port) {
+            return true;
+        }
+        return false;
+    }
+
+    explicit operator std::string() const {
+        return std::to_string(controller) + ":" + std::to_string(port);
+    }
+
+    friend std::ostream& operator<<(std::ostream& stream, const PortAddressData& contact) {
+        stream << std::to_string(contact.controller) + ":" + std::to_string(contact.port);
+        return stream;
+    }
 };
 
 struct GlobalPortAddressData {
