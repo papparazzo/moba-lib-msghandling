@@ -123,7 +123,7 @@ RawMessage Endpoint::waitForNewMsg() const {
 }
 
 std::string Endpoint::waitForNewMsgAsString() {
-    std::lock_guard l{m};
+    std::scoped_lock l{m};
     std::uint32_t d[3];
 
     if(recv(socket->getSocket(), d, sizeof(d), MSG_WAITALL) < static_cast<ssize_t>(sizeof(d))) {
@@ -155,7 +155,7 @@ void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, con
 }
 
 void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const std::string &data) {
-    std::lock_guard l{m};
+    std::scoped_lock l{m};
 
     if(!socket) {
         throw std::runtime_error{"Socket not connected, cannot send message"};
