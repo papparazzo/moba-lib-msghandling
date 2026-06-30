@@ -119,9 +119,7 @@ struct EndpointData {
         if(appData.name.empty() && appId == 0 && port == 0) {
             return "null";
         }
-        std::stringstream ss;
-        ss << appData.name << "#" << appId << "@" << addr << ":" << port;
-        return ss.str();
+        return std::format("{}#{}@{}:{}", appData.name, appId, addr, port);
     }
 
     AppData appData;
@@ -246,7 +244,7 @@ struct PortAddressData {
     }
 
     friend std::ostream& operator<<(std::ostream& stream, const PortAddressData& contact) {
-        stream << std::to_string(contact.controller) + ":" + std::to_string(contact.port);
+        stream << std::format("{}:{}", contact.controller, contact.port);
         return stream;
     }
 };

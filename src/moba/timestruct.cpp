@@ -19,6 +19,8 @@
  */
 
 #include "timestruct.h"
+
+#include <format>
 #include <sstream>
 
 Time::Time(): time{0} {
@@ -53,22 +55,7 @@ unsigned int Time::getTime() const {
 }
 
 std::string Time::getTimeAsString() const {
-
-    const auto h = getHours();
-    const auto m = getMinutes();
-
-    std::stringstream ss;
-
-    if(h < 10) {
-        ss << "0";
-    }
-    ss << h << ":";
-
-    if(m < 10) {
-        ss << "0";
-    }
-    ss << m;
-    return ss.str();
+    return std::format("{:02}:{:02}", getHours(), getMinutes());
 }
 
 bool operator== (const Time& t1, const Time& t2) {
