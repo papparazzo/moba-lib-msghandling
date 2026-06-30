@@ -51,7 +51,8 @@ struct AppData {
         name = d["name"].get<std::string>();
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const {
         nlohmann::json d;
 
         d["name"] = name;
@@ -94,7 +95,8 @@ struct EndpointData {
         appData = AppData{d["appData"]};
     }
 
-    [[nodiscard]] nlohmann::json getJsonDocument() const {
+    [[nodiscard]]
+    nlohmann::json getJsonDocument() const {
         nlohmann::json d;
 
         if(appData.name.empty() && appId == 0 && port == 0) {
@@ -115,7 +117,8 @@ struct EndpointData {
         return d;
     }
 
-    [[nodiscard]] std::string toString() const {
+    [[nodiscard]]
+    std::string toString() const {
         if(appData.name.empty() && appId == 0 && port == 0) {
             return "null";
         }
