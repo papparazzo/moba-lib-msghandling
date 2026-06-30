@@ -29,6 +29,8 @@
 #include "clientmessages.h"
 #include "endpoint.h"
 
+#include <format>
+
 #include "shared.h"
 
 Endpoint::Endpoint(
@@ -144,10 +146,7 @@ std::string Endpoint::waitForNewMsgAsString() {
         return "";
     }
 
-    std::stringstream ss;
-    ss << "{\"groupId\":" << d[0] << ", \"messageId\":" << d[1] << ", \"data\":" << output << "}";
-
-    return ss.str();
+    return std::format("{{\"groupId\":{}, \"messageId\":{}, \"data\":{}}}", d[0], d[1], output);
 }
 
 void Endpoint::sendMsg(const std::uint32_t grpId, const std::uint32_t msgId, const nlohmann::json &data) {
